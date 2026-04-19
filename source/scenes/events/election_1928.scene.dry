@@ -2157,7 +2157,7 @@ subtitle: SPD + Z + [+ ddp_name +] ([+ weimar_coalition +]%)
 choose-if: president != "Hitler" and z_willing == 1
 unavailable-subtitle: SPD + Z + [+ ddp_name +] ([+ weimar_coalition +]%) - [? if president == "Hitler" : Hitler refuses to appoint a chancellor under such a governing arrangement. ?][? if not z_willing : The Center Party is unwilling to coalition with us. ?]
 view-if: weimar_coalition >= 50 or (weimar_coalition + sapd_r >= 50 and kpd_relations >= 30)
-on-arrival: leverage += 5; leverage += 5 if z_party_leader == "Joos"; in_weimar_coalition = 1; spd_in_government = 1; in_popular_front = 0; in_left_front = 0; foreign_minister_party = "Z"; interior_minister_party = "Z"; justice_minister_party = ddp_name; labor_minister_party = "Z"; reichswehr_minister_party = "I"; economic_minister_party = ddp_name; finance_minister_party = "Z"; agriculture_minister_party = "Z"; foreign_minister = "Wirth"; interior_minister = "Wirth"; justice_minister = "Erich Koch-Weser"; labor_minister = "Stegerwald"; reichswehr_minister = "Groener"; economic_minister = "Dietrich"; finance_minister = "Köhler"; agriculture_minister = "Hermes";
+on-arrival: leverage += 5; leverage += 5 if z_party_leader == "Joos"; in_weimar_coalition = 1; spd_in_government = 1; in_popular_front = 0; in_left_front = 0; foreign_minister_party = "Z"; interior_minister_party = "Z"; justice_minister_party = ddp_name; labor_minister_party = "Z"; reichswehr_minister_party = "I"; economic_minister_party = ddp_name; finance_minister_party = "Z"; agriculture_minister_party = "Z"; foreign_minister = "Wirth"; interior_minister = "Wirth"; justice_minister = "Koch-Weser"; labor_minister = "Stegerwald"; reichswehr_minister = "Groener"; economic_minister = "Dietrich"; finance_minister = "Köhler"; agriculture_minister = "Hermes";
 achievement: weimar_coalition
 go-to: weimar_normal if z_relation >= 40 and bourgeois_coalition < 50; weimar_z if z_relation < 40 or bourgeois_coalition >= 50
 
@@ -2466,7 +2466,6 @@ Who should be the chancellor?
 - @wels
 - @z_chancellor
 - @z_chancellor_wirth
-- @koch-weser
 - @luther
 - @no_govt
 
@@ -2524,9 +2523,9 @@ Otto Braun has resigned as Minister-President of Prussia to pursue his aspiratio
 @koch_weser
 subtitle: Erich Koch-Weser will become chancellor, as proposed in 1925, this will cost cabinet positions to Zentrum, however, who expected us or them to get the chancellorship.
 on-arrival: spd_in_government = 1; chancellor = "Koch-Weser"; chancellor_party = "DDP"; leverage -= 10; in_grand_coalition = 1 if in_weimar_coalition == 0.
-go-to: new_government_1926.accept_groko
+go-to: ministries
 
-@koch_weser
+@luther
 subtitle: Hans Luther will become chancellor, as he was in 1925, this will cost cabinet positions to Zentrum, however, who expected us or them to get the chancellorship.
 on-arrival: spd_in_government = 1; chancellor = "Luther"; chancellor_party = "DVP"; leverage -= 10; in_grand_coalition = 1 if in_weimar_coalition == 0.
 go-to: ministries
@@ -2796,7 +2795,7 @@ go-to: ministries
 @drop_justice
 title: Drop the Justice Ministry.
 view-if: justice_minister_party = "SPD"
-on-arrival: justice_minister_party = ddp_name; justice_minister = "Erich Koch-Weser"; leverage += 10;
+on-arrival: justice_minister_party = ddp_name; justice_minister = "Koch-Weser"; leverage += 10;
 tags: drop_mins_1928
 go-to: ministries
 
