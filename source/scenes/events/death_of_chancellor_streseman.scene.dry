@@ -1,0 +1,37 @@
+title: The Death of Gustav Stresemann
+view-if: year = 1929 and month >= 9 and chancellor = "Stresemann"
+frequency: 1000
+max-visits: 1
+tags: event
+on-arrival: stresemann_dead = 1; dvp_relation -= 5
+new-page: true
+
+= The Death of Gustav Stresemann
+
+Gustav Stresemann, leader of the DVP and longtime foreign minister, and, recently the chancellor, has died at the tragically young age of 51. He was the primary force driving his party to support democracy; without him, the democratic forces in the Republic will be so much weaker.
+
+- @muller_chancellor: Hermann Müller of the SPD for chancellor
+- @luther_chancellor: Hans Luther of the DVP might make a viable successor, as Stresemann was part of his party.
+- @bruning_chancellor: Let Heinrich Bruning of the Center Party become Chancellor.
+- @wirth_chancellor: Joseph Wirth of the Center Party should be Chancellor.
+
+@muller_chancellor
+on-arrival: chancellor = "Müller"; chancellor_party = "SPD"; z_relation -= 3; dvp_relation -= 3; ddp_relation -= 1
+subtitle: He was the chancellor before, but Bourgeoisie parties will get mad, having been used to having the chancellorship.
+
+@luther_chancellor
+on-arrival: chancellor = "Luther"; chancellor_party = "DVP"; z_relations += 5; dvp_relations += 8; ddp_relation += 6
+subtitle: Despite their misgivings about a Liberal chancellor, Zentrum is happier about that than a Socialist.
+
+@bruning_chancellor
+on-arrival: chancellor = "Brüning"; chancellor_party = "Z"; z_relation += 5; dvp_relation += 5
+subtitle: The Center Party claims it is their turn...
+
+The Center Party is grateful that we have supported Brüning for Chancellor.
+
+@wirth_chancellor
+on-arrival: chancellor = "Wirth"; chancellor_party = "Z"; z_relation += 5; dvp_relation += 2
+view-if: z_party_leader = "Joos"
+subtitle: As a moderate member of the Center Party, he could represent unity.
+
+Our coalition partners accept Joseph Wirth of the Center Party as the new Chancellor.
