@@ -2524,7 +2524,7 @@ Otto Braun has resigned as Minister-President of Prussia to pursue his aspiratio
 @koch_weser
 subtitle: Erich Koch-Weser will become chancellor, as proposed in 1925, this will cost cabinet positions to Zentrum, however, who expected us or them to get the chancellorship.
 on-arrival: spd_in_government = 1; chancellor = "Koch-Weser"; chancellor_party = "DDP"; leverage -= 10; in_grand_coalition = 1 if in_weimar_coalition == 0.
-go-to: ministries
+go-to: new_government_1926.accept_groko
 
 @koch_weser
 subtitle: Hans Luther will become chancellor, as he was in 1925, this will cost cabinet positions to Zentrum, however, who expected us or them to get the chancellorship.
