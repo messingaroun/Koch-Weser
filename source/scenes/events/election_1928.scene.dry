@@ -2539,17 +2539,17 @@ subtitle: Wirth is on the left wing of the Center Party. This may give us a bett
 on-arrival: left_dissent += 2; z_relation += 6; ddp_relation += 3; kpd_relation -= 5; in_grand_coalition = 1 if in_weimar_coalition == 0; chancellor = "Wirth"; chancellor_party = "Z"; spd_in_government = 1; leverage += 5
 go-to: ministries
 
+@luther
+subtitle: Hans Luther will become chancellor, as he was in 1925, this will cost cabinet positions to Zentrum, however, who expected us or them to get the chancellorship.
+on-arrival: spd_in_government = 1; chancellor = "Luther"; chancellor_party = "DVP"; leverage -= 10; in_grand_coalition = 1 if in_weimar_coalition == 0.
+go-to: ministries
+
 @koch-weser
 subtitle: Erich Koch-Weser will become chancellor, as proposed in 1925, this will cost cabinet positions to Zentrum, however, who expected us or them to get the chancellorship.
 on-arrival: spd_in_government = 1; chancellor = "Koch-Weser"; chancellor_party = "DDP"; leverage -= 10; in_grand_coalition = 1 if in_weimar_coalition == 0.
 go-to: ministries
 
 Erich Koch-Weser becomes chancellor of the GroKo, just as was proposed in 1925.
-
-@luther
-subtitle: Hans Luther will become chancellor, as he was in 1925, this will cost cabinet positions to Zentrum, however, who expected us or them to get the chancellorship.
-on-arrival: spd_in_government = 1; chancellor = "Luther"; chancellor_party = "DVP"; leverage -= 10; in_grand_coalition = 1 if in_weimar_coalition == 0.
-go-to: ministries
 
 @no_govt_3
 view-if: (weimar_coalition >= 50 and z_willing == 1) or (grand_coalition >= 50 and grand_coalition_failed != 1 and dvp_willing == 1)
