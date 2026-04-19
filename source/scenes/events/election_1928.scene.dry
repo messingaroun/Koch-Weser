@@ -2466,6 +2466,8 @@ Who should be the chancellor?
 - @wels
 - @z_chancellor
 - @z_chancellor_wirth
+- @koch-weser
+- @luther
 - @no_govt
 
 
@@ -2518,6 +2520,16 @@ on-arrival: spd_prussia = 0; z_prussia = 1; spd_in_government = 1; chancellor = 
 go-to: ministries
 
 Otto Braun has resigned as Minister-President of Prussia to pursue his aspirations on the national level.
+
+@koch_weser
+subtitle: Erich Koch-Weser will become chancellor, as proposed in 1925, this will cost cabinet positions to Zentrum, however, who expected us or them to get the chancellorship.
+on-arrival: spd_in_government = 1; chancellor = "Koch-Weser"; chancellor_party = "DDP"; leverage -= 10; in_grand_coalition = 1 if in_weimar_coalition == 0.
+go-to: ministries
+
+@koch_weser
+subtitle: Hans Luther will become chancellor, as he was in 1925, this will cost cabinet positions to Zentrum, however, who expected us or them to get the chancellorship.
+on-arrival: spd_in_government = 1; chancellor = "Luther"; chancellor_party = "DVP"; leverage -= 10; in_grand_coalition = 1 if in_weimar_coalition == 0.
+go-to: ministries
 
 @z_chancellor
 title: Let the Center Party have their chancellor.
