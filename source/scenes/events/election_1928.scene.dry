@@ -2543,6 +2543,7 @@ go-to: ministries
 @stresemann
 title: Gustav Stresemann, foreign policy expert and former chancellor, shall become chancellor of the new GroKo.
 subtitle: This will cost cabinet positions to Zentrum, because they expected us or them to get the chancellorship.
+view-if: stesemann_dead = 0
 on-arrival: spd_in_government = 1; chancellor = "Stresemann"; chancellor_party = "DVP"; leverage -= 10; in_grand_coalition = 1 if in_weimar_coalition == 0.; dvp_relations += 10
 go-to: ministries
 
