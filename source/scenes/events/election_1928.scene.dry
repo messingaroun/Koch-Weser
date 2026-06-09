@@ -2544,19 +2544,19 @@ go-to: ministries
 title: Gustav Stresemann, foreign policy expert and former chancellor, shall become chancellor of the new GroKo.
 subtitle: This will cost cabinet positions to Zentrum, because they expected us or them to get the chancellorship.
 view-if: stesemann_dead = 0
-on-arrival: spd_in_government = 1; chancellor = "Stresemann"; chancellor_party = "DVP"; leverage -= 10; in_grand_coalition = 1 if in_weimar_coalition == 0.; dvp_relations += 10
+on-arrival: spd_in_government = 1; chancellor = "Stresemann"; chancellor_party = "DVP"; leverage -= 5; in_grand_coalition = 1 if in_weimar_coalition == 0.; dvp_relations += 10; foreign_minister = "Curtius"
 go-to: ministries
 
 @luther
 title: Hans Luther will become chancellor
 subtitle: He was chancellor in 1925, this will cost cabinet positions to Zentrum, because they expected us or them to get the chancellorship.
-on-arrival: spd_in_government = 1; chancellor = "Luther"; chancellor_party = "DVP"; leverage -= 10; in_grand_coalition = 1 if in_weimar_coalition == 0.; dvp_relations += 10
+on-arrival: spd_in_government = 1; chancellor = "Luther"; chancellor_party = "DVP"; leverage -= 5; in_grand_coalition = 1 if in_weimar_coalition == 0.; dvp_relations += 10
 go-to: ministries
 
 @koch-weser
 title: Erich Koch-Weser will become chancellor
-subtitle: This proposed in 1925 and will cost cabinet positions to Zentrum who expected us or them to get the chancellorship.
-on-arrival: spd_in_government = 1; chancellor = "Koch-Weser"; chancellor_party = "DDP"; leverage -= 10; in_grand_coalition = 1 if in_weimar_coalition == 0.; ddp_relations += 10
+subtitle: [? if not chancellor = "Koch-Weser" : This proposed in 1926 and will cost cabinet positions to Zentrum who expected us or them to get the chancellorship. ?] [? if chancellor = "Koch-Weser" : Koch Weser will continue to be chancellor, which no one raises any objections to, and the DDP appreciates. ?]
+on-arrival: spd_in_government = 1; leverage -= 5 if not chancellor = "Koch-Weser"; in_grand_coalition = 1 if in_weimar_coalition == 0.; ddp_relations += 10 chancellor = "Koch-Weser"; chancellor_party = "DDP";
 go-to: ministries
 
 @no_govt_3
