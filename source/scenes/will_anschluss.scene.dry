@@ -1,0 +1,16 @@
+title: will anschluss?
+on-arrival: {!
+if (Q.seldte_march) {
+    if ((Q.vienna_influence >= (Q.coup_progress*0.5)) && (((Q.austria_strength*(Q.austria_militancy))*(Q.italo_ethiopian_war+1)) >= (Q.reichswehr_strength*Q.reichswehr_militancy*Q.reichswehr_loyalty)) && Q.nazi_austria && !Q.hitler_dead) {
+        Q.anschluss_attempt = 1;
+        Q.seldte_march = 0;
+    }
+}
+if (Q.nazi_march) {
+    if ((Q.vienna_influence >= (Q.coup_progress*0.25)) && ((((Q.austria_strength+Q.sa_strength)*(Q.austria_militancy+Q.sa_militancy))*(Q.italo_ethiopian_war+1)) >= (Q.reichswehr_strength*Q.reichswehr_militancy*Q.reichswehr_loyalty)) && Q.nazi_austria && !Q.hitler_dead) {
+        Q.anschluss_attempt = 1;
+        Q.nazi_march = 0;
+    }
+}
+
+!}

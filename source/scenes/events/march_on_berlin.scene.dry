@@ -1,17 +1,20 @@
 title: March on Berlin
 subtitle: Right-wing militants are taking action...
-view-if: ((((spd_in_government = 1 and coup_progress >= 10) or (coup_progress >= 15)) and year >= 1930 and ((sa_banned=0 or sh_banned=0) or (sa_force + sh_force + army_force*(1-reichswehr_loyalty) >= 50))) or (year >= 1933 and month >= 2 and chancellor != "Papen" and chancellor != "Schleicher" and (coup_progress >= 7 or (coup_progress >= 4 and president == "Braun")) and nsdap_votes + dnvp_votes + (sa_force+sh_force)/4 >= 50)) and march_on_berlin_timer = 0 and (nsdap_votes + sa_force >= dnvp_votes + other_votes + dvp_votes + sh_force) and chancellor_party != "NSDAP"
+view-if: ((((spd_in_government = 1 and coup_progress >= 10) or (coup_progress >= 15)) and year >= 1930 and ((sa_banned=0 or sh_banned=0) or (sa_force + sh_force + army_force*(1-reichswehr_loyalty) >= 50))) or (year >= 1933 and month >= 2 and chancellor != "Papen" and chancellor != "Schleicher" and (coup_progress >= 7 or (coup_progress >= 4 and president == "Braun")) and nsdap_votes + dnvp_votes + (sa_force+sh_force)/4 >= 50)) and march_on_berlin_timer = 0 and (nsdap_votes + sa_force + vienna_influence >= dnvp_votes + other_votes + dvp_votes + sh_force) and chancellor_party != "NSDAP"
 new-page: true
 max-visits: 4
-on-arrival: march_on_berlin_seen += 1; hitler_seen = 0; reichswehr_loyalty += 0.1 if chancellor_party == "Z" or z_relation >= 45; sa_strength += 80; sh_strength += 80; strife += 1; march_on_berlin_timer += 8
+on-arrival: nazi_march = 1; march_on_berlin_seen += 1; hitler_seen = 0; reichswehr_loyalty += 0.1 if chancellor_party == "Z" or z_relation >= 45; sa_strength += 80; sh_strength += 80; strife += 1; march_on_berlin_timer += 8
 go-to: ask_resign if spd_in_government and (president != "Braun" and president != "Schumacher" and president != "Juchacz" and president != "Thälmann" and president != "Münzenberg" and president != "Adenauer" and president != "Gessler" and president != "Eckener"); govt_menu if president = "Braun" or president = "Schumacher" or president = "Juchacz"; non_govt_menu if spd_in_government = 0 and (president != "Braun" and president != "Schumacher" and president != "Juchacz" and president != "Adenauer" and president != "Thälmann" and president != "Münzenberg" and president != "Gessler" and president != "Eckener"); presidential_support if president == "Gessler" or president == "Eckener" or president == "Adenauer" or president == "Thälmann" or president == "Münzenberg"
 tags: event
+call: will_anschluss
 
 = March on Berlin
 
 The far right is mobilizing. Paramilitary forces of the Stahlhelm and SA, organized under the Harzburg Front, have marched on Berlin, threatening to violently overthrow the government.
 
-They demand either immediate elections under the "supervision" of the nationalist paramilitaries, or else the immediate resignation of the government and the appointment of Adolf Hitler as chancellor[? if hitler_deported : , and the revocation of his deportation ?]. It is obvious that they are threatening a civil war if their demands are not met.
+They demand either immediate elections under the "supervision" of the nationalist paramilitaries, or else the immediate resignation of the government and the appointment of Adolf Hitler as chancellor[? if hitler_deported :, and the revocation of his deportation[? if hitler_dead :, following his revival back to life by the Nazi Party's top necromancers?]?]. It is obvious that they are threatening a civil war if their demands are not met.
+
+[? if anschluss_attempt : In coordination with this coup, meanwhile, forces of the Austrian army and SA have crossed the border into Bavaria, clashing with government forces there. Democracy is under a grand assault. ?]
 
 @non_govt_menu
 
@@ -26,14 +29,14 @@ go-to: accept_election if nsdap_normalized + dnvp_normalized >= 0.45 and far_rig
 
 @accept_election
 on-arrival: next_election_time = time + 1 if next_election_time > time+1; next_election_month = month + 1 if next_election_time >= time+1; next_election_year = year if next_election_time >= time+1; next_election_year += 1 if next_election_month > 12; next_election_month -= 12 if next_election_month > 12; old_middle_nsdap += 10; new_middle_nsdap += 10; workers_nsdap += 10; rural_nsdap += 10; unemployed_nsdap += 8; workers_spd -= 10; workers_kpd -= 10; sa_strength += 100;
+go-to: austrian_issue if anschluss_attempt
 
 President [+ president +] has called for emergency elections, to be held next month, under a caretaker government. The SA is permitted to act with impunity, intimidating voters into supporting the fascists.
-
 
 @accept_hitler
 on-arrival: chancellor = "Hitler"; chancellor_party = "NSDAP"; spd_in_government = 0
 
-After the resignation of the chancellor, Hitler has been appointed chancellor[? if hitler_deported: , after being made a citizen again ?].
+After the resignation of the chancellor, Hitler has been appointed chancellor[? if hitler_deported:, after being made a citizen again?].
 
 - @hitler_takes_power
 
@@ -67,6 +70,7 @@ The Reichsbanner number at [+ rb_strength +] thousand; many are in Berlin to cou
 @fight_2_win
 on-arrival: coup_progress = 0; sa_strength *= 0.7; sh_strength *= 0.7; rb_strength *= 0.9; workers_nsdap -= 12*(1-dissent); unemployed_nsdap -= 10*(1-dissent); new_middle_nsdap -= 6*(1-dissent); workers_spd += 8*(1-dissent); unemployed_spd += 6*(1-dissent); pro_republic += 15
 achievement: drei_pfeile
+go-to: austrian_issue if anschluss_attempt
 
 Our forces confront the fascists, and somehow, the fascists retreat! They were overwhelmed by our display of strength, and have chosen to slink away. The attempted coup is over, at least for now.
 
@@ -74,6 +78,7 @@ The show of force has reinvigorated support for the republic and for the SPD, an
 
 @fight_2_win_2
 on-arrival: coup_progress = 0; pro_republic += 5; workers_nsdap -= 2*(1-dissent); unemployed_nsdap -= 2*(1-dissent); new_middle_nsdap -= 2*(1-dissent); rb_strength *= 0.9; sa_strength *= 0.9; sh_strength *= 0.9
+go-to: austrian_issue if anschluss_attempt
 
 # if march on Berlin has already been seen
 
@@ -131,7 +136,7 @@ With the mediation of various establishment figures, new elections are called fo
 
 @new_elections_2
 on-arrival: next_election_time = time + 1 if next_election_time > time+1; next_election_month = month + 1 if next_election_time >= time+1; next_election_year = year if next_election_time >= time+1; next_election_year += 1 if next_election_month > 12; next_election_month -= 12 if next_election_month > 12;
-
+go-to: austrian_issue if anschluss_attempt
 
 @new_elections_hindenburg_reject
 

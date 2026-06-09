@@ -21,6 +21,7 @@ This mod adds a variety of changes to the base game, mostly in the form of flavo
 - @legislification: "Legislification" of government cards
 - @civil_war_flavor: Civil War flavor
 - @weakened_presidency_hitler: Weakened Presidency + Hitler takeover flavor
+- @hitler_deportation_flavor: Hitler deportation & Austrian politics flavor
 - @coalition_flavor: Coalition flavor
 - @minor_changes: Other minor changes
 - @plans: Plans for the mod
@@ -134,6 +135,12 @@ The mod also contains many small changes that I felt would be good additions to 
 
 - @flavors: Back
 
+@hitler_deportation_flavor
+
+= Hitler Deportation Flavor
+
+Hitler does not drop out of politics after being deported to Austria. He can even manage to take over the country, and, if he does, turn his eyes back to Germany. 
+
 @changelog
 
 = Changelog
@@ -203,6 +210,10 @@ The mod also contains many small changes that I felt would be good additions to 
 **2/5/2025**: And a lot more since then, but I forgot to update the changelog: post-hitler content, landtags, legislification, 1925...
 
 **15/5/2025**: Capital strike changes, businesses lose confidence changes, Hamburg tweak
+
+**24/5/2026**: Dark mode. Happy new year! 
+
+**26/5/2026**: Hitler can now take over Austria
 
 - @flavors: Back
 

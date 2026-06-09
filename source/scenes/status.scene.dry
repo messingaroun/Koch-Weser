@@ -179,6 +179,8 @@ SPD: [+ spd_votes +]%
 
 [? if sapd_formed == 1 : SAPD: [+ sapd_votes +]% ?]
 
+[? if zca_formed : ZCA: [+ zca_votes +]% ?]
+
 Z + BVP: [+ z_votes +]%
 
 KPD: [+ kpd_votes +]%

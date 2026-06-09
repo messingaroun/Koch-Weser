@@ -210,6 +210,9 @@ if (Q.jarres_campaign) {
     Q.jarres_votes += ((Math.floor(Math.random() * 11))/500);
     Q.jarres_votes += Q.nationalism/1500;
     Q.jarres_votes += Q.nsdap_normalized/4;
+    if (Q.bvp_support_jarres) {
+        Q.jarres_votes += 0.03;
+    }
 }
 if (Q.ludendorff_campaign) {
     Q.ludendorff_votes += Q.nsdap_normalized/8;
@@ -393,6 +396,17 @@ go-to: braun2_menu
 We have dropped out and endorsed Wilhelm Marx, who is now the candidate of the **Volksblock**. In return, the Center Party has voted Otto Braun as M-P of Prussia.
 
 @finished_campaign_braun
+go-to: hindenburg_enters if fun_value < 95 or not spd_support_marx; no_hindenburg if fun_value >= 95 and spd_support_marx
+
+@no_hindenburg
+on-arrival: held_campaign = 0; ludendorff_campaign = 0; bvp_support_jarres = 1
+go-to: marx_campaign
+
+As we conclude our own decisions with regards to the presidential campaign, we receive news of the decision of the **Reichsblock**, which seemingly attempted to reach out to Paul von Hindenburg, considered by the right-wing a prestigious war hero, a Field Marshal in the German Empire. Luckily for us, he seems to have turned them down, as the **Reichsblock**, after much grumbling and consideration, has determined to continue backing Jarres.
+
+The BVP, meanwhile, has withdrawn Heinrich Held, while the NSDAP has withdrawn Ludendorff, the former endorsing Jarres and the latter denouncing the elections. 
+
+@hindenburg_enters
 on-arrival: held_campaign = 0; jarres_campaign = 0; ludendorff_campaign = 0; dvp_support_hindenburg = 1; hindenburg_campaign = 1; bvp_support_hindenburg = 1 if z_relation < 55 and spd_support_marx; bvp_support_marx = 1 if z_relation > 65 or not spd_support_marx; nationalism += 5
 go-to: marx_campaign if spd_support_marx; bc2 if braun_campaign
 
@@ -423,7 +437,7 @@ on-arrival: resources -= 1; pro_republic += 6; nationalism -= 3; workers_dnvp -=
 go-to: marx_campaign
 max-visits: 1
 
-We rally behind Wilhelm Marx as a defender of democracy and the republic against Paul von Hindenburg and the monarchists backing him.
+We rally behind Wilhelm Marx as a defender of democracy and the republic [? if hindenburg_campaign : against Paul von Hindenburg and the monarchists backing him. ?][? if not hindenburg_campaign : against the right which sought to undermine democracy by asking Paul von Hindenburg to run. ?]
 
 @donate_z
 subtitle: -1 resource - this may anger our left-wing further!

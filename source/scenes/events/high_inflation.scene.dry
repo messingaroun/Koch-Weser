@@ -2,7 +2,7 @@ title: High Inflation
 subtitle: Workers are seeing their purchasing power decline.
 view-if: inflation >= 7 and high_inflation_timer = 0 and spd_in_government
 new-page: true
-on-arrival: capital_strike_progress += 1; hyperinflation += 0.2; workers_spd -= 4; old_middle_spd -= 6; new_middle_spd -= 6; rural_spd -= 5; unemployed_spd -= 4; high_inflation_timer = 4 if inflation > 8; high_inflation_timer = 2 if inflation >= 10; pro_republic -= 5; old_middle_nsdap += 2; new_middle_nsdap += 2; rural_nsdap += 2; socialism -= 2
+on-arrival: capital_strike_progress += 1; hyperinflation += 0.2; workers_spd -= 4; workers_spd += nationalization_progress; old_middle_spd -= 6; new_middle_spd -= 6; rural_spd -= 5; unemployed_spd -= 4; unemployed_spd += welfare; high_inflation_timer = 4 if inflation > 8; high_inflation_timer = 2 if inflation >= 10; pro_republic -= 5; old_middle_nsdap += 2; new_middle_nsdap += 2; rural_nsdap += 2; socialism -= 2
 tags: event
 
 = High Inflation
@@ -14,6 +14,7 @@ The people and the press are clamoring for action to reduce inflation.
 - @taxes: Raise taxes.
 - @welfare: Reduce welfare and social spending.
 - @price_controls: Impose price and wage controls.
+- @tighten_controls: Tighten 
 - @bank: Surely the Reichsbank has a plan this time?
 - @nothing: Realistically, there is nothing we can do.
 
@@ -28,9 +29,16 @@ on-arrival: welfare -= 1; budget += 1; capital_strike_progress -= 2; unemployed 
 Reducing the amount of government spending should reduce the inflation rate, according to classical economics. But it imposes pain upon the people who are suffering the most.
 
 @price_controls
-on-arrival: capital_strike_progress += 3; inflation -= 3; hyperinflation = 0; coalition_dissent += 1; unemployed += 1; old_middle_spd -= 4; new_middle_spd -= 3; rural_spd -= 5; workers_spd -= 2; unemployed_spd += 3; labor_dissent += 6; dvp_relation -= 6; z_relation -= 4; ddp_relation -= 4; economic_growth -= 0.4
+view-if: not price_controls
+on-arrival: price_controls = 1; black_market += 3; black_market += 6 if capital_strike_seen; inflation_goal = 5; capital_strike_progress += 3; inflation -= 3; hyperinflation = 0; coalition_dissent += 1; unemployed += 1; old_middle_spd -= 4; new_middle_spd -= 3; rural_spd -= 5; workers_spd -= 2; unemployed_spd += 3; labor_dissent += 6; dvp_relation -= 6; z_relation -= 4; ddp_relation -= 4; economic_growth -= 0.4
 
 Price controls are very unpopular with the bourgeoisie and their representatives, as well as rural producers, while wage controls hurt organized workers. However, the policies do stem the tide of inflation, at least somewhat.
+
+@tighten_controls
+view-if: price_controls
+on-arrival: inflation_goal -= 1 if inflation_goal > price_controls; capital_strike_progress += 2; inflation -= 2; black_market += 6; hyperinflation = 0; coalition_dissent += 1; unemployed += 1; old_middle_spd -= 2; new_middle_spd -= 2; rural_spd -= 4; workers_spd -= 1; unemployed_spd += 2; labor_dissent += 3; dvp_relation -= 3; z_relation -= 2; ddp_relation -= 2; economic_growth -= 0.2
+
+We tighten price controls, aiming to reduce inflation further beyond its current levels. This causes further growth in the black market.
 
 @bank
 on-arrival: capital_strike_progress += 2

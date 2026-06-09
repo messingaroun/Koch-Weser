@@ -35,6 +35,7 @@ Wilhelm Marx was elected in 1925 as the candidate of the republican parties, and
 - @final_election: The final vote...
 
 @dvp_marx
+view-if: not zca_formed
 choose-if: dvp_relation >= 50
 unavailable-subtitle: No.
 on-arrival: dvp_support_marx = 1
@@ -52,7 +53,7 @@ go-to: braun_campaign
 
 It takes effort to run a somewhat unexpected campaign. First, Braun has to be convinced to run. He himself had supported backing Marx, and it takes a good deal of prodding to convince him of his destiny.
 
-Without our support, Wilhelm Marx has dropped out. The miniscule remnants of the Democratic Party (now called the German State Party) will likely support us. Who else will? Can we convince the Center to support Braun? What about the Communists?
+Without our support, Wilhelm Marx has dropped out. The miniscule remnants of the Democratic Party (now called the German State Party) will likely support us. Who else will? [? if not zca_formed : Can we convince the Center to support Braun? ?] What about the Communists?
 
 
 @support_thalmann
@@ -80,6 +81,7 @@ Fine. We have thrown our support to Chairman Thälmann of the KPD.
 - @final_election: The final vote...
 
 @convince_z
+view-if: not zca_formed
 choose-if: spd_votes >= z_votes
 unavailable-subtitle: The Center knows that they are more popular than us; they do not see a reason to support our candidate.
 on-arrival: {!
@@ -157,6 +159,7 @@ The KPD now endorses Braun in the presidential election! We ask them to keep the
 
 
 @convince_liberals
+view-if: not zca_formed
 max-visits: 1
 go-to: convince_liberals_success if dvp_relation >= 60; convince_liberals_fail if dvp_relation < 60
 
@@ -231,6 +234,9 @@ if (Q.marx_campaign) {
         Q.marx_votes += Q.other_normalized*(Q.pro_republic/200);
     }
     Q.marx_votes += Q.other_normalized*(Q.pro_republic/200);
+    if (Q.zca_formed) {
+        Q.marx_votes += Q.zca_normalized;
+    }
 }
 if (Q.hitler_campaign) {
     Q.hitler_votes += Q.nsdap_normalized;
@@ -286,6 +292,9 @@ if (Q.adenauer_campaign) {
     Q.adenauer_votes += Q.z_normalized;
     Q.adenauer_votes += Q.pro_republic/4000;
     Q.adenauer_votes += ((Math.floor(Math.random() * 11))/350);
+    if (Q.zca_formed) {
+        Q.adenauer_votes += Q.zca_normalized;
+    }
 }
 
 var total_votes = 0;
@@ -438,7 +447,7 @@ go-to: r2_menu
 Following Duesterberg's withdrawal, the reactionary vote has effectively been monopolized by [+ nsdap_candidate +]. No other candidate is entered, as the NSDAP categorically refuses to back any other candidates, and the reactionaries, in fear of splitting their own vote, reluctantly consolidate behind the man.
 
 @r2_menu
-go-to: z_support_braun_auto if ((hitler_plurality or (duesterberg_votes+hitler_votes >= braun_votes and braun_votes > adenauer_votes)) and braun_campaign and not z_support_braun)
+go-to: z_support_braun_auto if (((hitler_plurality or (duesterberg_votes+hitler_votes >= braun_votes and braun_votes > adenauer_votes)) and braun_campaign and not z_support_braun) and not zca_formed)
 
 In the second round, any candidate who wins a plurality will win overall. What should we do?
 
@@ -452,7 +461,7 @@ In the second round, any candidate who wins a plurality will win overall. What s
 go-to: post_election
 
 @r2_z_braun
-view-if: not z_support_braun and braun_campaign
+view-if: not z_support_braun and braun_campaign and not zca_formed
 choose-if: braun_votes >= adenauer_votes and z_relation >= 50
 on-arrival: adenauer_campaign = 0; z_support_braun = 1
 go-to: r2_menu
@@ -460,7 +469,7 @@ go-to: r2_menu
 We have convinced the Centrists to back Otto Braun.
 
 @r2_dvp_braun
-view-if: not dvp_support_braun and braun_campaign
+view-if: not dvp_support_braun and braun_campaign and not zca_formed
 choose-if: dvp_relation >= 70 or (dvp_relation >= 55 and not reactionary_consolidate)
 on-arrival: dvp_support_braun = 1
 go-to: r2_menu
@@ -468,7 +477,7 @@ go-to: r2_menu
 We have convinced the DVP to back Otto Braun.
 
 @r2_dvp_marx
-view-if: not dvp_support_marx and marx_campaign
+view-if: not dvp_support_marx and marx_campaign and not zca_formed
 choose-if: dvp_relation >= 60 or (dvp_relation >= 45 and not reactionary_consolidate)
 on-arrival: dvp_support_marx = 1
 go-to: r2_menu

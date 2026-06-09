@@ -3,7 +3,7 @@ new-page: true
 is-card: true
 tags: govt_affairs
 on-arrival: economic_policy_timer += 12; month_actions += 1; synthesis_budget = 3; synthesis_budget -= 1 if economic_democracy+nationalization_progress >= 3; synthesis_budget -= 1 if synthesis_progress >= 1; nationalize_budget = 4; nationalize_budget -= 1 if works_councils >= 2; nationalize_budget -= 1 if works_councils >= 3; nationalize_budget -= 1 if socializations + nationalization_progress >= 2; wtb_budget = 4; wtb_budget -= 1 if works_councils >= 2 or socializations >= 1 or pro_labor >= 2
-view-if: spd_in_government = 1 and (economic_minister_party == "SPD" or finance_minister_party == "SPD") and economic_policy_timer <= 0 and economic_plan > 0
+view-if: spd_in_government = 1 and (economic_minister_party == "SPD" or finance_minister_party == "SPD") and economic_policy_timer <= 0 and (economic_plan > 0 or capital_flight)
 card-image: img/portraits/SchmidtRobert.jpg
 #subtitle: Policies to address the economic crisis.
 
@@ -22,6 +22,16 @@ We have already formulated an economic plan. Now we have to implement it.
 - @moderate_plan_limited_budget
 - @synthesis_plan
 - @synthesis_only_works
+- @five_year_plan
+- @further_plan
+- @tighten_controls
+- @reconcile_town_and_country1
+- @reconcile_town_and_country2
+- @reconcile_town_and_country3
+- @reconcile_town_and_country4
+- @reconcile_town_and_country5
+- @reconcile_town_and_country6
+- @cybersyn
 - @root: Do not implement the economic plan.
 - @cancel_advisor_action
 - @easy_discard
@@ -117,7 +127,7 @@ go-to: nationalize_deficit if budget < nationalize_budget; nationalize_no_defici
 
 
 @nationalize_no_deficit
-on-arrival: nationalization_progress += 1; capital_strike_progress += 2; unemployed -= 3.5 if unemployed >= 6; unemployed -= 1.2 if works_councils >= 3; workers += 2 if nationalization_progress < 2; budget -= nationalize_budget; works_program += 1; workers_spd += 8*(1-dissent); unemployed_spd += 5*(1-dissent); coalition_dissent += 1; coalition_dissent += 1 if in_grand_coalition; dvp_relation -= 4; left_dissent -= 5; new_middle_spd -= 2; new_middle_spd += 1 if new_middle_conscious; old_middle_spd -= 3; economy_goal_completed += 1; inflation += 2; economic_growth += 1.7 if economic_growth < 5
+on-arrival: nationalization_progress += 1; capital_strike_progress += 2; bourgeois_power -= 0.05; unemployed -= 3.5 if unemployed >= 6; unemployed -= 1.2 if works_councils >= 3; workers += 2 if nationalization_progress < 2; budget -= nationalize_budget; works_program += 1; workers_spd += 8*(1-dissent); unemployed_spd += 5*(1-dissent); coalition_dissent += 1; coalition_dissent += 1 if in_grand_coalition; dvp_relation -= 4; left_dissent -= 5; new_middle_spd -= 2; new_middle_spd += 1 if new_middle_conscious; old_middle_spd -= 3; economy_goal_completed += 1; inflation += 2; economic_growth += 1.7 if economic_growth < 5
 achievement: wirtschaftspolitik
 
 [? if nationalization_progress == 1 : We have begun purchasing idling enterprises from the capitalists[? if works_councils >= 1: , and running them in coordination with empowered works councils ?]. By keeping production going, we can stave off the rising unemployment. ?]
@@ -142,7 +152,7 @@ title: Take a budget deficit to fund the nationalization program.
 choose-if: (left_strength > reformist_strength + center_strength or woytinsky_advisor == 1) and (finance_minister_party == "SPD" or finance_minister_party == "KPD")
 subtitle: [? if woytinsky_advisor: Woytinsky can bring us around to supporting a budget deficit. ?]
 unavailable-subtitle: [? if left_strength <= reformist_strength + center_strength: The party does not yet support budget deficits for this purpose. ?] [? if not woytinsky_advisor : Perhaps bringing on an advisor might help make this action palatable? ?][? if finance_minister_party != "SPD" and finance_minister_party != "KPD" : Without control over finances, we cannot undertake such deficit spending. ?]
-on-arrival: nationalization_progress += 1; capital_strike_progress += 3; unemployed -= 3 if unemployed >= 6; unemployed -= 1.2 if works_councils >= 3; budget -= nationalize_budget; works_program += 1; workers_spd += 8*(1-dissent); unemployed_spd += 5*(1-dissent); coalition_dissent += 2; coalition_dissent += 1 if in_grand_coalition; dvp_relation -= 7; z_relation -= 4; new_middle_spd -= 3; new_middle_spd += 1 if new_middle_conscious; old_middle_spd -= 3; economy_goal_completed += 1; inflation += 3; economic_growth += 2 if economic_growth < 5;
+on-arrival: nationalization_progress += 1; bourgeois_power -= 0.05; capital_strike_progress += 3; unemployed -= 3 if unemployed >= 6; unemployed -= 1.2 if works_councils >= 3; budget -= nationalize_budget; works_program += 1; workers_spd += 8*(1-dissent); unemployed_spd += 5*(1-dissent); coalition_dissent += 2; coalition_dissent += 1 if in_grand_coalition; dvp_relation -= 7; z_relation -= 4; new_middle_spd -= 3; new_middle_spd += 1 if new_middle_conscious; old_middle_spd -= 3; economy_goal_completed += 1; inflation += 3; economic_growth += 2 if economic_growth < 5;
 achievement: wirtschaftspolitik
 
 [? if woytinsky_advisor: Most of the party, even on the left, are opposed to budget deficits for any purpose, with the exception of Wladimir Woytinsky. While he did not originally support the left's "transformational" plan, he has come around, and has persuaded the party and the Finance Ministry to support budget deficits in limited cases, for the purpose of exiting from the depression. ?]
@@ -158,7 +168,7 @@ title: Nationalize without compensation.
 subtitle: There is no reason why we should not simply take over idle factories. This is likely to provoke a confrontation with the capitalists.
 unavailable-subtitle: [? if left_strength <= reformist_strength + center_strength: The bulk of the party does not support this quasi-legal action. ?] [? if judicial_reform < 3 : The judiciary would oppose this action. ?] [? if left_coalition < 50 : We lack a majority in the Reichstag. ?]
 choose-if: left_strength > reformist_strength + center_strength and judicial_reform >= 3 and left_coalition >= 50
-on-arrival: nationalization_progress += 1; capital_strike_progress += 7; coup_progress += 3; unemployed -= 2.5 if unemployed >= 6; unemployed -= 1.2 if works_councils >= 3 and unemployed >= 3; works_program += 1; workers_spd += 8*(1-dissent); unemployed_spd += 6*(1-dissent); coalition_dissent += 2; coalition_dissent += 1 if in_grand_coalition; coalition_dissent += 1 if capital_strike_progress >= 10; dvp_relation -= 12; z_relation -= 8; ddp_relation -= 8; left_strength += 15; reformist_dissent += 10; left_dissent -= 10; new_middle_spd -= 5; new_middle_spd += 3 if new_middle_conscious; old_middle_spd -= 8; economy_goal_completed += 1; kpd_relation += 5*(1-dissent); inflation += 4; economic_growth += 1 if economic_growth < 4; socialism -= 1
+on-arrival: nationalization_progress += 1; bourgeois_power -= 0.1; capital_strike_progress += 7; coup_progress += 3; unemployed -= 2.5 if unemployed >= 6; unemployed -= 1.2 if works_councils >= 3 and unemployed >= 3; works_program += 1; workers_spd += 8*(1-dissent); unemployed_spd += 6*(1-dissent); coalition_dissent += 2; coalition_dissent += 1 if in_grand_coalition; coalition_dissent += 1 if capital_strike_progress >= 10; dvp_relation -= 12; z_relation -= 8; ddp_relation -= 8; left_strength += 15; reformist_dissent += 10; left_dissent -= 10; new_middle_spd -= 5; new_middle_spd += 3 if new_middle_conscious; old_middle_spd -= 8; economy_goal_completed += 1; kpd_relation += 5*(1-dissent); inflation += 4; economic_growth += 1 if economic_growth < 4; socialism -= 1
 achievement: wirtschaftspolitik
 
 The capitalists are, predictably, up in arms about our policy of nationalization without compensation. They call it illegal expropriation, and it is. Nevertheless, it is clear that they have failed by keeping their factories idle, and we must take radical action.
@@ -172,7 +182,7 @@ title: Empower workers to take over factories.
 subtitle: We can promise to legalize factory occupations, giving the factories over to worker unions. This is highly confrontational, and would likely provoke a reaction from right-wing militants as well as capitalists.
 unavailable-subtitle: [? if left_strength <= reformist_strength + neorevisionist_strength : The bulk of the party does not support this radical action. ?] [? if judicial_reform < 3 : The judiciary would oppose this action. ?] [? if rb_militancy < 0.25 : If we increased the strength of our paramilitary forces, perhaps we could do this. ?] [? if works_councils < 1 : We need the support of the works councils first. ?][? if left_coalition < 50 : We lack a majority in the Reichstag. ?]
 choose-if: left_strength > reformist_strength + neorevisionist_strength and (judicial_reform >= 3 or rb_militancy >= 0.25) and works_councils >= 1 and left_coalition >= 50
-on-arrival: nationalization_progress += 1; capital_strike_progress += 6; coup_progress += 5; unemployed -= 3 if unemployed >= 6; unemployed -= 1.5 if works_councils >= 3 and unemployed > 4; works_program += 1; workers_spd += 10*(1-dissent); unemployed_spd += 10*(1-dissent); coalition_dissent += 2; coalition_dissent += 1 if in_grand_coalition; coalition_dissent += 1 if capital_strike_progress >= 10; coalition_dissent += 1 if coup_progress >= 8; dvp_relation -= 12; z_relation -= 8; ddp_relation -= 8; workers_nsdap -= 5*(1-dissent); unemployed_nsdap -= 5*(1-dissent); left_strength += 15; reformist_dissent += 10; left_dissent -= 10; new_middle_spd -= 5; new_middle_spd += 2 if new_middle_conscious; old_middle_spd -= 10; factory_takeovers += 1; economy_goal_completed += 1; kpd_relation += 5*(1-dissent); inflation += 3; economic_growth += 1 if economic_growth < 3; socialism += 1
+on-arrival: nationalization_progress += 1; bourgeois_power -= 0.1; capital_strike_progress += 6; coup_progress += 5; unemployed -= 3 if unemployed >= 6; unemployed -= 1.5 if works_councils >= 3 and unemployed > 4; works_program += 1; workers_spd += 10*(1-dissent); unemployed_spd += 10*(1-dissent); coalition_dissent += 2; coalition_dissent += 1 if in_grand_coalition; coalition_dissent += 1 if capital_strike_progress >= 10; coalition_dissent += 1 if coup_progress >= 8; dvp_relation -= 12; z_relation -= 8; ddp_relation -= 8; workers_nsdap -= 5*(1-dissent); unemployed_nsdap -= 5*(1-dissent); left_strength += 15; reformist_dissent += 10; left_dissent -= 10; new_middle_spd -= 5; new_middle_spd += 2 if new_middle_conscious; old_middle_spd -= 10; factory_takeovers += 1; economy_goal_completed += 1; kpd_relation += 5*(1-dissent); inflation += 3; economic_growth += 1 if economic_growth < 3; socialism += 1
 achievement: wirtschaftspolitik
 
 The capitalists are, predictably, up in arms about our policy of legalizing factory occupations. They call it illegal expropriation, and it is. Nevertheless, it is clear that they have failed, and we must take radical action.
@@ -183,7 +193,7 @@ Fascists have been taking increasingly violent actions around the occupied facto
 @nationalize_2
 title: Continue the Left plan for the transformation of the economy.
 subtitle: -[+ nationalize_budget +] budget. [? if works_councils >= 3 : Our works councils have reduced the budget necessary for this program. ?] [? if socializations + nationalization_progress >= 2: Our existing socialization policies have reduced the budget necessary for this program. ?]
-view-if: nationalization_adopted == 1 and nationalization_progress >= 1
+view-if: nationalization_adopted == 1 and nationalization_progress >= 1 and not capital_flight
 choose-if: economic_minister_party != "DVP"
 unavailable-subtitle: The DVP-controlled Economic Ministry could never allow such an action.
 on-arrival: nationalize_vote = 1
@@ -275,4 +285,94 @@ choose-if: budget >= 1
 on-arrival: reformist_vote = 1; reformist_budget = 1
 go-to: reformist_done_2 if not legislature_enabled; legislative_menu if legislature_enabled
 
-We propose a bill to begin a public works program.
+We propose a bill to begin a public works program.ù
+
+##############################
+# Five-year plan
+
+@five_year_plan
+title: Implement a comprehensive economic plan using our control over the economy.
+view-if: capital_flight and not five_year_plan
+choose-if: budget > 0
+subtitle: [? if budget <= 5 : -[+ budget +] budget. ?][? if budget > 5 : -5 budget. ?]
+on-arrival: invested = budget if budget <= 5; invested = 5 if budget > 5; budget = 0 if budget <= 5; budget -= 5 if budget > 5; economic_growth += 0.8*invested; unemployed -= 1.4*invested; inflation += 1*invested; inflation += 0.5*invested if inflation < 3; economic_growth += 0.4 if invested >= 3; economic_growth += 0.2 if invested == 5; unemployed -= 0.6 if invested >= 3; unemployed -= 1 if invested == 5; five_year_plan = 1
+
+We have begun, using our control over the economy, to implement a comprehensive economic plan, with which we hope to reduce unemployment to neglible margins and restore the economy. In a sense, this plan will be the trial of socialism; it is our task to demonstrate the superiority of this economic system. 
+
+@further_plan
+view-if: five_year_plan and capital_flight
+title: Invest further resources into the five-year plan.
+subtitle: -1 budget. [? if budget < 1 : We will enter deficit spending. ?]
+on-arrival: budget -= 1; economic_growth += 0.6; unemployed -= 1.1; inflation += 0.9; inflation += 0.4 if inflation < 3; inflation += 0.4 if budget < 0; invested += 1
+
+We have slated more funds for our economic plan, which will allow it to achieve greater success in its implementation.
+
+@reconcile_town_and_country1
+view-if: five_year_plan and reconcile_town_and_country == 1
+title: Continue to undertake the development of urban agriculture.
+subtitle: We will reconcile town & country!
+on-arrival: reconcile_town_and_country += 1; inflation -= nationalization_progress/10; rural -= (invested/10); workers += (invested/10); unemployed -= (nationalization_progress+invested)/12
+
+We have continued to organize the development of urban agriculture, so as to increase the self-reliance of each and every city and reduce the divide between the country and the city. This is only the first step in working towards a permanent solution.
+
+## todo: make food shortages a gov card which appears after the first event
+
+@reconcile_town_and_country2
+view-if: reconcile_town_and_country == 2 or reconcile_town_and_country == 3
+title: Enlist urban planners to conceptualize new settlements, based on a blend between the town and country.
+subtitle: We will reconcile town & country!
+on-arrival: reconcile_town_and_country += 1; labor_dissent += 5
+max-visits: 1
+
+We have tasked our urban planners with beginning to conceptualize a new kind of settlement, unlike those built before, along the lines of the Marxist aim of reconciling town and country, something the disurbanists of the Soviet Union attempted to tackle as well.
+
+While these disurbanists have proven as obvious sources of inspiration, some have further looked to Ebenezer Howard's "garden cities", with their attempt at making reasonably sized and self-sufficient cities to blend town and country together.
+
+@reconcile_town_and_country3
+view-if: reconcile_town_and_country == 2 or reconcile_town_and_country == 3
+title: Launch an education initiative to teach workers basic agricultural skills.
+subtitle: We will reconcile town & country!
+on-arrival: inflation -= 0.2; rural_spd -= 2; rural -= 1; workers += 1
+max-visits: 1
+
+By teaching workers basic agricultural skills, we increase the self-sufficiency of urban environments further, and dilute the division of labor, also creating more workers for our developing urban agroindustrial workplaces.
+
+@reconcile_town_and_country4
+view-if: reconcile_town_and_country == 4 or reconcile_town_and_country == 5
+title: Begin construction of new proletarian garden cities, as conceived by our urban planners.
+subtitle: -1 budget - We will reconcile town & country!
+on-arrival: budget -= 1; inflation -= 0.1; inflation += 0.4 if budget < 0; economic_growth += 1; unemployed -= 1; garden_cities += 1; reconcile_town_and_country += 1; insurgency += 2; rural -= invested; workers += invested
+max-visits: 1
+
+With our urban planners having concentrated their proposals into a cohesive vision for a new kind of city, we can begin their construction. Many farmers have reacted intensely negatively, however, as we encroach deeper into the countryside with our development. 
+
+@reconcile_town_and_country5
+view-if: reconcile_town_and_country == 4 or reconcile_town_and_country == 5
+title: Organize seasonal rotations of rural & urban work between workers' councils and agricultural cooperatives.
+subtitle: -1 budget - We will reconcile town & country!
+on-arrival: budget -= 1; inflation += 0.6 if budget < 0; rural_spd += 3*(1-dissent); workers_spd += 3*(1-dissent); economic_growth += 0.2; unemployed -= 0.3; reconcile_town_and_country += 1; inflation -= 1 if inflation > 3
+
+We organize seasonal rotations of urban & rural workers, bringing the two fields closer together and diminishing the stark divide in worldviews between the two. 
+
+@reconcile_town_and_country6
+view-if: reconcile_town_and_country == 6
+title: Reconcile town & country!
+subtitle: We will reconcile town & country!
+on-arrival: inflation -= 3 if inflation >= 3; economic_growth += 2; rural -= invested; workers += invested; workers += rural if rural < 0; rural = 0 if rural < 0
+
+We have reconciled town and country, or at least made significant progress towards doing so, anyway. While there is still a long ways to go, we have constructed many new settlements based around the principle, and through seasonal labor rotation and the construction of urban agriculture in existing cities, we are helping to reduce the conflict in other manners as well.
+
+@tighten_controls
+view-if: price_controls
+title: Tighten control on prices and wages, to lower inflation.
+on-arrival: inflation_goal -= 1 if inflation_goal > price_controls; capital_strike_progress += 2; inflation -= 2; black_market += 6; hyperinflation = 0; coalition_dissent += 1; unemployed += 1; old_middle_spd -= 2; new_middle_spd -= 2; rural_spd -= 4; workers_spd -= 1; unemployed_spd += 2; labor_dissent += 3; dvp_relation -= 3; z_relation -= 2; ddp_relation -= 2; economic_growth -= 0.2
+
+We tighten price controls, aiming to reduce inflation further beyond its current levels. This causes further growth in the black market.
+
+@cybersyn
+view-if: five_year_plan and invested >= 5 and science >= 3
+title: Look into the unorthodox and speculative ideas of some of our planners and scientists.
+subtitle: Some suggest that future advances in computation could revolutionize planning.
+on-arrival: cybersyn += 1
+
+We have begun to investigate the possibility of future advances in automated computation, tabulation, and statistical methods enabling an eventual revolutionization of planning. Currently, research remains overwhelmingly speculative, and some planners are annoyed that we are focusing on this, rather than the more pressing and immediate concerns of their constituents.

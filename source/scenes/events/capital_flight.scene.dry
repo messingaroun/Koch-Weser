@@ -1,0 +1,54 @@
+title: Capital Flight
+subtitle: After failing to retake their country, the nation's business magnates pack up and leave
+view-if: capital_strike_seen and capital_strike_timer < 1 and ((class_war >= 7 and zca_formed and (((nationalization_progress+economic_democracy)/bourgeois_power) >= zca_votes) and (month < (fun_value/10)) and (socialism >= (1-bourgeois_power)*100)) or bourgeois_power < 0.05)
+tags: event
+new-page: true
+max-visits: 1
+on-arrival: capital_flight = 1; economic_growth -= (zca_votes*bourgeois_power)/1.2; unemployed += (zca_votes*bourgeois_power)/1.5; inflation += (zca_votes*bourgeois_power)/10; bourgeois_power = 0; {!
+
+Q.workers_zca *= (1-(0.25*(Q.socialism/100)));
+Q.new_middle_zca *= (1-(0.25*(Q.socialism/100)));
+Q.old_middle_zca *= (1-(0.25*(Q.socialism/100)));
+Q.rural_zca *= (1-(0.25*(Q.socialism/100)));
+Q.unemployed_zca *= (1-(0.25*(Q.socialism/100)));
+Q.catholics_zca *= (1-(0.25*(Q.socialism/100)));
+
+Q.west_relation -= 3;
+Q.east_relation -= 3;
+Q.soviet_relation += 1;
+
+Q.capital_strike_timer += 12;
+Q.old_economy = Q.economic_health;
+
+!}
+
+= Capital Flight
+
+After months of aggressive attempts by the bourgeoisie to reclaim state power and put an end to the revolution, most seem to have now recognized the futility of their efforts, and our victory. What is left of private industry is abandoned en masse, as industrialists pack their bags and set out for better horizons, lobbying governments wherever they go against our project, telling tales of horrifying Bolshevik barbarism, of looting and pillaging. What is left of the abandoned industries, we have no issues in taking over the operation of. 
+
+- @victory: We have won.
+
+@victory
+subtitle: Now we must prove it before Germany and the world.
+
+With the working class in control of the state and now economy, we have won. Our decisive confrontation with the bourgeoisie has yielded as victory a nation in the hands of the proletariat. Now, however, remains a task before us. We must prove our victory.
+
+- @five_year_plan: We will begin the implementation of a comprehensive economic plan, using our control over the economy to do so.
+- @nothing: We can do that laaaateeerrrrr.
+
+@five_year_plan
+choose-if: budget > 0
+subtitle: [? if budget <= 5 : -[+ budget +] budget. ?][? if budget > 5 : -5 budget. ?]
+on-arrival: invested = budget if budget <= 5; invested = 5 if budget > 5; budget = 0 if budget <= 5; budget -= 5 if budget > 5; economic_growth += 0.8*invested; unemployed -= 1.4*invested; inflation += 1*invested; inflation += 0.5*invested if inflation < 3; economic_growth += 0.4 if invested >= 3; economic_growth += 0.2 if invested == 5; unemployed -= 0.6 if invested >= 3; unemployed -= 1 if invested == 5; five_year_plan = 1
+
+We have begun, using our control over the economy, to implement a comprehensive economic plan, with which we hope to reduce unemployment to neglible margins and restore the economy. In a sense, this plan will be the trial of socialism; it is our task to demonstrate the superiority of this economic system. 
+
+@nothing
+on-arrival: unemployed_spd += 10*(1-dissent); bourgeoisie_spd += 10*(1-dissent); center_dissent -= 5; reformist_dissent -= 5; labor_dissent -= 5; neorevisionist_dissent -= 5
+
+There is no need to hurry. We have won. We can prove this victory later; for now, let us rest. Many of society's lazier individuals echo this sentiment, while the relaxed tone eases tensions in our party.
+
+## todo: economic policy card now holds planning related decisions
+## cybersyn if sufficient Investment
+## retrospective a year after capital flight, determining whether or not socialism has been a success
+## five year plan requires decisions to be made; eg what to do about small businesses, violently subordinate to plan or otherwise

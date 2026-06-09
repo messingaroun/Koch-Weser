@@ -1,0 +1,624 @@
+title: The Austrian Issue
+tags: event
+on-arrival: global_tension += 3; time_left = 3+(resources*2); total_power = 0; {!
+
+Q.bavaria_reichswehr = Q.reichswehr_strength*Q.reichswehr_loyalty*0.15*0.25;
+Q.bavaria_reichswehr_disp = Q.bavaria_reichswehr.toFixed(1);
+
+Q.bavaria_sa = Q.sa_strength*((Q.nsdap_bl*0.115)/Q.nsdap_votes);
+Q.bavaria_sa_disp = Q.bavaria_sa.toFixed(1);
+
+Q.austria_strength_disp = Q.austria_strength.toFixed(1);
+
+var total_bavaria = 0;
+console.log("Starting normalization of bavarian votes...");
+// normalize bavarian votes
+for (var party of Q.parties) {
+    Q[party+'_votes_bavaria'] = 0;
+    console.log(`Processing party: ${party}`);
+    
+    for (var c of Q.classes) {
+        let votes = Q['bavaria_'+c] * Q[c+'_'+party+'_normalized'] * Q['bavaria_'+party];
+        Q[party+'_votes_bavaria'] += votes;
+        total_bavaria += votes;
+
+        console.log(`  Class: ${c}, Votes: ${votes}, Cumulative Total: ${Q[party+'_votes_bavaria']}`);
+    }
+}
+for (var party of Q.parties) {
+    Q[party+'_votes_bavaria'] = Math.round((Q[party+'_votes_bavaria'] / total_bavaria) * 100);
+    console.log(`Final percentage for ${party}: ${Q[party+'_votes_bavaria']}%`);
+}
+console.log("Normalization comblete. Total bavarian votes:", total_bavaria);
+if (Q.z_votes_bavaria < 30) {
+    Q.bavaria_z += 0.1;
+    for (var party of Q.parties) {
+        Q[party+'_votes_bavaria'] = 0;
+        console.log(`Processing party: ${party}`);
+    
+        for (var c of Q.classes) {
+            let votes = Q['bavaria_'+c] * Q[c+'_'+party+'_normalized'] * Q['bavaria_'+party];
+            Q[party+'_votes_bavaria'] += votes;
+            total_bavaria += votes;
+
+            console.log(`  Class: ${c}, Votes: ${votes}, Cumulative Total: ${Q[party+'_votes_bavaria']}`);
+        }
+    }
+    for (var party of Q.parties) {
+        Q[party+'_votes_bavaria'] = Math.round((Q[party+'_votes_bavaria'] / total_bavaria) * 100);
+        console.log(`Final percentage for ${party}: ${Q[party+'_votes_bavaria']}%`);
+    }
+}
+
+
+// set old results
+// election threshold constitutional reform
+Q.bavaria_threshold = 3;
+// banning parties
+var new_party_sum = 0;
+for (var party of Q.parties) {
+    Q['old_' + party + '_bl'] = Q[party + '_bl'];
+    if (Q.constitutional_reform > 0 || Q.bavaria_threshold) {
+        if (Q[party + '_votes_bavaria'] < Q.bavaria_threshold || (Q[party + '_banned'] == 1)) {
+            Q[party + '_bl'] = 0;
+        } else {
+            Q[party + '_bl'] = Q[party + '_votes_bavaria'];
+        }
+        new_party_sum += Q[party + '_bl'];
+    } else {
+        Q[party + '_bl'] = Q[party + '_votes_bavaria'];
+    }
+        // if we use decimals, then we might want to truncate the numbers
+    if (Q.use_decimals) {
+        Q[party + '_bl_disp'] = Q[party+'_bl'].toFixed(1);
+    }  else {
+            Q[party + '_bl_disp'] = Q[party+'_bl'];
+    }
+    Q['change_' + party + '_bl'] = Q[party + '_bl'] - Q['old_' + party + '_bl'];
+    var sign = Q['change_' + party + '_bl'] > 0 ? '+'  : '';
+    Q['stbl_change_' + party] = sign + Q['change_' + party + '_bl'];//.toFixed(1);
+}
+
+var pro_bb = 90;
+var anti_bb = 10;
+pro_bb += Q.pro_republic;
+anti_bb += Q.nationalism;
+var total_blother = pro_bb+anti_bb;
+pro_bb = pro_bb/total_blother;
+Q.bb_bl = Math.round(Q.other_bl*pro_bb);
+Q.other_bl -= Q.bb_bl;
+
+!}
+view-if: anschluss_attempt
+max-visits: 1
+
+= The Austrian Issue
+
+In coordination with the March on Berlin, which we have now resolved, Austrian forces had crossed the border into Bavaria to wage war. While their domestic allies no longer raise up arms against us, the Austrian issue remains ever prevalent. Under Hitler's call for a grand national revolution to unify the German people, the forces attempt to converge on Munich, assisted by domestic Nazi militias.
+
+- @war: So it is war.
+- @paramilitaries: Nothing more than paramilitaries.
+
+@war
+view-if: hitler_recognized
+go-to: warmenu
+
+Due the fact we have recognized Hitler's government as legitimate, there really is no two ways around this; this is war, between Germany and Austria. 
+
+@paramilitaries
+view-if: not hitler_recognized
+go-to: warmenu
+
+Even as but paramilitaries, this still could spell civil war. Certainly, the fact they are launching their attacks from Austrian territory does give things an international implication, even if we do not recognize Hitler's government.
+
+@warmenu
+on-arrival: resources_spent = 0
+
+Time Remaining: [+ time_left +]
+
+- @strike: Are the unions ready to organize a general strike?
+- @reichsbanner: Is the Reichsbanner prepared to take a stand?
+- @kpd: Will the communists help defend the proletariat from this fascist assault?
+- @soviets: For that matter, what about the Soviets?
+- @reichswehr: Is the Reichswehr ready to defend Munich? Are they even loyal?
+- @entente: Will the Entente powers back us?
+- @mussolini: What about Mussolini?
+- @the_battle: The Battle of Munich.
+
+@strike
+max-visits: 1
+choose-if: time_left >= 1
+unavailable-subtitle: It takes time to live, but no time to die.
+on-arrival: {! 
+
+// general strike strength
+// maximum (given 25 labor strength) is 400
+// use normalized workers_spd instead of labor_strength?
+Q.normalized_workers_spd = 100*(Q.workers_spd*Q.bavaria_spd)/((Q.workers_spd*Q.bavaria_spd) + (Q.workers_kpd*Q.bavaria_kpd) + (Q.workers_nsdap*Q.bavaria_nsdap) + (Q.workers_other*Q.bavaria_other) + (Q.workers_dnvp*Q.bavaria_dnvp) + (Q.workers_z*Q.bavaria_z));
+Q.normalized_workers_kpd = 100*(Q.workers_kpd*Q.bavaria_kpd)/((Q.workers_spd*Q.bavaria_spd) + (Q.workers_kpd*Q.bavaria_kpd) + (Q.workers_nsdap*Q.bavaria_nsdap) + (Q.workers_other*Q.bavaria_other) + (Q.workers_dnvp*Q.bavaria_dnvp) + (Q.workers_z*Q.bavaria_z));
+Q.normalized_workers_total = Q.normalized_workers_spd;
+if (Q.kpd_relation >= 60) {
+    Q.normalized_workers_total += Q.normalized_workers_kpd;
+    Q.left_bl = Q.spd_bl+Q.kpd_bl;
+} else if (Q.kpd_relation >= 45) {
+    Q.normalized_workers_total += Q.normalized_workers_kpd*0.5;
+    Q.left_bl = Q.spd_bl+(Q.kpd_bl*0.5);
+}
+Q.strike_power = (2 - Q.labor_dissent/100)*Q.normalized_workers_total*(2 - Q.unemployed/100)*(Q.left_bl/10);
+Q.total_power += Q.strike_power;
+console.log("Supporter strength:", Q.total_power, Q.strike_power);
+
+Q.time_left -= 2;
+if (Q.resources >= 1) {
+    Q.resources -= 1;
+    Q.time_left += 1;
+    Q.resources_spent = 1;
+}
+
+!}
+go-to: warmenu
+
+The trade unions, while historically less powerful in Bavaria than elsewhere in the Reich, still possess the power to make all urban industry slow to a halt and mobilize a defense within the city of Munich against the Nazi tide. We have activated our union contacts, organizing as fast as we can a strike. [? if resources_spent : We have used our resources to help with the strike. ?][? if not resources_spent : Without resources to help the strike with, we expended more time than we'd have liked on the strike preparations. ?]
+
+@reichsbanner
+max-visits: 1
+choose-if: time_left >= 1
+unavailable-subtitle: It takes time to live, but no time to die.
+on-arrival: {!
+
+Q.bavaria_rb = Q.rb_strength*((Q.spd_bl*0.115)/Q.spd_votes);
+if (Q.dissent > 0.15) {
+    Q.bavaria_rb *= (1 - Q.dissent/1.5);
+}
+if (Q.spd_normalized < 0.25) {
+    Q.bavaria_rb *= (Q.spd_normalized/0.25);
+}
+Q.bavaria_rb_disp = Q.bavaria_rb.toFixed(1);
+
+Q.time_left -= 2;
+if (Q.resources >= 1) {
+    Q.resources -= 1;
+    Q.time_left += 1;
+    Q.resources_spent = 1;
+}
+
+!}
+go-to: warmenu
+
+While only a minority of our voterbase is in Bavaria, we still have a portion of our Reichsbanner forces in the state, numbering [+ bavaria_rb_disp +] thousand. These men are quickly mobilized in the city of Munich, taking up defensive positions. [? if resources_spent : We have used our resources to help in the mobilization. ?][? if not resources_spent : Without resources to help the mobilization with, we expended more time than we'd have liked on the strike preparations. ?]
+
+@kpd
+max-visits: 1
+choose-if: time_left >= 1
+unavailable-subtitle: It takes time to live, but no time to die.
+on-arrival: time_left -= 1; kpd_relation += 2; left_dissent -= 5
+go-to: warmenu
+
+The KPD has, since the days of the disastrous Bavarian Soviet, always been a small party in the region. [? if kpd_relation >= 60 : Nevertheless, with what little forces they have, they are willing to help. ?][? if kpd_relation < 60 and kpd_relation >= 40 : Some of them are choosing to help in the fight, though many still spite us. ?][? if kpd_relation < 40 : By and large, the communists do not make much of an effort to defend against the assault. Some, using revolutionary-defeatist rhetoric, even consider a defeat desirable. ?]
+
+@soviets
+max-visits: 1
+choose-if: time_left >= 1 and (foreign_minister_party == "SPD" or comintern_seen)
+unavailable-subtitle: [? if time_left < 1 : It takes time to live, but no time to die. ?][? if time_left >= 1 : We have no way of contacting the Soviets. ?]
+on-arrival: time_left -= 1; soviet_relation += 1; communist_coalition += 1 if soviet_relation >= 1; kpd_relation += 5 if soviet_relation >= 1; west_relation -= 1 if west_relation < 2
+go-to: warmenu
+
+We reach out to the Soviets, asking them for help. [? if soviet_relation < 1 : Stalin, frankly, does not care, rendering the whole thing a waste of time. We have, at least, mildly improven our relations. ?][? if soviet_relation >= 1 : While they are completely incapable of providing immediate help, Stalin is happy to be thought of, and assures us he will tell the KPD to assist in defending against the reactionary and fascist menace, while simultaneously issuing a condemnation of Hitler's actions and calling for the restoration of regular Austrian government. ?] [? if west_relation < 2 : The Entente powers are a bit annoyed by our validation of the USSR. ?]
+
+@reichswehr
+max-visits: 1
+choose-if: time_left >= 1 and spd_in_government
+unavailable-subtitle: [? if time_left < 1 : It takes time to live, but no time to die. ?][? if time_left >= 1 : We have no control over the Reichswehr. ?]
+on-arrival: {!
+
+Q.bavaria_reichswehr += Q.reichswehr_loyalty*Q.reichswehr_strength*0.15*0.75;
+
+Q.time_left -= 2;
+if (Q.budget >= 1) {
+    Q.budget -= 1;
+    Q.time_left += 1;
+    Q.resources_spent = 1;
+}
+
+Q.bavaria_reichswehr_disp = Q.bavaria_reichswehr.toFixed(1);
+
+!}
+go-to: warmenu
+
+The Reichswehr, for all its faults, is by and large Germany's strongest armed force. To have them in Munich fighting Hitler's forces would be a boon to the democratic cause. [? if reichswehr_loyalty < 0.5 : Unfortunately, the Reichswehr has not proven a very loyal force. We can only hope it will fight. ?][? if reichswehr_loyalty >= 0.5 : Luckily, the Reichswehr seems more loyal than not. It seems likely that it will fight. ?]
+
+[? if resources_spent : We are able to save a bit of time in mobilization by spending some of the government's budget. ?][? if not resources_spent : Without any allocated budget to speed the mobilization up, the Reichswehr is slower to mobilize. ?]
+
+@entente
+max-visits: 1
+choose-if: time_left >= 1 and (foreign_minister_party == "SPD" or west_seen)
+unavailable-subtitle: [? if time_left < 1 : It takes time to live, but no time to die. ?][? if time_left >= 1 : We have no way of contacting their governments. ?]
+on-arrival: time_left -= 1; west_relation += 1; ddp_relation += 3 if west_relation >= 1; z_relation += 3 if west_relation >= 1
+go-to: warmenu
+
+We reach out to the Entente Powers, asking them for help. [? if west_relation < 1 : For whatever reason, they are unwilling to help us, viewing us as not much better than the Austrians and far more concerned with their internal affairs, rendering the whole idea a waste of time. ?][? if west_relation >= 1 : While they are completely incapable of providing immediate help, the Entente Powers nevertheless bring the matter to the League of Nations, granting us international legitimacy, and domestic legitimacy from those who care about international legitimacy. ?]
+
+@mussolini
+max-visits: 1
+view-if: foreign_minister_party == "SPD"
+choose-if: time_left >= 1 and not italo_ethiopian_war
+unavailable-subtitle: [? if time_left < 1 : It takes time to live, but no time to die. ?][? if italo_ethiopian_war : Mussolini is too busy being a horrible person to help fight horrible people. ?]
+on-arrival: rome_berlin = 1; reichswehr_loyalty += 0.1
+go-to: warmenu
+
+We reach out to Mussolini in secret. He agrees strongly that Hitler is a maniac who has to be stopped, still upset over Dollfuß's deposal. As Breitscheid returns home, news breaks out of Italy proclaiming "Pax Romana" and staunch opposition to Austrian actions. Their confidence helps inspire some in the Reichswehr.
+
+@the_battle
+new-page: true
+on-arrival: {!
+
+var rw_power = Q.bavaria_reichswehr*Q.reichswehr_militancy;
+var austria_power = Q.austria_strength*Q.austria_militancy;
+
+var battle_power = rw_power+austria_power;
+
+Q.austria_power = Math.floor((austria_power/battle_power)*10);
+Q.rw_power = Math.floor((rw_power/battle_power)*10);
+Q.rw_bonus = 0;
+Q.austria_bonus = 0;
+
+if (Q.rw_power > Q.austria_power) {
+    Q.rw_bonus = (Q.rw_power-Q.austria_power);
+    if (Q.time_left < 0) {
+        Q.rw_bonus += Q.time_left;
+    }
+}
+
+if (Q.austria_power > Q.rw_power) {
+    Q.austria_bonus = (Q.austria_power-Q.rw_power);
+    if (Q.time_left < 0) {
+        Q.austria_bonus -= Q.time_left;
+    }
+}
+
+Q.reichswehr_luck = ((Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1));
+Q.reichswehr_roll = Q.reichswehr_luck + Q.rw_bonus;
+Q.austria_luck = ((Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1));
+Q.austria_roll = Q.austria_luck + Q.austria_bonus;
+
+if (!Q.bavaria_rb) {
+    Q.bavaria_rb = 1;
+    Q.bavaria_rb_disp = 1;
+}
+
+var sa_power = Q.bavaria_sa*Q.sa_militancy;
+var rb_power = Q.bavaria_rb*Q.rb_militancy;
+
+var battle_power2 = sa_power+rb_power;
+
+Q.sa_power = Math.floor((sa_power/battle_power2)*10);
+Q.rb_power = Math.floor((rb_power/battle_power2)*10);
+Q.sa_bonus = 0;
+Q.rb_bonus = 0;
+
+if (Q.sa_power > Q.rb_power) {
+    Q.sa_bonus = (Q.sa_power-Q.rb_power);
+    if (Q.time_left < 0) {
+        Q.sa_bonus -= Q.time_left;
+    }
+}
+
+if (Q.rb_power > Q.sa_power) {
+    Q.rb_bonus = (Q.rb_power-Q.sa_power);
+    if (Q.time_left < 0) {
+        Q.rb_bonus += Q.time_left;
+    }
+}
+
+Q.sa_luck = ((Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1));
+Q.sa_roll = Q.sa_luck + Q.sa_bonus;
+Q.rb_luck = ((Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1));
+Q.rb_roll = Q.rb_luck + Q.rb_bonus;
+
+!}
+go-to: battlemenu1
+
+= The Battle of Munich
+
+We have run out of time; the Nazis are converging on Munich. We can only hope to win now. On our side we have the Reichsbanner, with [+ bavaria_rb_disp +] thousand in Munich. [? if strike_power : We have also organized a general strike in the city. ?] In the Reichswehr, meanwhile, [+ bavaria_reichswehr_disp +] thousand stand ready to engage Hitler's armies.
+
+Hitler, meanwhile, has [+ bavaria_sa_disp +] thousand insurgents in the Bavarian countryside ready to descend upon Munich, while the armies he commands in Austria number [+ austria_strength_disp +] thousand.
+
+@battlemenu1
+
+- @streetfights: The Reichsbanner and SA engage in the outskirts of Munich.
+- @border_clashes: The Reichswehr and Austrians engage across southern Bavaria.
+
+@streetfights
+on-arrival: battles_seen += 1
+max-visits: 1
+
+SA forces from all around the Bavarian countryside have taken up arms and descended upon Munich to assist Hitler in his assault. We will have to hope the local Reichsbanner forces are strong enough to repel them.
+
+- @decisive_sa_victory: The battle is fought...
+- @indecisive: The battle is fought...
+- @decisive_rb_victory: The battle is fought...
+
+@decisive_sa_victory
+view-if: sa_roll >= (rb_roll+3)
+on-arrival: bavaria_rb *= (1-(0.05*(sa_roll/12))); bavaria_rb *= (1-(sa_militancy/10)); bavaria_sa *= (1-(rb_militancy/10)); scabbing = 1; rb_counterscab = 0; {! 
+
+Q.bavaria_rb_disp = Q.bavaria_rb.toFixed(1);
+Q.bavaria_sa_disp = Q.bavaria_sa.toFixed(1);
+
+!}
+go-to: battlemenu1 if battles_seen < 2; battlemenu2 if battles_seen >= 2
+
+The Reichsbanner is resoundly defeated and forced to retreat and disengage. The SA is given a free hand to advance into the city and assault the strikers and defenses we have erected, which they will surely do. It is bleak.
+
+Reichsbanner: [+ bavaria_rb_disp +] thousand
+
+SA: [+ bavaria_sa_disp +] thousand
+
+@indecisive
+view-if: rb_roll < (sa_roll+3) and sa_roll < (rb_roll+3)
+on-arrival: bavaria_rb *= (1-(sa_militancy/10)); bavaria_sa *= (1-(rb_militancy/10)); scabbing = 1; rb_counterscab = 1; {! 
+
+Q.bavaria_rb_disp = Q.bavaria_rb.toFixed(1);
+Q.bavaria_sa_disp = Q.bavaria_sa.toFixed(1);
+
+!}
+go-to: battlemenu1 if battles_seen < 2; battlemenu2 if battles_seen >= 2
+
+There is no clear conclusion to the initial streetfights. Both sides are damaged to varying degrees, and the SA pushes forward into Munich, intent on attacking the defenses there. The Reichsbanner continues to fight.
+
+Reichsbanner: [+ bavaria_rb_disp +] thousand
+
+SA: [+ bavaria_sa_disp +] thousand
+
+@decisive_rb_victory
+view-if: rb_roll >= (sa_roll+3)
+on-arrival: bavaria_sa *= (1-(0.05*(rb_roll/12))); bavaria_rb *= (1-(sa_militancy/10)); bavaria_sa *= (1-(rb_militancy/10)); scabbing = 0; rb_counterscab = 1; {! 
+
+Q.bavaria_rb_disp = Q.bavaria_rb.toFixed(1);
+Q.bavaria_sa_disp = Q.bavaria_sa.toFixed(1);
+
+!}
+go-to: battlemenu1 if battles_seen < 2; battlemenu2 if battles_seen >= 2
+
+Luckily, we are victorious. The SA assaulters are repelled and forced back into the countryside, freeing up the Reichsbanner forces to focus on the defense from Austria. 
+
+@border_clashes
+on-arrival: battles_seen += 1
+max-visits: 1
+
+Austrian forces under the command of Hitler have poured across the border in their thousands towards Munich in a grand assault on German democracy. The Reichswehr, while often not very committed to German democracy, will nonetheless be our first line of defense. 
+
+- @decisive_au_victory: The battle is fought...
+- @indecisive2: The battle is fought...
+- @decisive_rw_victory: The battle is fought...
+
+@decisive_au_victory
+view-if: austria_roll >= (reichswehr_roll+3)
+on-arrival: bavaria_reichswehr *= (1-(0.05*(austria_roll/12))); bavaria_reichswehr *= (1-(austria_militancy/10)); austria_strength *= (1-(reichswehr_militancy/10)); munich_advance = 1; rw_munich = 0; {! 
+
+Q.bavaria_reichswehr_disp = Q.bavaria_reichswehr.toFixed(1);
+Q.austria_strength_disp = Q.austria_strength.toFixed(1);
+
+!}
+go-to: battlemenu1 if battles_seen < 2; battlemenu2 if battles_seen >= 2
+
+The Reichswehr is resoundly beaten by the Austrian forces, allowing them to rapidly advance towards Munich. They will surely be here in no time at all; we can only hope the city's defenses are strong enough.
+
+Reichswehr: [+ bavaria_reichswehr_disp +] thousand
+
+Austria: [+ austria_strength_disp +] thousand
+
+@indecisive2
+view-if: austria_roll < (reichswehr_roll+3) and reichswehr_roll < (austria_roll+3)
+on-arrival: bavaria_reichswehr *= (1-(austria_militancy/10)); austria_strength *= (1-(reichswehr_militancy/10)); munich_advance = 1; rw_munich = 1; {! 
+
+Q.bavaria_reichswehr_disp = Q.bavaria_reichswehr.toFixed(1);
+Q.austria_strength_disp = Q.austria_strength.toFixed(1);
+
+!}
+go-to: battlemenu1 if battles_seen < 2; battlemenu2 if battles_seen >= 2
+
+The clashes are inconclusive, the Reichswehr forces present making a fighting retreat to Munich to match the Austrian advance. It is regretful to not have repelled them, but at the very least, the Reichswehr forces will participate in the defense of the city.
+
+Reichswehr: [+ bavaria_reichswehr_disp +] thousand
+
+Austria: [+ austria_strength_disp +] thousand
+
+@decisive_rw_victory
+view-if: reichswehr_roll >= (austria_roll+3)
+on-arrival: austria_strength *= (1-(0.05*(reichswehr_roll/12))); bavaria_reichswehr *= (1-(austria_militancy/10)); austria_strength *= (1-(reichswehr_militancy/10)); munich_advance = 0; rw_munich = 1; {! 
+
+Q.bavaria_reichswehr_disp = Q.bavaria_reichswehr.toFixed(1);
+Q.austria_strength_disp = Q.austria_strength.toFixed(1);
+
+!}
+go-to: battlemenu1 if battles_seen < 2; battlemenu2 if battles_seen >= 2
+
+The Austrian invaders are decisively repelled by the present Reichswehr forces, forced to pull back to Austria as Hitler's grip on the country is rendered ever further precarious. [? if scabbing : There are still the SA insurgents, however. ?]
+
+Reichswehr: [+ bavaria_reichswehr_disp +] thousand
+
+Austria: [+ austria_strength_disp +] thousand
+
+@battlemenu2
+
+- @scab_attempt: The SA assaults picket lines and barricades across Munich.
+- @battle_in_munich: The final battle.
+- @victory_against_hitler: So we have won.
+
+@scab_attempt
+view-if: scabbing
+max-visits: 1
+on-arrival: scabbing_seen = 1; {!
+
+if (!Q.strike_power) {
+    Q.strike_power = 1;
+}
+
+var sa_power = Q.bavaria_sa*Q.sa_militancy;
+var rb_power = Q.bavaria_rb*Q.rb_militancy*Q.rb_counterscab;
+var strike_power = Q.strike_power+rb_power;
+
+var battle_power3 = sa_power+rb_power;
+
+Q.sa_power = Math.floor((sa_power/battle_power3)*10);
+Q.strike_power_relative = Math.floor((strike_power/battle_power3)*10);
+Q.sa_bonus = 0;
+Q.strike_bonus = 0;
+
+if (Q.sa_power > Q.strike_power) {
+    Q.sa_bonus = (Q.sa_power-Q.strike_power);
+    if (Q.time_left < 0) {
+        Q.sa_bonus -= Q.time_left;
+    }
+}
+
+if (Q.strike_power > Q.sa_power) {
+    Q.strike_bonus = (Q.strike_power-Q.sa_power);
+    if (Q.time_left < 0) {
+        Q.strike_bonus += Q.time_left;
+    }
+}
+
+Q.sa_luck = ((Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1));
+Q.sa_roll = Q.sa_luck + Q.sa_bonus;
+Q.strike_luck = ((Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1));
+Q.strike_roll = Q.strike_luck + Q.strike_bonus;
+
+!}
+
+Following their advance from the outskirts of the city, the SA has entered Munich, attempting to assault and wreak havoc upon the city's defenses so as to clear the way for Hitler's forces.
+
+- @decisive_strike_victory: The battle is fought...
+- @indecisive3: The battle is fought...
+- @decisive_scab_victory: The battle is fought...
+
+@decisive_strike_victory
+view-if: strike_roll >= (sa_roll+3)
+on-arrival: bavaria_sa *= (1-(0.05*(strike_roll/12))); bavaria_sa *= (1-(rb_militancy/10)); {! 
+
+Q.bavaria_sa_disp = Q.bavaria_sa.toFixed(1);
+
+!}
+go-to: battlemenu2 if munich_advance; victory_against_hitler if not munich_advance
+
+The SA is repelled from its attempts to break the strike, allowing the workers to resume their brave defense of the city undeterred. [? if munich_advance : The SA continues to linger on the outskirts of the city, intending on helping Hitler assault it. ?][? if not munich_advance : Given the failure of Austrian forces to make it past the Reichswehr, the SA has retreated back into the countryside. It appears we are victorious. ?]
+
+SA: [+ bavaria_sa_disp +] thousand
+
+@indecisive3
+view-if: sa_roll < (strike_roll+3) and strike_roll < (sa_roll+3)
+on-arrival: strike_power *= (1-(0.1*(sa_roll/12))); bavaria_sa *= (1-(rb_militancy/10)); strike_power *= (1-(sa_militancy/5)); bavaria_spd *= (1-(sa_militancy/10)); {! 
+
+Q.bavaria_sa_disp = Q.bavaria_sa.toFixed(1);
+
+!}
+go-to: battlemenu2 if munich_advance; victory_against_hitler if not munich_advance
+
+The scabbing attempts are inconclusive, with the strike resuming albeit hurt and damaged. Barricades torn down have to be re-erected, and picket lines rebuilt. [? if munich_advance : The SA pulls back, awaiting the arrival of Hitler's men. ?][? if not munich_advance : Given the failure of Austrian forces to make it past the Reichswehr, the SA has retreated back into the countryside. It appears we are victorious. ?]
+
+SA: [+ bavaria_sa_disp +] thousand
+
+@decisive_scab_victory
+view-if: sa_roll >= (strike_roll+3)
+on-arrival: strike_power *= (1-(1*(sa_roll/12))); bavaria_sa *= (1-(rb_militancy/10)); strike_power *= (1-(sa_militancy/2)); bavaria_spd *= (1-(sa_militancy/5)); strike_broken = 1; {! 
+
+Q.bavaria_sa_disp = Q.bavaria_sa.toFixed(1);
+
+!}
+go-to: battlemenu2 if munich_advance; victory_against_hitler if not munich_advance
+
+Faced with the whole might of the SA, the strike is unable to defend itself. Pickets are torn and disassembled while barricades are crushed, union organizers beaten in the streets. By the time the SA has pulled back from the city, its defenses are shattered. [? if munich_advance : They will soon return to help the Austrians in their final seizure. ?][? if not munich_advance : Despite the success of the SA, given the failure of the Austrian armies to break through, they have retreated, leaving Munich in ruins. It appears we are victorious. ?]
+
+SA: [+ bavaria_sa_disp +] thousand
+
+@battle_in_munich
+view-if: munich_advance and (scabbing != 1 or scabbing_seen)
+on-arrival: {! 
+
+Q.defense_power = 0;
+Q.assault_power = 0;
+
+if (Q.rw_munich) {
+    Q.defense_power += Q.bavaria_reichswehr*Q.reichswehr_militancy;
+}
+if (Q.scabbing) {
+    Q.assault_power += Q.bavaria_sa*Q.sa_militancy;
+}
+Q.defense_power += (Q.bavaria_rb*Q.rb_militancy);
+Q.assault_power += (Q.austria_strength*Q.austria_militancy);
+if (!Q.strike_broken) {
+    Q.defense_power += Q.strike_power;
+}
+
+var defense_power = Q.defense_power;
+var assault_power = Q.assault_power;
+
+var battle_power4 = defense_power+assault_power;
+
+Q.defense_power = Math.floor((defense_power/battle_power4)*10);
+Q.assault_power = Math.floor((assault_power/battle_power4)*10);
+Q.defense_bonus = 0;
+Q.assault_bonus = 0;
+
+if (Q.assault_power > Q.defense_power) {
+    Q.assault_bonus = (Q.assault_power-Q.defense_power);
+    if (Q.time_left < 0) {
+        Q.assault_bonus -= Q.time_left;
+    }
+}
+
+if (Q.defense_power > Q.assault_power) {
+    Q.defense_bonus = (Q.defense_power-Q.assault_power);
+    if (Q.time_left < 0) {
+        Q.defense_bonus += Q.time_left;
+    }
+}
+
+Q.defense_luck = ((Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1));
+Q.defense_roll = Q.defense_luck + Q.defense_bonus;
+Q.assault_luck = ((Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1));
+Q.assault_roll = Q.assault_luck + Q.assault_bonus;
+
+!}
+
+It has happened; Hitler's Austrian armies have reached Munich. If we lose this battle, they will capture the city, and potentially more to come. [? if not strike_broken : Luckily, the strike in the city will help to defend it. ?][? if strike_broken : Unfortunately, the SA have managed to break our strike; we will be vulnerable. ?][? if scabbing : The SA are joining this battle, coming down onto Munich once more to help the Nazis take it. ?][? if rw_munich : Luckily, the Reichswehr is prepared to defend the city. ?]
+
+- @defense_victory: The battle is fought...
+- @assault_victory: The battle is fought...
+
+@defense_victory
+view-if: defense_roll >= assault_roll
+go-to: victory_against_hitler
+
+Successfully, we have managed to defend Munich from those forces attacking it. In disarray, the Austrian armies collapse, and the invasion is ended.
+
+@assault_victory
+view-if: assault_roll > defense_roll
+on-arrival: rb_strength -= bavaria_rb
+
+The worst has come to pass. Our forces are beaten, and Munich falls under Nazi control. It seems that this will be... a **Long War.**
+
+- @civil_war.long_war: Roll credits.
+
+@victory_against_hitler
+view-if: not scabbing and not munich_advance
+on-arrival: pro_republic += 5; nationalism -= 5; hitler_dead = 1; anschluss_attempt = 0; nazi_austria = 0; vienna_influence = 0
+
+Faced with an inability to use Austria as a launching ground from which to seize all of Germany, and the collapse of his armies, we have essentially won. This victory is cemented quickly, as, in the following days, news comes from Vienna of [? if sdapo_strength >= 4 : a SDAPÖ uprising ?][? if sdapo_strength < 4 : an Austrofascist uprising ?] against Hitler, who has reportedly been shot dead.
+
+
+## todo: austria vs reichswehr initial clashes, sa vs reichsbanner initial clashes, if sa not resoundly beaten then scabs vs strikers clashes, remaining strike health after scabbers will be added to city defense with reichsbanner from sa & austria if reichswehr not resoundly victorious, then conclusion
+## which is to say: austria vs reichswehr border, reichsbanner vs sa outskirts of munich ->
+## if sa beats reichsbanner, progresses to munich proper to strikebreak against the union
+## if reichsbanner beats sa resoundly, sa pulls back
+## else if not decisive either way, sa still progresses to strikebreaking but reichsbanner + union defends against it instead of just union
+## strikebreaking battle is sa vs strike strength, if reichsbanner survived initial clashes with sa it will help defend the strike
+## if sa wins, strike is broken
+## if strikers win, sa hangs back and waits for austria to arrive before resuming attack
+## if not decisive either way, strike loses strength but not extinguishand sa pulls back to wait
+## meanwhile, if austria beats reichswehr, progresses to munich proper
+## if reichswehr beats austria, austria pulls back
+## if not decisive either way, austria progresses to munich but reichswehr is able to retreat there too
+## then, after previous 1 sa-rb battle 2 austria-reichswehr battle and 3 scab-strikers battle, the 4th final battle with strengths and sides based on the previous one occurs

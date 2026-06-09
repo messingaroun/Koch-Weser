@@ -29,6 +29,8 @@ Q.month = 1;
 // how many actions have been taken this month?
 Q.month_actions = 0;
 
+Q.italo_ethiopian_war = 0;
+
 // 0 = normal difficulty, 1 = hard mode, 2 = hard mode no saves
 Q.difficulty = 0;
 Q.historical_mode = 0;
@@ -87,6 +89,9 @@ Q.pacifism = 0;
 Q.democratization = 0;
 // Support for a communist coalition relative to 1928
 Q.communist_coalition = 0;
+
+Q.financing_banned = 0;
+Q.socialized_media = 0;
 // economic_plan: have we adopted *any* economic plan?
 // 1 - WTB plan, 2 - AfA-bund plan, 3 - radical plan (mass nationalization of industries)
 Q.economic_plan = 0;
@@ -214,6 +219,7 @@ Q.rural = 25; // agriculture and forestry employment... but many of those are pr
 // source: https://surface.syr.edu/cgi/viewcontent.cgi?filename=3&article=1016&context=books&type=additional page 43, table 3.3
 Q.unemployed = 8.6;
 Q.catholics = 30;
+Q.bourgeoisie = 1;
 
 // unemployment: 1929 - 13.3, 1930 - 22.7, 1931 - 34.3, 1932 - 43.8 (same source as above)
 
@@ -241,7 +247,7 @@ Q.unemployed_qol = 100;
 Q.old_middle_qol = 100;
 Q.new_middle_qol = 100;
 
-Q.classes = ['workers', 'old_middle', 'new_middle', 'rural', 'unemployed', 'catholics'];
+Q.classes = ['workers', 'old_middle', 'new_middle', 'rural', 'unemployed', 'catholics', 'bourgeoisie'];
 Q.parties = ['spd', 'sapd', 'kpd', 'z', 'ddp', 'dvp', 'dnvp', 'nsdap', 'other'];
 Q.states = ['prussia', 'bavaria', 'thuringia', 'saxony', 'schaumburg_lippe', 'hamburg', 'wurttemberg'];
 
@@ -306,6 +312,19 @@ Q.catholics_dvp = 5;
 Q.catholics_dnvp = 5;
 Q.catholics_nsdap = 0;
 Q.catholics_other = 12;
+
+Q.bourgeoisie_spd = 0;
+Q.bourgeoisie_sapd = 0;
+Q.bourgeoisie_kpd = 0;
+Q.bourgeoisie_z = 10;
+Q.bourgeoisie_ddp = 10;
+Q.bourgeoisie_dvp = 40;
+Q.bourgeoisie_dnvp = 24;
+Q.bourgeoisie_nsdap = 1;
+Q.bourgeoisie_other = 15;
+
+Q.bourgeois_power = 1;
+// 0-1 range, reduced by socialist reforms
 
 Q.rural_prole = 0.2;
 Q.middle_prole = 0.5;
@@ -502,7 +521,7 @@ Q.timers = ['advisor_action', 'confronting_nazis', 'crisis_program',
             'constitutional_reform', 'weimar_enacting', 'referendum',
             'land_referendum', 'nationalization_referendum', 'wtb_referendum',
             'council_referendum', 'abortion_referendum', 'buyer_referendum', 'council_development',
-            'spanish_war', 'education_science', 'curriculum',
+            'spanish_war', 'education_science', 'curriculum', 'class_war', 
             // events
             'emergency_cuts', 'unemployment_insurance',
             'sa_ban', 'sh_ban', 'papen_chancellor',
@@ -510,9 +529,10 @@ Q.timers = ['advisor_action', 'confronting_nazis', 'crisis_program',
             'high_inflation', 'banking_crisis', 'march_on_berlin', 'abysinnia', 'nazi_peak',
             'nazi_reform', 'understanding_enemy', 'laissez_faire', 'presidential', 'papenomics', 'thuringeration',
             'advisor_loss', 'schleichers_schemes', 'disarray', 'dne', 'businesses_lose_confidence', 'article_48',
-            'military_relations', 'postal_affairs'];
+            'military_relations', 'postal_affairs', 'factory_battles'];
 Q.advisor_action_timer = 0;
 Q.advisor_loss_timer = 0;
+Q.factory_battles_timer = 0;
 // party affairs timers
 Q.confronting_nazis_timer = 0;
 Q.crisis_program_timer = 0;
@@ -568,6 +588,7 @@ Q.buyer_referendum_timer = 0;
 Q.council_development_timer = 0;
 Q.spanish_war_timer = 0;
 Q.postal_affairs_timer = 0;
+Q.class_war_timer = 0;
 // event timers
 Q.emergency_cuts_timer = 0;
 Q.unemployment_insurance_timer = 0;

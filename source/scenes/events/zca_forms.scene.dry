@@ -1,0 +1,118 @@
+title: The Centre Christian Alliance
+subtitle: The bourgeoisie unite into a new party.
+view-if: month == 3 and not z_banned and ((bourgeois_power - (socialism/100)) < 0.5) and spd_in_government and not in_grand_coalition and not in_weimar_coalition and ((capital_strike_seen and financing_banned and capital_strike_progress >= (z_relation/2) and (nsdap_banned or capital_nazi)) or (victory_republic and ((capital_strike_progress >= (z_relation/4) and left_strength >= reformist_strength and not kpd_banned) or dvp_banned))) and z_relation < 50 and ddp_relation < 50 and dvp_relation < 50
+max-visits: 1
+tags: event
+new-page: true
+on-arrival: {! 
+
+Q.parties.push('zca');
+Q.zca_formed = 1;
+
+Q.workers_zca = (Q.workers_z+Q.workers_ddp+Q.workers_dvp);
+Q.new_middle_zca = (Q.new_middle_z+Q.new_middle_ddp+Q.new_middle_dvp);
+Q.old_middle_zca = (Q.old_middle_z+Q.old_middle_ddp+Q.old_middle_dvp);
+Q.rural_zca = (Q.rural_z+Q.rural_ddp+Q.rural_dvp);
+Q.unemployed_zca = (Q.unemployed_z+Q.unemployed_ddp+Q.unemployed_dvp);
+Q.catholics_zca = (Q.catholics_z*0.95);
+Q.bourgeoisie_zca = (Q.bourgeoisie_z+Q.bourgeoisie_ddp+Q.bourgeoisie_dvp);
+
+Q.catholics_z *= 0.05;
+Q.workers_z = 0;
+Q.new_middle_z = 0;
+Q.old_middle_z = 0;
+Q.rural_z = 0;
+Q.unemployed_z = 0;
+
+Q.workers_ddp = 0;
+Q.new_middle_ddp = 0;
+Q.old_middle_ddp = 0;
+Q.rural_ddp = 0;
+Q.unemployed_ddp = 0;
+Q.catholics_ddp = 0;
+
+Q.workers_dvp = 0;
+Q.new_middle_dvp = 0;
+Q.old_middle_dvp = 0;
+Q.rural_dvp = 0;
+Q.unemployed_dvp = 0;
+Q.catholics_dvp = 0;
+
+Q.new_middle_spd *= (1-((Q.socialism/100)*0.25));
+Q.old_middle_spd *= (1-((Q.socialism/100)*0.25));
+Q.rural_spd *= (1-((Q.socialism/100)*0.25));
+Q.catholics_spd *= (1-((Q.socialism/100)*0.25));
+Q.unemployed_spd *= (1-((Q.socialism/100)*0.1));
+Q.workers_spd *= (1-((Q.socialism/100)*0.1));
+
+if (Q.capital_strike_progress < 20) {
+    Q.socialism -= (Q.capital_strike_progress*Q.bourgeois_power);
+}
+if (Q.capital_strike_progress >= 20) {
+    Q.socialism -= (20*Q.bourgeois_power);
+}
+Q.coup_progress += (Q.capital_strike_progress*Q.bourgeois_power*(Q.spd_normalized+Q.kpd_normalized));
+
+if (!Q.socialized_media) {
+    Q.workers_zca += (Q.capital_strike_progress*Q.bourgeois_power*(1-(Q.socialism/100)))*3;
+    Q.new_middle_zca += (Q.capital_strike_progress*Q.bourgeois_power)*3;
+    Q.old_middle_zca += (Q.capital_strike_progress*Q.bourgeois_power)*3;
+    Q.rural_zca += (Q.capital_strike_progress*Q.bourgeois_power)*3;
+    Q.bourgeoisie_zca += (3*Q.capital_strike_progress);
+}
+if (Q.socialized_media) {
+    Q.workers_zca += (Q.capital_strike_progress*Q.bourgeois_power*(1-(Q.socialism/100)))*1.5;
+    Q.new_middle_zca += (Q.capital_strike_progress*Q.bourgeois_power)*1.5;
+    Q.old_middle_zca += (Q.capital_strike_progress*Q.bourgeois_power)*1.5;
+    Q.rural_zca += (Q.capital_strike_progress*Q.bourgeois_power)*1.5;
+    Q.bourgeoisie_zca += (3*Q.capital_strike_progress);
+}
+
+Q.zca_r = 0;
+Q.old_z_r = 0;
+for (var record of Q.election_records) {
+    record['zca'] = 0;
+}
+for (var record of Q.party_support_records) {
+    record['zca'] = 0;
+}
+
+Q.workers_zca += Q.workers_other;
+Q.new_middle_zca += Q.new_middle_other;
+Q.old_middle_zca += Q.old_middle_other;
+Q.rural_zca += Q.rural_other;
+Q.unemployed_zca += Q.unemployed_other;
+Q.catholics_zca += Q.catholics_other;
+
+Q.workers_other *= (1-(Q.socialism/100));
+Q.new_middle_other *= (1-(Q.socialism/100));
+Q.old_middle_other *= (1-(Q.socialism/100));
+Q.rural_other *= (1-(Q.socialism/100));
+Q.unemployed_other *= (1-(Q.socialism/100));
+Q.catholics_other *= (1-(Q.socialism/100));
+
+Q.workers_zca -= Q.workers_other;
+Q.new_middle_zca -= Q.new_middle_other;
+Q.old_middle_zca -= Q.old_middle_other;
+Q.rural_zca -= Q.rural_other;
+Q.unemployed_zca -= Q.unemployed_other;
+Q.catholics_zca -= Q.catholics_other;
+
+if (Q.sh_force+Q.sa_force < Q.rb_force+Q.rfb_force) {
+    Q.workers_zca *= (1-(((Q.rb_force*(Q.left_strength/100)+Q.rfb_force)/100)*0.05));
+    Q.new_middle_zca *= (1-(((Q.rb_force*(Q.left_strength/100)+Q.rfb_force)/100)*0.05));
+    Q.old_middle_zca *= (1-(((Q.rb_force*(Q.left_strength/100)+Q.rfb_force)/100)*0.05));
+    Q.rural_zca *= (1-(((Q.rb_force*(Q.left_strength/100)+Q.rfb_force)/100)*0.05));
+    Q.unemployed_zca *= (1-(((Q.rb_force*(Q.left_strength/100)+Q.rfb_force)/100)*0.05));
+    Q.catholics_zca *= (1-(((Q.rb_force*(Q.left_strength/100)+Q.rfb_force)/100)*0.05));
+}
+
+!}
+
+= The Centre Christian Alliance
+
+With the bourgeoisie's grip on Germany weaker than ever and Germany seemingly sliding towards socialism, a new party has been announced, the ZCA, intended to merge Catholics and liberals into a single bourgeois-interests party. Electing Otto Gessler as leader, they intend to oppose our socialist agenda, although they do not appear overtly antidemocratic. [? if nsdap_banned : There is some fear that the Nazis will use them as a trojan horse, however. ?]
+
+[? if capital_strike_seen : It is clear that they embody the interests of the business community which has struck against us. ?][? if victory_republic : Their formation is sure to spice up emerging post-war politics. ?]
+
+While the merger has been approved by majorities in each of the constituent parties, small splinters remain for each, composed of the minorities that were opposed.

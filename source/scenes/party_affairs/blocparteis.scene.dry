@@ -1,0 +1,55 @@
+title: Bloc Parties
+new-page: true
+on-arrival: month_actions += 1
+is-card: true
+card-image: img/blocpartei.jpg
+frequency: 20
+tags: party_affairs
+view-if: zca_formed and not (ddp_socialist and z_socialist) and not blocparteis_rejected and financing_banned
+
+= Bloc Parties
+
+With the ZCA's formation and the banning of private party financing, the remnants of the Zentrumspartei and [+ ddp_name +] which refused to merge into that bourgeois collosus present to us an opportunity, with some in our party advocating that we might effectively take over their party infrastructures to establish socialist bloc parties, to compete for votes with the bourgeois parties amongst bourgeois demographics.
+
+- @ddp_bloc2: We can make the [+ ddp_name +] into a bloc party!
+- @z_bloc2: We can make the Z into a bloc party!
+- @ddp_bloc: Let's try to make the [+ ddp_name +] into a bloc party.
+- @z_bloc: Let's try to make the Z into a bloc party.
+- @reject: What a backhanded proposal.
+- @easy_discard
+
+@ddp_bloc
+subtitle: -1 resource
+choose-if: resources >= 1
+view-if: ddp_bloc < 5
+on-arrival: resources -= 1; ddp_bloc += 1; ddp_bloc += 1 if interior_minister_party == "SPD"; ddp_relation += 10*ddp_bloc; new_middle_ddp += ddp_bloc; old_middle_ddp += ddp_bloc/1.5; rural_ddp += ddp_bloc/2; rural_ddp += (ddp_bloc*land_reform)/5
+
+We have attempted to work on turning the [+ ddp_name +] into a bloc party, our organizers reaching out to their remaining insolvent party branches and infiltrating them [? if interior_minister_party == "SPD" : with the help of the Interior Ministry?].
+
+@z_bloc
+subtitle: -1 resource
+choose-if: resources >= 1
+view-if: z_bloc < 5
+on-arrival: resources -= 1; z_bloc += 1; z_bloc += 1 if interior_minister_party == "SPD"; z_relation += 10*z_bloc; catholics_z += z_bloc; catholics_zca -= z_bloc
+
+We have attempted to work on turning the Z into a bloc party, our organizers reaching out to their remaining insolvent party branches and infiltrating them [? if interior_minister_party == "SPD" : with the help of the Interior Ministry?].
+
+@ddp_bloc2
+view-if: ddp_bloc >= 5
+subtitle: Even the bourgeoisie can find their way to socialism.
+on-arrival: ddp_name = "RDP"; ddp_socialist = 1; ddp_relation += 100; socialism += ddp_votes; workers_ddp += 5*(socialism/100); new_middle_ddp += 8*(socialism/100); old_middle_ddp += 6*(socialism/100); rural_ddp += 5*(socialism/100)
+
+We have successfully transformed the Democrats, to the extent that, following an extraordinary party congress, they have rebranded their party out of their newly professed faith in socialism as the guiding principle of humanity and natural extension of liberal principles. 
+
+@z_bloc2
+view-if: z_bloc >= 5
+subtitle: Even the bourgeoisie can find their way to socialism.
+on-arrival: z_socialist = 1; z_relation += 100; socialism += z_votes; workers_z += 5*(socialism/100); new_middle_z += 3*(socialism/100); old_middle_z += 3*(socialism/100); rural_z += 5*(socialism/100); catholics_z += 3*(socialism/100); catholics_z += 7*(socialism/100) if reichskonkordat
+
+We have successfully transformed the Centrists, who now proclaim their belief in Christian socialism, in the brotherhood of all men and the need to overcome their exploitation. [? if not reichskonkordat : The Pope is quick to condemn this. ?][? if reichskonkordat : Luckily for us, the Pope does not condemn this, so the gain amongst Catholics is quite strong. ?]
+
+@reject
+view-if: not ddp_bloc and not z_bloc
+on-arrival: blocparteis_rejected = 1
+
+This is far too backhanded. No, we will not do this.

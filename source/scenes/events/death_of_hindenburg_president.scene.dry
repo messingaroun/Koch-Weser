@@ -758,7 +758,7 @@ With [+ nsdap_candidate +]'s victory, the Nazis waste no time in consolidating p
 @seldte_victory
 on-arrival: chancellor = "Hitler"; chancellor_party = "NSDAP"; hitler_seen = 0
 
-With Seldte's victory, the balance of power passes to the Nazis. [? if hitler_deported: His first act is to depose the current chancellor and appoint Adolf Hitler as chancellor, first undoing his deportation. ?][? if not hitler_deported: His first act is to depose the current chancellor and appoint Adolf Hitler as chancellor. ?]
+With Seldte's victory, the balance of power passes to the Nazis. [? if hitler_deported and not hitler_dead: His first act is to depose the current chancellor and appoint Adolf Hitler as chancellor, first undoing his deportation. ?][? if not hitler_deported: His first act is to depose the current chancellor and appoint Adolf Hitler as chancellor. ?][? if hitler_dead : His first act is to depose the current chancellor and revive Hitler with a satanic ritual to allow him a route to power. ?]
 
 - @hitler_takes_power: What next?
 - @hitler_constitutional: This is blatantly unconstitutional!

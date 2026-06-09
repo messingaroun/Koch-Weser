@@ -20,7 +20,7 @@ As we have made our work councils the basis of governance in Germany, questions 
 subtitle: -1 budget.
 view-if: rural_prole < 1
 choose-if: land_reform >= 1
-unavailable_subtitle: We need to first begin some land reform programs.
+unavailable-subtitle: We need to first begin some land reform programs.
 on-arrival: rural_spd += 5*(1-dissent); rural_policy += 1; rural_sol += 2; rural_prole += 0.1; budget -= 1; rural_dnvp -= 3*(1-dissent); rural_nsdap -= 3*(1-dissent);
 
 We expand the peasant councils, leading to increased development and community participation in rural regions as well as expanded suffrage for farmers in our wider council system.

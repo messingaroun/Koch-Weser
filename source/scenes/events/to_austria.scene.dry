@@ -1,0 +1,29 @@
+title: Hitler in Austria
+new-page: true
+subtitle: Hitler gives a speech in Vienna calling for the Nazi movement to move to Austria.
+view-if: not austrian_civil_war_seen and (hitler_austria*(sa_banned+1)) >= ((nsdap_votes+sa_force)/2)
+max-visits: 1
+on-arrival: nazi_migration = 1; nsdapo_force = (hitler_austria*0.1); austria_militancy = 0; austria_strength = 0
+tags: event
+
+= Hitler in Austria
+
+We have just heard from Vienna that Hitler, who, following his deportation from Germany chose to become politically active in the Austrian Nazi movement, has called on his German compatriots to take the struggle to Austria where he claims the seeds for German renewal are being sown in a far riper environment. 
+
+[? if sa_banned == 1 : This call has resonated with many in the now-illegal SA, who have grown tired of being part of an illegal and clandestine group and would prefer to return to open thuggery in the streets. ?]
+
+- @welp: We can only hope that the SDAPÖ can defend the Austrian workers from fascism as we have.
+- @support_them: We must provide the SDAPÖ with support!
+
+@welp
+on-arrival: left_dissent += 5
+
+Of course, it is out of our control. But some in our party nonetheless feel as though we surely can do something...?
+
+@support_them
+on-arrival: resources -= 1; sdapo_strength += 1; austria_relation += 1
+choose-if: resources >= 1
+unavailable-subtitle: -1 resource. We cannot afford this.
+subtitle: -1 resource.
+
+We have provided our comrades in Austria with resources, in the hopes that they might use these to defend against the now truly international Nazi threat.

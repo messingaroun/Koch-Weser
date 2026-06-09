@@ -6,7 +6,7 @@ tags: event
 new-page: true
 go-to: choose if not spd_prussia and not z_prussia; prussian_overthrow if spd_prussia or z_prussia
 
-[? if hitler_deported and president != "Hitler" and chancellor != "Hitler": The first act that Chancellor [+ chancellor +] takes upon assuming office is bringing Adolf Hitler back to Germany, and giving him citizenship and an official cabinet position. ?]
+[? if hitler_deported and president != "Hitler" and chancellor != "Hitler": The first act that Chancellor [+ chancellor +] takes upon assuming office is bringing Adolf Hitler back to [? if hitler_dead : life and then to?] Germany, and giving him citizenship and an official cabinet position. ?]
 
 Hitler has promised a campaign of revenge against the socialists, and the Nazis have already spilled much blood on the streets. In his published manifesto, he promises a campaign of unspeakable horror against our Jews, and endless wars of violent expansion that will ruin all of Europe.
 
@@ -51,6 +51,12 @@ Q.workers_spd -= 3;
 Q.kpd_relation += 10; 
 Q.unemployed_kpd -= 8;
 Q.unemployed_spd -= 4;
+if (Q.bourgeois_power < 0.9) {
+    Q.bourgeois_power += 0.1;
+    if (Q.bourgeois_power < 0.9) {
+        Q.bourgeois_power += 0.05;
+    }
+}
 !}
 
 Speeches are made. Votes are held. Bullets fly in the streets. Some socialists are killed or jailed. Others flee the country. What can votes even do at this juncture?
@@ -103,7 +109,7 @@ Our forces confront the government troops and their supporters on the streets of
 
 @surrender
 title: Give up on the Prussian government.
-on-arrival: spd_prussia = 0; workers_spd -= 5; left_dissent += 10; labor_dissent += 10; rb_militancy = rb_militancy/1.25; rb_strength -= 200;
+on-arrival: spd_prussia = 0; workers_spd -= 5; left_dissent += 10; labor_dissent += 10; rb_militancy = rb_militancy/1.25; rb_strength -= 200; bourgeois_power += 0.05 if bourgeois_power < 1
 go-to: give_up_now
 
 A pall of hopelessness and despair descends over social democracy. We have failed. Many in the Reichsbanner simply quit, demoralized by their leaders' lack of a call to action.

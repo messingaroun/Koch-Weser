@@ -45,8 +45,8 @@ We have enforced party discipline to reduce dissent across all factions.
 title: Emergency Fundraising
 view-if: difficulty < 1
 subtitle: An emergency infusion of resources.
-choose-if: advisor_action_timer = 0
-unavailable-subtitle: [? if advisor_action_timer > 0 : [+ advisor_action_timer +] months before next advisor action. ?]
+choose-if: advisor_action_timer = 0 and not financing_banned
+unavailable-subtitle: [? if advisor_action_timer > 0 : [+ advisor_action_timer +] months before next advisor action. ?][? if financing_banned : Wels' favorite donors are mysteriously unable to finance us now. ?]
 on-arrival: advisor_action_timer = 6; resources += dues
 
 We have gained +[+ dues +] resources.

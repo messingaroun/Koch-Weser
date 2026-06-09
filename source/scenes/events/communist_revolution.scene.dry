@@ -16,6 +16,10 @@ Q.harzburg_strength = Q.sa_force;
 Q.harzburg_strength += Q.sh_force;
 Q.harzburg_strength += Q.prussia_force*(1-Q.prussian_police_loyalty);
 Q.harzburg_strength += Q.rural*(1-((Q.rural_spd_normalized+Q.rural_kpd_normalized)/100));
+
+if (Q.chancellor == "Groener") {
+    Q.reichswehr_loyalty = 0;
+}
 !}
 
 = [+ month : month +] Revolution
@@ -69,7 +73,7 @@ By firmly taking a side we would split, as the communists want us to. We will wa
 
 @kpd_vs_army
 view-if: spd_revolution
-on-arrival: harzburg_strength += army_force
+on-arrival: harzburg_strength += (reichswehr_strength*reichswehr_militancy)
 go-to: kpd_victory if communist_strength > harzburg_strength; kpd_beaten if harzburg_strength >= communist_strength
 
 @kpd_victory

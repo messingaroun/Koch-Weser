@@ -1,0 +1,154 @@
+title: The New Austrian State
+subtitle: Hitler attempts to play at national leadership
+new-page: true
+tags: event
+view-if: nazi_austria and year == 1934 and month >= 4
+max-visits: 1
+on-arrival: vienna_influence += 1
+go-to: spd_foreign if foreign_minister_party == "SPD"; kpd_foreign if foreign_minister_party == "KPD"; bourgeois_foreign if foreign_minister_party != "SPD" and foreign_minister_party != "KPD"
+
+= The New Austrian State
+
+Since taking over Austria in the power vacuum left by the February Fights, Hitler has consolidated his position in the country as best as he can. Now, seeking to begin drastic progress towards his aims, he unveils his plans for the new Austrian state, even as embargoes from the Entente powers impoverish his nation.
+
+Alongside comprehensive domestic reforms, he has turned his eyes abroad. [? if eu : After first withdrawing his country from the European Union, he ?][? if not eu : He ?]has turned his sights to Germany, seeking closer ties towards the eventual goal of unification, something that the Entente powers remain staunchly opposed to.
+
+@spd_foreign
+
+Given our control over the Foreign Ministry, negotiations are sure to be awkward. The bourgeois parties would want us to separate our antifascist principles from foreign policy here in the interests of German national interests, but, while many in our party are also enthusiastic about unification, they would not take kindly to collaboration with the man we deported precisely to get out of the picture.
+
+The first issue is the matter of recognizing his government. If we do not do this, then there will be no basis for negotiations at all.
+
+- @recognize: We have no choice but to recognize Hitler's government.
+- @withhold_recognition: We will never work with fascists.
+
+@recognize
+subtitle: This will upset our Austrian comrades, and countless here at home.
+on-arrival: hitler_recognized = 1; left_dissent += 15; center_dissent += 10; reformist_dissent += 5; neorevisionist_dissent += 15; workers_spd -= 5; workers_kpd += 2; workers_sapd += 2 if sapd_consolidated; west_relation -= 1; east_relation -= 1; soviet_relation -= 1; workers_nsdap += 2; new_middle_nsdap += 3; old_middle_nsdap += 4; rural_nsdap += 4; unemployed_nsdap += 3; nationalism += 5; pro_republic -= 3
+
+There is no point in continuing to fight the fact of the matter, which, albeit regretful, is that Hitler now rules Austria. We will have to conduct business with this state eventually, especially if we wish to represent all Germans, even those in Austria.
+
+This development is, however, a great victory for the new Austrian ruler. We have legitimized his rule by being the first government to recognize it. In the end, it would have likely happened eventually, anyway, but we can't discount our contributions. Hopefully, the sacrifice will be worth it.
+
+- @customs_union: Hitler proposes a customs union.
+- @alliance: Hitler proposes an alliance.
+
+@withhold_recognition
+subtitle: This will upset German nationalists, and the bourgeois parties.
+on-arrival: recognition_withheld = 1; coup_progress += 1; coup_progress += 1 if nationalism >= 60; vienna_influence += 2; z_relation -= 5*(nationalism/100); ddp_relation -= 5*(nationalism/100); hindenburg_angry += 25 if president == "Hindenburg"; coalition_dissent += 1; dvp_relation -= 10*(nationalism/100); coalition_dissent += 1 if nationalism >= 75; coalition_dissent += 1 if in_grand_coalition
+
+We as principled antifascists can never sanction (except economically) a hostile takeover of a neighboring German state by the same fascists we fought tooth and nail to keep at bay here. We will not compromise on our principles and abandon our Austrian friends to Nazism. We must withhold recognition of this government indefinitely until it collapses as the isolated entity it is.
+
+This decision is, however, largely unpopular amongst the nationalist & bourgeois right, who have attacked us for turning Austria away and sabotaging German unity. It seems they are too single-minded to realize that it is not German unity we are opposing but Hitler, the same man who would have done the same here as he is doing now in Austria if not for our efforts. When will they ever learn?
+
+- @sanction: Place economic sanctions on Austria[? if customs_union : to effectively revoke the customs union?].
+- @enough: That's enough.
+
+@sanction
+subtitle: While effective, this would *really* alienate the nationalist & bourgeois right.
+on-arrival: austria_sanctioned = 1; coup_progress += 2; coup_progress += 1 if nationalism >= 50; vienna_influence += 4; west_relation += 1; east_relation += 1; reichswehr_loyalty -= 0.1*(nationalism/100); coup_progress += 1 if nationalism >= 65; unemployed += 0.3; inflation += 0.5; economic_growth -= 0.2; workers_spd -= 2*(nationalism/100); new_middle_spd -= 4*(nationalism/100); old_middle_spd -= 6*(nationalism/100); rural_spd -= 6*(nationalism/100); unemployed_spd -= 3*(nationalism/100); coalition_dissent += 1; new_middle_nsdap += 3*(nationalism/100); old_middle_nsdap += 3*(nationalism/100); rural_nsdap += 3*(nationalism/100); z_relation -= 6*(nationalism/100); ddp_relation -= 6*(nationalism/100); dvp_relation -= 15*(nationalism/100); coalition_dissent += 1 if in_grand_coalition
+
+We have decided to place economic sanctions on Austria. This decision is sure to hurt Hitler hard, though it is also doing well to mobilize the nationalist right against us in one big tide of solidarity for Hitler and Austria.
+
+@enough
+
+We have done enough now.
+
+@kpd_foreign
+
+WIP. 
+
+@customs_union
+view-if: not customs_union
+
+Hitler has revived the idea of a German-Austrian customs union as a step towards eventual unification. While a popular proposal, it is also plain to see it would be overwhelmingly to his benefit, given the total isolation of Austria right now. Some worry it might even singlehandedly allow it to consolidate where it might otherwise collapse shortly.
+
+Regretfully, many in the bourgeois parties are keen, having pushed for this in the past, anyway.
+
+- @form_the_union: We'll form it.
+- @no_we_wont: No we won't.
+
+@form_the_union
+choose-if: left_strength+neorevisionist_strength < reformist_strength
+unavailable-subtitle: Our party is simply unwilling.
+on-arrival: hitler_accepted = 1; banking_crisis_timer = 2; west_relation -= 2; east_relation -= 2; customs_union = 1; left_dissent += 10; neorevisionist_dissent += 10; center_dissent += 5; nationalism += 5; pro_republic -= 5
+
+We have formed the customs union. The Entente powers are rapid to lodge their diplomatic protests, as are entire flanks of our party. Still, the Austrian people are brought closer to the German ones. Is the promise of national unity worth it?
+
+@no_we_wont
+on-arrival: dvp_relation -= 5; coalition_dissent += 1 if in_grand_coalition; new_middle_nsdap += 3*(nationalism/100); old_middle_nsdap += 3*(nationalism/100); rural_nsdap += 3*(nationalism/100); hitler_declined = 1
+
+The idea is, frankly, a step far too far. Just because we are willing to recognize the unchangeable fact that Hitler controls Austria now does not mean we will deal with him. 
+
+@alliance
+view-if: customs_union
+
+Hitler, building off of the existing customs union, has gone one step further to propose an alliance. Despite our past enmity within the German political sphere, he is willing to put aside petty political differences for the sake of German unity, or so he claims. In truth, he is more than likely just desparate for any opportunity to escape diplomatic isolation and maintain relevancy.
+
+- @accept_alliance: We'll form it.
+- @decline_alliance: No we won't.
+
+@accept_alliance
+choose-if: this_path_has_been_coded
+unavailable-subtitle: What a ridiculous proposition.
+
+@decline_alliance
+on-arrival: pro_republic += 2; alliance_declined = 1
+
+Yeah, that's never gonna happen. 
+
+@bourgeois_foreign
+on-arrival: hitler_recognized = 1; west_relation -= 1; east_relation -= 1; workers_nsdap += 2; new_middle_nsdap += 3; old_middle_nsdap += 4; rural_nsdap += 4; unemployed_nsdap += 3; nationalism += 5; pro_republic -= 3
+go-to: toleration if spd_toleration; nothing_to_do if not spd_toleration
+
+The bourgeois parties conduct negotiations earnestly, naively championing that bygones be bygones in the name of pragmatic diplomacy and German unity. While many in our party are enthusiastic at the prospect, few would take that enthusiasm to the extent of collaborating with Hitler and defying the Entente.
+
+The first issue is the matter of recognizing his government, as, without such, there would be no basis for negotiations at all. Unfortunately, the bourgeois parties do not hesitate to do so.
+
+@toleration
+
+With the government relying upon our toleration, we can still interject to put an end to these discussions with Hitler; indeed, many in our party see it as an imperative.
+
+- @end_toleration: Vote down these talks!
+- @allow_the_talks: Let it happen.
+
+@end_toleration
+subtitle: This is difficult; all of the right-of-center parties support these talks.
+go-to: end_toleration_success if spd_r + kpd_r + ddp_r >= 50; end_toleration_fail if spd_r + kpd_r + ddp_r < 50
+on-arrival: z_relation -= 6; dvp_relation -= 12
+
+@end_toleration_success
+on-arrival: time_to_election = 3; spd_in_government = 0; in_grand_coalition = 0; spd_toleration = 0;
+call: set_next_election_time
+
+With the support of the KPD and [+ ddp_name +], we have successfully stopped the negotiations from taking place. This results in the fall of the [+ chancellor +] government.
+
+New elections have been set for [+ next_election_month : month +] [+ next_election_year +].
+
+@end_toleration_fail
+go-to: what_do_they_do
+
+Unfortunately, the far-right parties united with the government to outvote us. The talks will proceed.
+
+@customs_union_bourgeois
+on-arrival: hitler_accepted = 1; banking_crisis_timer = 2; west_relation -= 2; east_relation -= 2; customs_union = 1; nationalism += 5; pro_republic -= 5
+
+In the following talks, a customs union is formed between Germany and Austria. The Entente powers are rapid to lodge their complaints, and Germany joins Austria in splendid diplomatic isolation while Austria is given the entire German market to sustain itself off of, directly enabling Hitler to continue ruling.
+
+@nothing_to_do
+go-to: what_do_they_do
+
+With no influence on the government, there is nothing we can do to stop these talks.
+
+@what_do_they_do
+go-to: customs_union_bourgeois if not customs_union; negotiations_proceed if customs_union
+
+@allow_the_talks
+go-to: what_do_they_do
+on-arrival: left_dissent += 5; neorevisionist_dissent += 5; pro_republic -= 2
+
+By allowing the talks, many in our party fear we are enabling collaboration with Hitler. Nevertheless, what more can we do? We have very little influence on government policy.
+
+@negotiations_proceed
+
+In the talks, no immediate conclusion is reached. From what we've heard, Hitler is pushing to escalate the existing customs union into a general alliance. We can only hope he is turned down.

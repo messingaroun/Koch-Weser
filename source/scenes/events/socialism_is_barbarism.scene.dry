@@ -1,0 +1,107 @@
+title: Socialism IS Barbarism!
+subtitle: The bourgeoisie unveil their newest slander...
+tags: event
+max-visits: 1
+new-page: true
+view-if: capital_strike_seen and (class_war*capital_strike_progress) >= (bourgeois_power*100)
+
+= Socialism IS Barbarism!
+
+Recently, a new pamphlet, the newest among many to have circulated since the capital strike begun, has been making the rounds [? if not socialized_media : in the bourgeois presses ?][? if socialized_media : in bourgeois circles ?] attacking socialism visciously and charging us with totalitarianism and unnaturality, proclaiming instead, both philosophically and with their supposed science of economics, that the freedom of each individual to compete meritocratically on a free market be the way a society ought to be structured instead.
+
+While this pamphlet is by no means special, what is special is the desperation with which the bourgeoisie now seek to oppose our project, such that they now mobilize every tool at their disposal behind this unremarkably libelous pamphlet in an attempt to slander away the revolution.
+
+- @pathetic: Their attempts are, of course, in vain.
+- @worrying: Quite the worrying the development.
+
+@worrying
+view-if: not socialized_media
+on-arrival: {!
+
+Q.new_middle_spd *= (0.5+(0.5*(Q.socialism/100)));
+Q.old_middle_spd *= (0.5+(0.5*(Q.socialism/100)))
+Q.rural_spd *= (0.5+(0.5*(Q.socialism/100)))
+Q.catholics_spd *= (0.5+(0.5*(Q.socialism/100)))
+Q.unemployed_spd *= (1-((Q.socialism/100)*0.1));
+Q.workers_spd *= (1-((Q.socialism/100)*0.1));
+
+Q.socialism -= (Q.capital_strike_progress*Q.bourgeois_power)/2;
+Q.coup_progress += (Q.capital_strike_progress*Q.bourgeois_power*(Q.spd_normalized+Q.kpd_normalized))/2;
+
+if (Q.capital_nazi) {
+    Q.workers_dvp += (Q.capital_strike_progress*Q.bourgeois_power*(1-(Q.socialism/100)))/2;
+    Q.new_middle_dvp += (Q.capital_strike_progress*Q.bourgeois_power)/2;
+    Q.old_middle_dvp += (Q.capital_strike_progress*Q.bourgeois_power)/2;
+    Q.rural_dvp += (Q.capital_strike_progress*Q.bourgeois_power)/2;
+    Q.bourgeoisie_dvp += (2*Q.capital_strike_progress);
+    if (!Q.dnvp_banned) {
+        Q.workers_dnvp += (Q.capital_strike_progress*Q.bourgeois_power*(1-(Q.socialism/100)))/2;
+        Q.new_middle_dnvp += (Q.capital_strike_progress*Q.bourgeois_power)/2;
+        Q.old_middle_dnvp += (Q.capital_strike_progress*Q.bourgeois_power)/2;
+        Q.rural_dnvp += (Q.capital_strike_progress*Q.bourgeois_power)/2;
+        Q.bourgeoisie_dnvp += Q.capital_strike_progress;
+    }
+    if (Q.dnvp_banned) {
+        Q.workers_dvp += (Q.capital_strike_progress*Q.bourgeois_power*(1-(Q.socialism/100)))/2;
+        Q.new_middle_dvp += (Q.capital_strike_progress*Q.bourgeois_power)/2;
+        Q.old_middle_dvp += (Q.capital_strike_progress*Q.bourgeois_power)/2;
+        Q.rural_dvp += (Q.capital_strike_progress*Q.bourgeois_power)/2;
+    }
+}
+if (!Q.capital_nazi) {
+    Q.workers_nsdap += (Q.capital_strike_progress*Q.bourgeois_power*(1-(Q.socialism/100)))*1.5;
+    Q.new_middle_nsdap += (Q.capital_strike_progress*Q.bourgeois_power)*1.5;
+    Q.old_middle_nsdap += (Q.capital_strike_progress*Q.bourgeois_power)*1.5;
+    Q.rural_nsdap += (Q.capital_strike_progress*Q.bourgeois_power)*1.5;
+    Q.bourgeoisie_nsdap += (3*Q.capital_strike_progress);
+}
+
+!}
+
+This is, unfortunately, quite the worrying development. With the bourgeoisie still controlling newspapers and printing presses all across Germany, it is very probable that this will influence opinions, as ridiculous as the pamphlet is.
+
+@pathetic
+view-if: socialized_media
+on-arrival: {!
+
+Q.new_middle_spd *= (0.75+(0.25*(Q.socialism/100)));
+Q.old_middle_spd *= (0.75+(0.25*(Q.socialism/100)))
+Q.rural_spd *= (0.75+(0.25*(Q.socialism/100)))
+Q.catholics_spd *= (0.75+(0.25*(Q.socialism/100)))
+Q.unemployed_spd *= (1-((Q.socialism/100)*0.05));
+Q.workers_spd *= (1-((Q.socialism/100)*0.05));
+
+Q.socialism -= (Q.capital_strike_progress*Q.bourgeois_power)/4;
+Q.coup_progress += (Q.capital_strike_progress*Q.bourgeois_power*(Q.spd_normalized+Q.kpd_normalized))/4;
+
+if (Q.capital_nazi) {
+    Q.workers_dvp += (Q.capital_strike_progress*Q.bourgeois_power*(1-(Q.socialism/100)))/4;
+    Q.new_middle_dvp += (Q.capital_strike_progress*Q.bourgeois_power)/4;
+    Q.old_middle_dvp += (Q.capital_strike_progress*Q.bourgeois_power)/4;
+    Q.rural_dvp += (Q.capital_strike_progress*Q.bourgeois_power)/4;
+    Q.bourgeoisie_dvp += (2*Q.capital_strike_progress);
+    if (!Q.dnvp_banned) {
+        Q.workers_dnvp += (Q.capital_strike_progress*Q.bourgeois_power*(1-(Q.socialism/100)))/4;
+        Q.new_middle_dnvp += (Q.capital_strike_progress*Q.bourgeois_power)/4;
+        Q.old_middle_dnvp += (Q.capital_strike_progress*Q.bourgeois_power)/4;
+        Q.rural_dnvp += (Q.capital_strike_progress*Q.bourgeois_power)/4;
+        Q.bourgeoisie_dnvp += Q.capital_strike_progress;
+    }
+    if (Q.dnvp_banned) {
+        Q.workers_dvp += (Q.capital_strike_progress*Q.bourgeois_power*(1-(Q.socialism/100)))/4;
+        Q.new_middle_dvp += (Q.capital_strike_progress*Q.bourgeois_power)/4;
+        Q.old_middle_dvp += (Q.capital_strike_progress*Q.bourgeois_power)/4;
+        Q.rural_dvp += (Q.capital_strike_progress*Q.bourgeois_power)/4;
+    }
+}
+if (!Q.capital_nazi) {
+    Q.workers_nsdap += (Q.capital_strike_progress*Q.bourgeois_power*(1-(Q.socialism/100)))*0.75;
+    Q.new_middle_nsdap += (Q.capital_strike_progress*Q.bourgeois_power)*0.75;
+    Q.old_middle_nsdap += (Q.capital_strike_progress*Q.bourgeois_power)*0.75;
+    Q.rural_nsdap += (Q.capital_strike_progress*Q.bourgeois_power)*0.75;
+    Q.bourgeoisie_nsdap += (3*Q.capital_strike_progress);
+}
+
+!}
+
+With us having already socialized the newspapers and printing presses, the influence that the bourgeoisie can exert over public opinion through pamphlets like these has greatly diminished. Still, this coordinated effort does hurt somewhat, atleast amongst the more bourgeois demographics.

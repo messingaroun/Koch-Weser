@@ -1,0 +1,59 @@
+title: Economic Planning
+subtitle: What do we do with the petty bourgeoisie?
+view-if: five_year_plan and capital_strike_timer < 9 and spd_in_government
+tags: event
+max-visits: 1
+new-page: true
+
+= Economic Planning
+
+As we embark now on our economic plan, the question has come up of what exactly should be done with the petty bourgeoisie; the owners of small businesses and enterprises who work alongside those they employ, and even those who are entirely self-employed. If we are to work towards abolishing the anarchy of production, then they must be integrated into the economic plan. But how can we do so?
+
+- @nationalize: There will be no exceptions. Their property must be expropriated and placed under collective control.
+- @subordinate: Rather than outright expropriation, we will simply task them with following and enacting our plans themselves.
+- @allowance: It would be unwise to rush the transition. They can exist outside of the framework for now.
+
+@nationalize
+subtitle: This would be quite confrontational.
+on-arrival: old_middle_destroyed = 1; sa_strength -= 25 if sa_banned; sh_strength -= 25 if sh_banned; black_market += old_middle; economic_growth -= old_middle/10; inflation += old_middle/18; {!
+
+if (!Q.nsdap_banned) {
+    Q.old_middle_nsdap += 100;
+}
+if (!Q.dnvp_banned) {
+    Q.old_middle_dnvp += 100;
+}
+if (!Q.dvp_banned && Q.dnvp_banned) {
+    Q.old_middle_dvp += 100;
+}
+if (Q.zca_formed) {
+    Q.old_middle_zca += 100;
+}
+
+Q.sh_militancy += 0.03;
+Q.sa_militancy += 0.03;
+
+Q.sa_strength += 200;
+Q.sh_strength += 50;
+
+// Q.old_middle -= Q.nationalization_progress;
+// if (Q.old_middle < 0) {
+//    Q.old_middle = 0;
+//}
+// note: should they really lose their class identity?
+
+!}
+
+We decree that no exceptions will be made for the petty-bourgeoisie as compared with the haute, and that they too shall see their property expropriated. The old middle class is, understandably, up in arms over the prospect of their effective cessation of existence - literally. For a time, this will disrupt our economic project, but we may find planning easier in future.
+
+@subordinate
+subtitle: Some consider this the best middle route.
+on-arrival: old_middle_subjugated = 1; black_market += old_middle/4
+
+We have determined that there is no reason individual economic actors should not exist, so long as they execute and comply with our plans anyway. In the long term, we will plan to phase out petty production, through continued and directed development of the productive forces, but in the meantime, to destroy the petty-bourgeoisie entirely would be premature.
+
+@allowance
+subtitle: This would be quite unprincipled.
+on-arrival: economic_growth += 1; old_middle_spd += 5*(1-dissent); socialism -= 2; bourgeois_power += 0.05; left_dissent += 5; kpd_relation -= 10; old_middle += 3; rural -= 3
+
+We have decided that the economic plan must allow for the existence of petty-bourgeois elements in the time being. This has been justified by planners as necessary to avoid economic disruption and allow the further development of Germany's productive forces, but most Marxists are highly skeptical.

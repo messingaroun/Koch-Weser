@@ -67,6 +67,7 @@ on-arrival: old_middle_nsdap += uf_strength; rural_nsdap += uf_strength/2; new_m
 That is enough to get the United Front off of its feet and ready to fight fascism. United through this new organization, we shall stand strong. The Nazis grow further amongst the bourgeoisie, who are frightened by our unity, but it is in vain.
 
 @literally_why_would_anyone_whos_at_this_point_in_the_game_choose_this_like_what
+subtitle: [? if fun_value >= 61 and fun_value <= 67 : I know you're not picking this, bucko. ?]
 on-arrival: communist_coalition -= 1; kpd_relation -= 5; left_dissent += 15; reformist_strength += 10; reformist_dissent -= 20; sa_militancy += 0.02
 
 We politely turn the offer down, so as to retain the party's organizational independence. The dominant Left is perplexed.
