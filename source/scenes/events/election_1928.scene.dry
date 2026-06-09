@@ -2556,7 +2556,7 @@ go-to: ministries
 @koch-weser
 title: Erich Koch-Weser will become chancellor
 subtitle: [? if not chancellor = "Koch-Weser" : This proposed in 1926 and will cost cabinet positions to Zentrum who expected us or them to get the chancellorship. ?] [? if chancellor = "Koch-Weser" : Koch Weser will continue to be chancellor, which no one raises any objections to, and the DDP appreciates. ?]
-on-arrival: spd_in_government = 1; if not chancellor = "Koch-Weser" leverage -= 5; in_grand_coalition = 1 if in_weimar_coalition == 0.; ddp_relations += 10 chancellor = "Koch-Weser"; chancellor_party = "DDP";
+on-arrival: spd_in_government = 1; if not chancellor = "Koch-Weser" leverage -= 5; in_grand_coalition = 1 if in_weimar_coalition == 0.; ddp_relations += 10; chancellor = "Koch-Weser"; chancellor_party = "DDP";
 go-to: ministries
 
 @no_govt_3
