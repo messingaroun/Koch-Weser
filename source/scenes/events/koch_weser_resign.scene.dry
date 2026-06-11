@@ -4,7 +4,7 @@ new-page: true
 max-visits: 1
 tags: event
 on-arrival: chancellor = "Brüning"; chancellor_party = "Z"
-view-if: chancellor = "Koch-Weser" and Q.ddp_votes <= 2 and year >= 1928
+view-if: chancellor = "Koch-Weser" and ddp_votes <= 2 and year >= 1928
 
 - Koch-Weser resigns
 
