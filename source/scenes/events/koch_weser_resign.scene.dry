@@ -16,7 +16,7 @@ Chancellor Erich Koch-Weser has, already, agreed to these demands, but we could 
 - @nothing: really? That's fine.
 
 @intervene
-on-arrival: chancellor = "Wels"; chancellor_party = "SPD"; z_relations -= 6\
+on-arrival: chancellor = "Wels"; chancellor_party = "SPD"; z_relations -= 6
 
 Zentrum accepts, begrudgingly. 
 
