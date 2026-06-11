@@ -1,0 +1,27 @@
+title: Koch-Weser resigns!
+subtitle: The [+ ddp_name +] has slipped too far in the polls to be viable
+view-if: chancellor = "Koch-Weser" and Q.ddp_votes <= 2 and year >= 1928
+new-page: true
+max-visits: 1
+on-arrival: chancellor = "Brüning"; chancellor_party = "Z"
+tags: "event"
+
+- Koch-Weser resign
+
+Due to the [+ ddp_name +]'s declining vote share, Zentrum has demanded chancellorship be transfered to them.
+  
+Chancellor Erich Koch-Weser has, already, agreed to these demands, but we could intervene and take the chancellorship ourselves.
+
+- @intervene
+- @nothing
+
+@intervene
+title: Take the chancellorship for Wels, against Zentrum's wishes.
+subtitle: Zentrum would not be happy.
+on-arrival: chancellor = "Wels"; chancellor_party = "SPD"; z_relations -= 6
+
+@nothing
+title: This is other parties' affairs; not our buisness
+
+
+  
