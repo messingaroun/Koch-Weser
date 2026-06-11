@@ -13,7 +13,7 @@ Due to the [+ ddp_name +]'s declining vote share, Zentrum has demanded chancello
 Chancellor Erich Koch-Weser has, already, agreed to these demands, but we could intervene and take the chancellorship ourselves.
 
 - @intervene: Zentrum should not have chancellor, it was hard convincing them in the first place.
-- @nothing: really? That's fine.
+- @nothing: Let Brüning be.
 
 @intervene
 on-arrival: chancellor = "Wels"; chancellor_party = "SPD"; z_relations -= 6
