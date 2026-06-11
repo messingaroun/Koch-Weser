@@ -16,12 +16,11 @@ Chancellor Erich Koch-Weser has, already, agreed to these demands, but we could 
 - @nothing: really? That's fine.
 
 @intervene
-title: Take the chancellorship for Wels, against Zentrum's wishes.
-subtitle: Zentrum would not be happy.
-on-arrival: chancellor = "Wels"; chancellor_party = "SPD"; z_relations -= 6
+on-arrival: chancellor = "Wels"; chancellor_party = "SPD"; z_relations -= 6\
+
+Zentrum accepts, begrudgingly. 
 
 @nothing
-title: This is other parties' affairs; not our buisness
 
 
   
