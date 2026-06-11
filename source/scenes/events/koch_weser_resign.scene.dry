@@ -1,10 +1,10 @@
 title: Koch-Weser resigns!
 subtitle: The [+ ddp_name +] has slipped too far in the polls to be viable
 new-page: true
+view-if: chancellor = "Koch-Weser" and ddp_votes <= 2 and year >= 1928
 max-visits: 1
 tags: event
 on-arrival: chancellor = "Brüning"; chancellor_party = "Z"
-view-if: chancellor = "Koch-Weser" and ddp_votes <= 2 and year >= 1928
 
 - Koch-Weser resigns
 
