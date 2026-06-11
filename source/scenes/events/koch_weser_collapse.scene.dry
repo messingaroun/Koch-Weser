@@ -1,6 +1,6 @@
 title: Koch-Weser Resigns!
 subtitle: He is no longer able to keep the coalition together
-view-if: chancellor == "Koch-Weser" and coalition_dissent >= 3
+view-if: chancellor == "Koch-Weser" and coalition_dissent >= 3 and year <= 1928
 new-page: true
 tags: event
 max-visits: 1
