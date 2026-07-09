@@ -1,0 +1,31 @@
+title: Center Party Conference
+subtitle: The Center Party chooses their new leader...
+view-if: year = 1928 and month = 12 and z_party_leader = "Marx" and ulitzka
+max-visits: 1
+tags: event
+new-page: true
+
+= Center Party Conference
+
+Wilhelm Marx, former Center Party chancellor and presidential candidate, has chosen to resign from leadership of the Center Party. Now, the party holds a conference to replace him.
+
+The Right has condensed around Adam Stegerwald, a conservative trade unionist and one time Minister-President of Prussia, this was in response to the Left and Clerical wings consolidating around Carl Ulitzka, a somewhat Left wing Catholic priest from Silesia.
+
+- @ulitzka: The Center Party elects Ludwig Kaas as the party chair.
+- @stegerwald: The Center Party elects Adam Stegerwald as the party chair.
+
+@ulitzka
+on-arrival: z_party_leader = "Ulitzka"; z_relation += 5 if z_relations < 60
+choose-if: z_relation > 49
+unavailable-subtitle: The party is too Right Wing for him.
+
+Carl Ulitzka has been elected Zentrum chairman, he is more Left than Marx, but still more Right than the furthest Left.
+
+@stegerwald
+choose-if: z_relations < 50
+unavailable-subtitle: Stegerwald lacks the clout necessary to win.
+on-arrival: z_party_leader = "Stegerwald"; z_relation -= 10; nationalism += 4; socialism -= 3; left_strength += 5; catholics_z -= 10; catholics -= 5; stegerwald_timer = 1
+
+Adam Stegerwald has been elected as chairman of the Center Party. He represents a significant rightward turn from Marx, and will preside over a Center Party inclined to work with the right-wing over us. 
+
+Importantly, he also supports "leaving the tower", that is, transforming the Center into a party for all Christians, beyond just Catholics. This has caused an upset amongst the party's Catholic base, and significantly hurt the party.
