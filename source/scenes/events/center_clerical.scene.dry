@@ -22,6 +22,6 @@ Ludwig Kaas has been selected as the chairman of the Center Party. He seems to r
 unavailable-subtitle: Our relations are not good enough.
 subtitle: Ulitzka is likely to be friendlier to us than Kaas.
 choose-if: z_relation >= 60
-on-arrival: Q.ulitzka = 1; workers_z += 3
+on-arrival: ulitzka = 1; workers_z += 3
 
 With our grassroots connections, we have been able to influence the Center delegates to support Carl Ulitzka as the new Center chairman. He is more too the left than Kaas, and will be more inclined to collaborate with us compared to him.
