@@ -3,7 +3,7 @@ subtitle: Our [? if not capital_flight : military buildup ?][? if capital_flight
 new-page: true
 on-arrival: left_dissent += 5; center_dissent += 5; labor_dissent += 5; workers_nsdap += 3; new_middle_nsdap += 3; old_middle_nsdap += 4; rural_nsdap += 3; unemployed += 3; workers_spd -= 4 if spd_in_government; new_middle_spd -= 5 if spd_in_government; old_middle_spd -= 5 if spd_in_government; rural_spd -= 4 if spd_in_government; economic_growth -= 1; nationalism += 5; pacifism -= 1
 tags: event
-view-if: (reichswehr_strength*reichswehr_militancy > 700) or (capital_flight and capital_strike_timer <= 10)
+view-if: (reichswehr_strength*(reichswehr_militancy - exception) > 700) or (capital_flight and capital_strike_timer <= 10)
 max-visits: 1
 
 = Economic Sanctions

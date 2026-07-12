@@ -212,6 +212,14 @@ if (Q.jarres_campaign) {
     Q.jarres_votes += Q.nsdap_normalized/4;
     if (Q.bvp_support_jarres) {
         Q.jarres_votes += 0.03;
+        if (Q.jarres_votes >= Q.marx_votes) {
+            Q.jarres_votes -= 0.03;
+            Q.marx_votes += 0.03;
+            Q.rigged_1925 = 1;
+            if (Q.jarres_votes >= Q.marx_votes) {
+                Q.jarres_votes *= 0.9;
+            }
+        }
     }
 }
 if (Q.ludendorff_campaign) {
@@ -316,9 +324,11 @@ on-arrival: former_president = "Hindenburg"; president = "Hindenburg"; pro_repub
 Paul von Hindenburg has won the election with the backing of all the reactionary right organized under the **Reichsblock** behind him. Though many in our party anticipate an immediate restructuring of Germany along authoritarian and aristocratic lines, he seems, for now, to be following the constitution. Regardless, this signals a dark turn for German democracy. Who knows what Hindenburg may do in power?
 
 @marx_wins
-on-arrival: former_president = "Marx"; president = "Marx"; marx_relation += 10; pro_republic += 5; nationalism -= 5; z_relation += 5; ddp_relation += 5; reformist_strength += 5; jarres_campaign = 0; marx_campaign = 0; held_campaign = 0; thalmann_campaign = 0; ludendorff_campaign = 0; hellpach_campaign = 0; gessler_campaign = 0; braun_campaign = 0; z_support_braun = 0; ddp_support_braun = 0; bvp_support_hindenburg = 0
+on-arrival: former_president = "Marx"; president = "Marx"; marx_relation += 10; pro_republic += 5; nationalism -= 5; z_relation += 5; ddp_relation += 5; reformist_strength += 5; jarres_campaign = 0; marx_campaign = 0; held_campaign = 0; thalmann_campaign = 0; ludendorff_campaign = 0; hellpach_campaign = 0; gessler_campaign = 0; braun_campaign = 0; z_support_braun = 0; ddp_support_braun = 0; bvp_support_hindenburg = 0; sa_militancy += 0.05 if rigged_1925; coup_progress += 5 if rigged_1925; reichswehr_loyalty -= 0.1 if rigged_1925
 
 Wilhelm Marx has won the election with the backing of all the republican left organized under the **Volksblock** behind him. This is a victory for German democracy and the continued normalization of the republic.
+
+[? if rigged_1925 : Several reports of election irregularities have been made in Bavaria, where, despite the BVP's backing of Jarres, Marx seems to have won. This has radicalized the right-wing, who are trying to overturn the results, though the court has not found any conclusive evidence. ?]
 
 @braun_wins
 on-arrival: president = "Braun"; pro_republic += 8; socialism += 4; nationalism -= 2; dvp_relation -= 5; left_dissent -= 5; center_dissent -= 5; reformist_dissent -= 5; labor_dissent -= 5; workers_spd += 5*(1-dissent); new_middle_spd += 4*(1-dissent); unemployed_spd += 4*(1-dissent); rural_spd += 2*(1-dissent); jarres_campaign = 0; marx_campaign = 0; held_campaign = 0; thalmann_campaign = 0; ludendorff_campaign = 0; hellpach_campaign = 0; gessler_campaign = 0; braun_campaign = 0; z_support_braun = 0; ddp_support_braun = 0; bvp_support_hindenburg = 0

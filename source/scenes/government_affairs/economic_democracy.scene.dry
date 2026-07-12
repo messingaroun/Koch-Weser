@@ -34,7 +34,6 @@ We propose a bill to empower works councils.
 
 @council_expanded_1
 on-arrival: bourgeois_power -= 0.01; economic_democracy += 1; socialism += 1; workers_spd += 7*(1-dissent); capital_strike_progress += 1; works_councils += 1; labor_dissent -= 6; labor_strength += 8; dvp_relation -= 5; coalition_dissent +=1 if in_grand_coalition
-max-visits: 1
 
 The works councils, elected by workers at each major business, have been in place since the German Revolution of 1918, but they have been largely powerless in the face of capital. Now, we will have worker representation on the boards of companies, giving them more influence in management decisions.
 
@@ -50,7 +49,6 @@ We propose a bill to empower works councils.
 
 @council_expanded_2
 on-arrival: bourgeois_power -= 0.02; economic_democracy += 1; socialism += 2; workers_spd += 7*(1-dissent); capital_strike_progress += 1; works_councils += 1; labor_dissent -= 6; labor_strength += 8; dvp_relation -= 5; coalition_dissent +=1 if in_grand_coalition; economic_growth += 0.1 if economic_growth < 3
-max-visits: 1
 
 National and sectorial workers councils have been part of the Weimar Constitution, but they were disempowered in the past, acting as nothing more than advisory bodies. We can change that.
 
@@ -66,7 +64,6 @@ We propose a bill to empower works councils.
 
 @council_expanded_3
 on-arrival: bourgeois_power -= 0.03; economic_democracy += 1; socialism += 3; workers_spd += 7*(1-dissent); capital_strike_progress += 1; works_councils += 1; labor_dissent -= 6; labor_strength += 8; dvp_relation -= 5; coalition_dissent +=1 if in_grand_coalition; unemployed -= 2 if unemployed > 5; workers += 2; economic_growth += 0.1 if economic_growth < 3
-max-visits: 1
 
 Sectorial works councils can now negotiate wage and price policies for entire economic sectors, helping to both give workers more of a voice, and to rationalize the economy, smoothing over the anarchy of the market.
 
@@ -74,7 +71,8 @@ Sectorial works councils can now negotiate wage and price policies for entire ec
 @nationalize_1
 title: Begin to socialize key industries.
 subtitle: -1 budget - we should buy out industries and govern them together with workers and consumers.
-choose-if: budget >= 1
+unavailable-subtitle: -1 budget - we should buy out industries and govern them together with workers and consumers. [? if capital_spd : <span style="color:rgb(170,150,60);font-family:'Times New Roman',serif;font-weight:700;letter-spacing:0.5px;">But that would infringe upon the right to private property!</span> ?]
+choose-if: budget >= 1 and not capital_spd
 max-visits: 3
 on-arrival: socialization_vote = 1
 go-to: socialization_done if not legislature_enabled; legislative_menu if legislature_enabled

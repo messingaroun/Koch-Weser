@@ -1,4 +1,5 @@
 title: Investigating Domestic Enemies
+subtitle: [? if nazis_suspended and not nsdap_banned : We can ban the NSDAP. ?]
 on-arrival: month_actions += 1
 view-if: spd_in_government = 1 and interior_minister_party = "SPD"
 #card-image: img/portraits/SeveringCarl.jpg
@@ -12,6 +13,7 @@ view-if: spd_in_government = 1 and interior_minister_party = "SPD"
 As we have control over the Interior Ministry, we can direct police and intelligence services to investigate internal enemies. We can proscribe various organizations.
 
 - @deport_hitler
+- @ban_nsdap: Ban the NSDAP.
 - @ban_sa: Ban the SA.
 - @unban_sa: Unban the SA.
 - @persecute_sa
@@ -23,6 +25,15 @@ As we have control over the Interior Ministry, we can direct police and intellig
 - @persecute_rfb
 - @investigate_coup: Investigate the rumors of a coup plot.
 - @root: Take no action for now.
+
+@ban_nsdap
+subtitle: They attempted to overthrow the republic.
+view-if: nazis_suspended and not nsdap_banned
+choose-if: judicial_reform >= (3+(nsdap_votes/5))
+unavailable-subtitle: The courts are obstructing.
+on-arrival: nsdap_banned = 1; coup_progress += 5; dvp_relation -= 5; hindenburg_angry += 30; constitutional_reform += 1 if not party_bans; party_bans = 1 if not party_bans
+
+We have banned the NSDAP! This is a great victory for democracy, albeit a controversial measure which has had us labelled as undemocratic by the very same parties which loathe democracy.
 
 @ban_sa
 view-if: nazi_urgency >= 3 and sa_banned == 0

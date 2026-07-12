@@ -24,7 +24,7 @@ For better or for worse, the Socialists stand virtually alone in supporting incr
 
 @labor
 subtitle: Paid maternal leave policies, equal pay policies, and so on.
-max-visits: 3
+view-if: womens_work < 3
 on-arrival: women_labor_vote = 1
 go-to: women_labor if not legislature_enabled; legislative_menu if legislature_enabled
 
@@ -37,7 +37,7 @@ These policies mean that our party is increasing in popularity among the "new wo
 
 @family
 subtitle: Change family and inheritance law to treat women more equally.
-max-visits: 2
+view-if: family_law < 2
 on-arrival: women_family_vote = 1
 go-to: women_family if not legislature_enabled; legislative_menu if legislature_enabled
 
@@ -58,7 +58,7 @@ go-to: women_funded if not legislature_enabled; legislative_menu if legislature_
 We propose a bill to increase welfare spending on women and children.
 
 @women_funded
-on-arrival: welfare += 1; workers_spd += 5*(1-dissent); unemployed_spd += 5*(1-dissent); budget -= 1; womens_rights += 1; coalition_dissent += 1 if welfare >= 1 and unemployed >= 15; unemployed -= 0.4; inflation += 0.2; economic_growth += 0.3;
+on-arrival: welfare += 1; womens_welfare += 1; workers_spd += 5*(1-dissent); unemployed_spd += 5*(1-dissent); budget -= 1; womens_rights += 1; coalition_dissent += 1 if welfare >= 1 and unemployed >= 15; unemployed -= 0.4; inflation += 0.2; economic_growth += 0.3;
 
 We have increased welfare spending on women and children. [? if welfare >= 1 and unemployed >= 15 : Some of our coalition partners consider increased welfare spending profligate at this time. ?]
 

@@ -17,7 +17,7 @@ Previously, the Comintern adopted the "Third Period" thesis, positing an end to 
 
 @third_period
 view-if: (kpd_party_leader != "Conciliators" and (communist_coalition*soviet_relation < 10) and not kpd_ally and not in_left_front) or ((kpd_relation <= 40 and rfb_banned == 1) or kpd_relation <= 20)
-on-arrival: workers_spd -= 4; workers_kpd += 3; unemployed_spd -= 6; unemployed_kpd += 6; kpd_relation -= 10; third_period = 1; socialism -= 2
+on-arrival: workers_spd -= 4*(left_dissent/100); workers_kpd += 3*(left_dissent/100); unemployed_spd -= 6*(left_dissent/100); unemployed_kpd += 6*(left_dissent/100); workers_kpd -= 3*(left_strength/100); unemployed_kpd -= 6*(left_strength/100); kpd_relation -= 10; third_period = 1; socialism -= 2
 
 With the threat from fascism deemed insufficient, the Third Period thesis is maintained by the Communist International. This will hurt any attempts of ours to ally the KPD, and weaken leftism worldwide.
 

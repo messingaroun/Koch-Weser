@@ -1,6 +1,6 @@
 title: Privatization
 subtitle: [+ chancellor +] seeks to reverse our socialist policies
-view-if: nationalization_progress > 0 and papenomics_timer < 1 and not spd_in_government and not spd_caretaker and not (president == "Braun" or president == "Schumacher" or president == "Juchacz" or president == "Thälmann" or president == "Münzenberg")
+view-if: nationalization_progress > 0 and papenomics_timer < 1 and not spd_in_government and not spd_caretaker and ((not (president == "Braun" or president == "Schumacher" or president == "Juchacz" or president == "Thälmann" or president == "Münzenberg")) or (in_bourgeois_coalition or in_right_coalition))
 tags: event
 new-page: true
 on-arrival: papenomics_timer += 5

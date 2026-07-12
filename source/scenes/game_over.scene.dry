@@ -122,6 +122,22 @@ if ((Q.welfare > 0 && Q.judicial_reform >= 2 && Q.womens_work >= 1 && Q.family_l
 - #endings
 - @end_game: End game.
 
+@right_thing
+view-if: capital_spd
+title: <span style="color:rgb(170,150,60);font-family:'Times New Roman',serif;font-weight:700;letter-spacing:0.5px;">You did the right thing.</span>
+tags: endings
+go-to: eg_menu
+
+<span style="color:rgb(170,150,60);font-family:'Times New Roman',serif;font-weight:700;letter-spacing:0.5px;">Thanks to you, profits are booming. This has been a real boon to the economy, so I just want to emphasize, that you did the right thing.</span>
+
+@sapd_victory
+view-if: secret_ending
+title: The SAPD is in undisputed control over Germany.
+tags: endings
+go-to: eg_menu
+
+Crazy stuff. 
+
 @schleicher_victory
 view-if: schleicher_victory
 title: Kurt von Schleicher is in undisputed control over Germany.

@@ -38,7 +38,7 @@ subtitle: Call for breaking up the large aristocratic estates and giving land to
 view-if: land_referendum_timer = 0
 choose-if: budget >= 1
 unavailable-subtitle: The government doesn't have the budget to pursue this.
-on-arrival: land_referendum_timer += 12; kpd_relation += 5; rural_spd += 6*(1-dissent); rural_spd += 3*(1-dissent) if peoples_party; rural_kpd += 1; rural_dnvp -= 8*(1-dissent); rural_nsdap -= 3*(1-dissent); dvp_relation -= 8; z_relation -= 6; left_strength += 10; left_dissent -= 5; ddp_support = 1 if ddp_relation >= 65; referendum_support = (spd_votes + kpd_votes + sapd_votes); referendum_support += ddp_votes if ddp_support == 1; other_factor = ((100*(rural/(workers+unemployed+new_middle+old_middle+rural+catholics)))*((1-dissent)/2)); referendum_support += other_factor; referendum_succeed = 1 if referendum_support >= 50; referendum_succeed = 0 if referendum_support < 50; {! 
+on-arrival: land_referendum_timer += 12; kpd_relation += 5; rural_spd += 6*(1-dissent); rural_spd += 3*(1-dissent) if peoples_party; rural_kpd += 1; rural_dnvp -= 8*(1-dissent); rural_nsdap -= 3*(1-dissent); dvp_relation -= 8; z_relation -= 6; left_strength += 10 if left_dissent < 40; left_dissent -= 5; ddp_support = 1 if ddp_relation >= 65; referendum_support = (spd_votes + kpd_votes + sapd_votes); referendum_support += ddp_votes if ddp_support == 1; other_factor = ((100*(rural/(workers+unemployed+new_middle+old_middle+rural+catholics)))*((1-dissent)/2)); referendum_support += other_factor; referendum_succeed = 1 if referendum_support >= 50; referendum_succeed = 0 if referendum_support < 50; {! 
 Q.referendum_support.toFixed(1);
 !}
 

@@ -2,7 +2,7 @@ title: Class War
 new-page: true
 is-card: true
 on-arrival: class_war_timer += 2; month_actions += 1; nationalize_budget = 4; nationalize_budget -= 1 if works_councils >= 2; nationalize_budget -= 1 if works_councils >= 3; nationalize_budget -= 1 if socializations + nationalization_progress >= 2;
-view-if: capital_strike_seen and class_war_timer < 1 and not capital_flight
+view-if: capital_strike_seen and class_war_timer < 1 and not capital_flight and not capital_strike_over and in_capital_strike
 card-image: img/class_war.jpg
 tags: govt_affairs
 

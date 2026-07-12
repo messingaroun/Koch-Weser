@@ -310,6 +310,7 @@ Q.spd_r = 29;
 Q.sapd_r = 0;
 Q.kpd_r = 11;
 Q.z_r = 16;
+Q.z_minus_bvp_r = 13;
 Q.ddp_r = 5;
 Q.dvp_r = 9;
 Q.dnvp_r = 16;
@@ -423,6 +424,7 @@ Q.judicial_reform = 0;
 Q.bureaucratic_reform = 0;
 Q.military_reform = 0;
 Q.womens_rights = 1;
+Q.womens_work = 1;
 // level of welfare relative to 1928 (can go negative)
 Q.welfare = 0;
 // level of support for farmers

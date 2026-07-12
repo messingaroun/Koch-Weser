@@ -4,7 +4,7 @@ view-if: capital_strike_seen and capital_strike_timer < 1 and ((class_war >= 7 a
 tags: event
 new-page: true
 max-visits: 1
-on-arrival: capital_flight = 1; economic_growth -= (zca_votes*bourgeois_power)/1.2; unemployed += (zca_votes*bourgeois_power)/1.5; inflation += (zca_votes*bourgeois_power)/10; bourgeois_power = 0; {!
+on-arrival: in_capital_strike = 0; capital_flight = 1; economic_growth -= (zca_votes*bourgeois_power)/1.2; unemployed += (zca_votes*bourgeois_power)/1.5; inflation += (zca_votes*bourgeois_power)/10; bourgeois_power = 0; {!
 
 Q.workers_zca *= (1-(0.25*(Q.socialism/100)));
 Q.new_middle_zca *= (1-(0.25*(Q.socialism/100)));

@@ -3,7 +3,7 @@ new-page: true
 tags: event
 priority: -1
 view-if: ((year = next_election_year and month >= next_election_month) or (year > next_election_year)) and not supreme_soviet
-on-arrival: bb_failed = 0; status_quo = 0; reichswehr_loyalty -= 0.2 if reichswehr_loyalty >= 0.4 and chancellor == "Groener"; old_economic_health = economic_health; hindenburg_angry = 0; unity_refused = 0; wirth_lead = 0; dvp_willing = 0; dvp_willing = 1 if ((dvp_relation+spd_votes+(pro_republic/6)) >= ((100-pro_republic)+capital_strike_progress+(coup_progress/2))); z_willing = 0; z_willing = 1 if z_relation >= 50 or (z_relation >= 25 and bourgeois_coalition < 50)
+on-arrival: gov_tension = 0; bb_failed = 0; status_quo = 0; reichswehr_loyalty -= 0.2 if reichswehr_loyalty >= 0.4 and chancellor == "Groener"; old_economic_health = economic_health; hindenburg_angry = 0; unity_refused = 0; wirth_lead = 0; dvp_willing = 0; dvp_willing = 1 if ((dvp_relation+spd_votes+(pro_republic/6)) >= ((100-pro_republic)+capital_strike_progress+(coup_progress/2))); z_willing = 0; z_willing = 1 if z_relation >= 50 or (z_relation >= 25 and bourgeois_coalition < 50)
 on-departure: month_actions += 1; in_election = 0; next_election_year = next_election_year + 4; n_elections += 1; next_election_time = time + 48; papen_chancellor_timer = 4;
 set-jump: post_election_1928
 
@@ -135,6 +135,7 @@ Q.leverage = Q.spd_r;
 
 Q.grand_coalition_failed = 0;
 // Reset government and ministers... Based on Brüning's 1930 govt
+Q.in_spd_majority = 0;
 Q.coalition_dissent = 0;
 Q.kpd_coalition_dissent = 0;
 Q.spd_in_government = 0;
@@ -145,6 +146,8 @@ Q.in_popular_front = 0;
 Q.in_emergency_government = 0;
 Q.in_minority_government = 0;
 Q.in_unity_government = 0;
+Q.in_bourgeois_coalition = 0;
+Q.in_right_coalition = 0;
 Q.spd_toleration = 0;
 Q.spd_caretaker = 0;
 Q.foreign_minister_party = 'DVP';
@@ -395,6 +398,7 @@ As expected, the
 
 @coalition_menu
 
+- @sapd_majority
 - @spd_majority
 - @weimar_coalition
 - @grand_coalition
@@ -423,10 +427,28 @@ As expected, the
 - @ddp_majority
 - @counterrevolution
 
+@sapd_majority
+title: The SAPD has won a majority.
+subtitle: SAPD ([+ sapd_r +]%) - What the hell? They can do that?
+view-if: sapd_r >= 50
+on-arrival: secret_ending = 1
+
+The SAPD has won a majority. Wow. There envelops the SPD a sweeping sense of shame - what could we have possibly done to create such a powerful socialist movement, only to forsake it so greatly? This ending is quite the peculiar one, and necessarily implicates us in quite the great anti-worker travesties, yet simultaneously implicates us too in creating the conditions for such a sweeping socialist transformation. Was it worth it? Where did we go wrong, where did we go right?
+
+- @game_over: Game over.
+
 @counterrevolution
 title: The counterrevolutionaries have won a majority.
 subtitle: ZCA & Friends ([+ counterrevolution_r +]%)
 view-if: zca_formed and counterrevolution_r >= 50
+go-to: class_war if class_war; normal_bourgeois if not class_war
+
+@normal_bourgeois
+go-to: let_it_form
+
+The ZCA takes charge of a bourgeois coalition.
+
+@class_war
 on-arrival: bourgeois_power += 0.1; socialism -= (counterrevolution_r/10); workers_zca += 5; new_middle_zca += 5; old_middle_zca += 5; rural_zca += 5; unemployed_zca += 5; sh_militancy += bourgeois_power/2; sh_militancy += 0.05; sa_militancy += 0.02
 
 Somehow, the bourgeoisie have won this class war, even with our whole combined effort against them. Immediately, they form a government, unveiling their plan to save Germany from socialism. Already, they are planning to privatize the industries we had seized, while the Harzburg Front swells in the countryside. 
@@ -493,8 +515,8 @@ go-to: root
 
 @bourgeois_coalition
 title: A "Bourgeois" Coalition
-subtitle: Z + BVP + [+ ddp_name +] + DVP + Others ([+ bourgeois_coalition +]%)
-view-if: bourgeois_coalition >= 50 and (weimar_coalition < 50 or z_willing != 1) and not dvp_banned
+subtitle: Z + BVP + [+ ddp_name +] [? if not dvp_banned : + DVP ?] + Others ([+ bourgeois_coalition +]%)
+view-if: bourgeois_coalition >= 50 and (weimar_coalition < 50 or z_willing != 1)
 
 The constitutional bourgeois parties have enough votes to form a coalition on their own, without even needing toleration from us. It is likely that such a government will be formed unless we act to prevent it.
 
@@ -722,7 +744,7 @@ go-to: enabling_menu
 Despite initial resistance, Joseph Joos eventually convinces a majority of his party to vote against the Enabling Act.
 
 @concordat_kaas
-view-if: z_party_leader == "Kaas" and reichskonkordat
+view-if: z_party_leader == "Kaas" and reichskonkordat and not z_concordat
 on-arrival: against_enable += z_r; z_voted = 1
 go-to: enabling_menu
 
@@ -1138,12 +1160,17 @@ subtitle: Z + [+ bvp_name +] + DVP + DNVP + Others ([+ right_coalition +]%)
 unavailable-subtitle: The DNVP is not interested in a coalition with the Center.
 view-if: right_coalition >= 50
 choose-if: year < 1928 or dnvp_reform or ((not zca_formed or counterrevolution_r < 50) and (weimar_coalition < 50 or z_willing != 1) and (grand_coalition < 50 or grand_coalition_failed == 1 or dvp_willing != 1) and far_right_coalition < 50 and (hitler_right_coalition < 50 or left_strength < 50 or political_crisis_progress < 1 or chancellor != "Brüning" or bb_failed) and bourgeois_coalition < 50 and not (dne_formed and chancellor == "Schleicher"))
-go-to: no_right_coalition if year >= 1930 and not dnvp_reform; right_coalition_2 if year <= 1929 and not dnvp_reform; right_coalition_3 if dnvp_reform
+go-to: no_right_coalition if year >= 1930 and not dnvp_reform and (neo_weimar_coalition >= 50 or not return_to_normalcy or dnvp_r < bourgeois_coalition or z_relation > dnvp_r); right_coalition_2 if year <= 1929 and not dnvp_reform; right_coalition_3 if dnvp_reform; right_coalition_4 if year >= 1930 and not dnvp_reform and neo_weimar_coalition < 50 and return_to_normalcy and dnvp_r >= bourgeois_coalition and z_relation < dnvp_r
 
 There are enough votes for a right-wing coalition of the Center (+ [+ bvp_name +]), DVP, DNVP, and minor conservative parties.
 
+@right_coalition_4
+on-arrival: spd_in_government = 0; spd_toleration = 0; chancellor = "Hugenberg"; chancellor_party = "DNVP"; foreign_minister_party = "DVP"; interior_minister_party = "Z"; justice_minister_party = "Z"; labor_minister_party = "Z"; reichswehr_minister_party = "I"; economic_minister_party = "Z"; finance_minister_party = "Z"; agriculture_minister_party = "Z"; rb_militancy -= 0.05; coup_progress += 2; sh_militancy += 0.1; in_right_coalition = 1; gov_tension += 1; workers_spd -= 5; new_middle_spd -= 5; judicial_reform -= 2; reichswehr_loyalty -= 0.1; interior_police_loyalty -= 0.1; welfare -= 1; budget += 1; nationalism += 8; pro_republic -= 5; rural_dnvp += 5; old_middle_dnvp += 5; new_middle_dnvp += 5; catholics_dnvp += 5; workers_dnvp += 5; hugenberg_consolidation = 1
+
+Despite intense opposition to the Republic from Hugenberg, and unwillingness to stand in coalition governments, the DNVP has nevertheless entered into a right-wing government following the capitulation of the bourgeois parties to Hugenberg's once absurd demands to be made chancellor.
+
 @no_right_coalition
-go-to: no_majority if president == "Hindenburg"; no_majority_marx if president == "Marx"; no_majority_adenauer if president == "Adenauer"
+go-to: no_majority if president == "Hindenburg"; no_majority_marx if president == "Marx"; no_majority_adenauer if president == "Adenauer"; brauns_dilemma if president == "Braun" or president == "Schumacher" or president == "Juchacz"
 
 However, the DNVP and its leader Hugenberg is refusing to partake in a coalition with the "November criminals" in the Center Party. Thus, there is no clear path towards a Reichstag majority.
 
@@ -1237,7 +1264,7 @@ Luckily, the difficult decision has been made for us, as regardless of how we vo
 
 @no_majority_adenauer
 title: There is no clear governing majority.
-view-if: (not zca_formed or counterrevolution_r < 50) and (weimar_coalition < 50 or not z_willing) and (grand_coalition < 50 or grand_coalition_failed == 1 or dvp_willing != 1) and president = "Adenauer" and far_right_coalition < 50 and (right_coalition < 50 or right_coalition_failed) and bourgeois_coalition < 50
+view-if: (not zca_formed or counterrevolution_r < 50) and (weimar_coalition < 50 or not z_willing) and (grand_coalition < 50 or grand_coalition_failed == 1 or dvp_willing != 1) and president = "Adenauer" and far_right_coalition < 50 and (right_coalition < 50 or right_coalition_failed or (not dnvp_reform and year >= 1928)) and bourgeois_coalition < 50
 on-arrival: no_majority_elections += 1
 go-to: bruning_lead if no_majority_elections < 2; stegerwald_lead if (((z_relation + spd_r < z_r + dvp_r + other_r) or (z_relation + spd_r < national_front and z_national == 1)) and bourgeois_coalition+far_right_coalition >= 50) and no_majority_elections >= 2; wirth_lead if (((z_relation + spd_r >= z_r + dvp_r + other_r and z_national != 1) or (z_relation + spd_r >= national_front)) or bourgeois_coalition+far_right_coalition < 50) and no_majority_elections >= 2
 
@@ -1426,7 +1453,65 @@ Having successfully cobbled together an odd mismatch across the political spectr
 title: There is no clear governing majority.
 view-if: (not zca_formed or counterrevolution_r < 50) and (weimar_coalition < 50 or z_willing != 1) and (grand_coalition < 50 or grand_coalition_failed == 1 or dvp_willing != 1) and president = "Marx" and far_right_coalition < 50 and (right_coalition < 50 or right_coalition_failed) and (hitler_right_coalition < 50 or left_strength < 50 or political_crisis_progress < 1 or chancellor != "Brüning" or bb_failed or marx_relation >= 40) and bourgeois_coalition < 50 and not (dne_formed and chancellor == "Schleicher")
 on-arrival: no_majority_elections += 1
-go-to: no_majority_bracht if chancellor = "Bracht"; no_majority_scholz if chancellor = "Scholz"; no_majority_bruning2 if chancellor = "Brüning" or chancellor = "Wirth"; no_majority_spd2 if chancellor_party = "SPD" or n_elections <= 1; no_majority_nsdap if chancellor == "Hitler"
+go-to: no_majority_bracht if chancellor = "Bracht"; no_majority_scholz if chancellor = "Scholz"; no_majority_bruning2 if chancellor = "Brüning" or chancellor = "Wirth"; no_majority_spd2 if chancellor_party = "SPD" or n_elections <= 1; no_majority_nsdap if chancellor == "Hitler"; no_majority_martial_law if chancellor == "Groener"
+
+@no_majority_martial_law
+on-arrival: {!
+var hitler_points = 0;
+var braun_points = 0;
+var bruning_points = 0;
+
+hitler_points += Q.nsdap_r;
+hitler_points += Q.nationalism;
+hitler_points += Q.anti_democratic_coalition;
+hitler_points += Q.socialism;
+hitler_points += (100-Q.pro_republic);
+hitler_points += Q.kpd_r;
+hitler_points += (100-Q.marx_relation);
+hitler_points += Q.rb_force+Q.rfb_force;
+hitler_points -= Q.sa_force;
+hitler_points += ((Q.left_strength/100)*Q.spd_r);
+
+braun_points += Q.spd_r;
+braun_points += Q.socialism;
+braun_points += Q.pro_republic;
+braun_points += Q.weimar_coalition;
+braun_points -= Q.rb_force;
+braun_points += Q.marx_relation;
+braun_points -= Q.kpd_relation;
+braun_points += Q.dvp_relation;
+
+bruning_points += Q.z_r;
+bruning_points += Q.neo_weimar_coalition;
+bruning_points += Q.pro_republic;
+bruning_points += (100-Q.socialism);
+bruning_points += (100-Q.nationalism);
+bruning_points -= Q.no_majority_elections;
+if (braun_points >= hitler_points) {
+    bruning_points += hitler_points/4;
+} else {
+    bruning_points += braun_points/4;
+}
+
+Q.braun_chosen = 0;
+Q.hitler_chosen = 0;
+Q.bruning_chosen = 0;
+
+if (braun_points >= hitler_points && braun_points >= bruning_points) {
+    Q.braun_chosen = 1;
+} else if (hitler_points >= braun_points && hitler_points >= bruning_points) {
+    Q.hitler_chosen = 1;
+} else {
+    Q.bruning_chosen = 1;
+}
+!}
+
+Even after the martial law, there is no clear governing majority. Wilhelm Marx is growing increasingly tired of the chaos.
+
+- @marx_hitler: Adolf Hitler?
+- @marx_braun: Otto Braun?
+- @marx_bruning: Heinrich Brüning?
+- @marx_wirth: Joseph Wirth?
 
 @no_majority_bruning2
 go-to: no_majority_bruning_toleration if ((no_majority_elections <= 3 and anti_democratic_coalition <= 50 and marx_relation >= 0) or marx_relation >= 40); marx_appoints_bracht if ((no_majority_elections > 3 or anti_democratic_coalition > 50 or marx_relation < 0) and marx_relation < 40)
@@ -1988,11 +2073,11 @@ There is no path to a majority government for now. The scheming around President
 
 @spd_majority
 title: SPD majority alone
-subtitle: SPD: [+ spd_r +]%
+subtitle: SPD: [+ spd_r +]% [? if spd_r < 50 : - The [+ ddp_name +] is willing to tolerate it. ?]
 unavailable-subtitle: SPD: [+ spd_r +]% - [? if president == "Hitler" : Hitler refuses to appoint a chancellor under such a governing arrangement. ?]
-view-if: spd_r >= 50
+view-if: spd_r >= 50 or (spd_r+ddp_r >= 50 and ddp_relation >= 75)
 choose-if: president != "Hitler"
-on-arrival: chancellor = "Empty"; chancellor_party = "SPD"; spd_in_government = 1; in_spd_majority = 1; pro_republic += 5; foreign_minister_party = "SPD"; foreign_minister = "Breitscheid"; interior_minister_party = "SPD"; interior_minister = "Severing"; justice_minister_party = "SPD"; justice_minister = "Radbruch"; labor_minister_party = "SPD"; labor_minister = "Wissell"; reichswehr_minister_party = "SPD"; reichswehr_minister = "Leber"; economic_minister_party = "SPD"; economic_minister = "Schmidt"; finance_minister_party = "SPD"; finance_minister = "Hilferding"; agriculture_minister_party = "SPD"; agriculture_minister = "Baade"; reichswehr_loyalty -= 0.05; 
+on-arrival: chancellor = "Empty"; ddp_toleration = 1 if spd_r < 50; chancellor_party = "SPD"; spd_in_government = 1; in_spd_majority = 1; pro_republic += 5; foreign_minister_party = "SPD"; foreign_minister = "Breitscheid"; interior_minister_party = "SPD"; interior_minister = "Severing"; justice_minister_party = "SPD"; justice_minister = "Radbruch"; labor_minister_party = "SPD"; labor_minister = "Wissell"; reichswehr_minister_party = "SPD"; reichswehr_minister = "Leber"; economic_minister_party = "SPD"; economic_minister = "Schmidt"; finance_minister_party = "SPD"; finance_minister = "Hilferding"; agriculture_minister_party = "SPD"; agriculture_minister = "Baade"; reichswehr_loyalty -= 0.05; 
 achievement: majority_party
 
 Finally, the SPD can govern alone! Our long campaign of electioneering has paid off. We do not need to worry about coalition government; anything is possible. 

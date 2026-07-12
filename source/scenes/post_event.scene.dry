@@ -197,7 +197,7 @@ if (Q.nazi_peak || Q.return_to_normalcy || Q.victory_republic || Q.nsdap_banned)
 }
 
 Q.proletariat = Q.workers + (Q.rural*Q.rural_prole) + (Q.new_middle*Q.middle_prole) + (Q.unemployed*Q.lumpenprole);
-Q.catholic_proletariat = 15;
+Q.catholic_proletariat = (Q.catholics/2);
 Q.urban_proletariat = ((Q.workers/Q.proletariat)*85);
 Q.rural_proletariat = (((Q.rural*Q.rural_prole)/Q.proletariat)*85);
 Q.middle_proletariat = (((Q.new_middle*Q.middle_prole)/Q.proletariat)*85);
@@ -628,6 +628,39 @@ if (Q.month_actions >= 1) {
     }
     // accumulated economic growth/decline
     // Maybe there should be differences for positive/negative growth?
+    if (Q.bourgeois_power >= (0.9+((Q.nationalization_progress+Q.economic_democracy)/100))) {
+        if ((Q.bourgeois_power < 1 || (!Q.spd_in_government && Q.bourgeois_power < (1.25-((Q.nationalization_progress+Q.economic_democracy)/10)))) && Q.economic_growth > 0) {
+            Q.bourgeois_power += (Q.economic_growth/100)/12;
+        }
+        Q.bourgeois_power += 0.01/12;
+    }
+    if ((Q.bourgeois_power >= (0.9-((Q.nationalization_progress+Q.economic_democracy)/100))) && Q.economic_growth < 0) {
+        Q.bourgeois_power += (Q.economic_growth/100)/12;
+    }
+    if ((Q.bourgeois_power < (0.9-((Q.nationalization_progress+Q.economic_democracy)/100))) && !Q.spd_in_government) {
+        Q.bourgeois_power += ((1-Q.bourgeois_power)/(12+Q.nationalization_progress));
+    }
+    if (Q.bourgeois_power < 1) {
+        if (!Q.spd_in_government) {
+            Q.bourgeois_power += (Q.bourgeois_power)/1200;
+        }
+        if (Q.spd_in_government && (Q.in_grand_coalition || Q.in_weimar_coalition)) {
+            Q.bourgeois_power += (Q.bourgeois_power*(Q.coalition_dissent+1))/4800;
+        }
+    }
+    var diff = (Q.bourgeois_power - Q.assessed_bourgeois);
+    if (Q.interior_minister_party == "SPD") {
+        Q.assessed_bourgeois += (diff*Q.interior_police_loyalty*(Q.investigate_corruption/10))/12;
+    }
+    Q.assessed_bourgeois += (diff*(1-Q.dissent))/24;
+    if (Q.assessed_bourgeois >= (Q.bourgeois_power*1.25)) {
+        Q.assessed_bourgeois -= (Q.investigate_corruption/100)/12;
+        Q.inaccuracy = 1;
+    }
+    if (Q.assessed_bourgeois <= (Q.bourgeois_power*0.75)) {
+        Q.assessed_bourgeois += (Q.investigate_corruption/100)/12;
+        Q.inaccuracy = 1;
+    }
     if (Q.economic_growth < 0) {
         if (Q.economic_expansion > 0) {
             Q.economic_expansion = 0;
@@ -1702,6 +1735,33 @@ if (Q.month_actions >= 1) {
             }
         }
         if (Q.return_to_normalcy) {
+            if (Q.in_recession) {
+                Q.unemployed += (((Math.floor(Math.random() * 6) + 1)+Q.recession_severity)/12)*Q.bourgeois_power;
+                Q.inflation -= (((Math.floor(Math.random() * 3) + 1)+Q.recession_severity)/36)*Q.bourgeois_power;
+                Q.economic_growth -= (((Math.floor(Math.random() * 3) + 1)+Q.recession_severity)/24)*Q.bourgeois_power;
+                Q.recession_severity -= 0.5;
+            }
+            if (Q.nsdap_banned && (Q.nsdap_votes >= (100-Q.pro_republic))) {
+                Q.workers_nsdap -= 3/12;
+                Q.new_middle_nsdap -= 3/12;
+                Q.rural_nsdap -= (1+Q.land_reform)/12;
+                Q.unemployed_nsdap -= 3/12;
+                Q.old_middle_nsdap -= 3/12;
+            }
+            if (Q.inflation < 0 && !Q.in_recession) {
+                Q.inflation += (1/12)*Q.bourgeois_power;
+                Q.economic_growth += (0.7/12)*Q.bourgeois_power;
+            }
+            if (Q.economic_growth < 0 && Q.inflation >= 0 && !Q.in_recession) {
+                Q.economic_growth += (Q.inflation/12)*Q.bourgeois_power;
+            }
+            if ((Q.unemployed > (5-Q.welfare)) && Q.economic_growth >= 0 && !Q.in_recession) {
+                Q.unemployed -= (Q.economic_growth/12)*Q.bourgeois_power;
+            }
+            if (Q.inflation > 3 && !Q.in_recession) {
+                Q.economic_growth -= ((Q.inflation-3)/12)*Q.bourgeois_power;
+                Q.inflation -= ((Q.unemployed/5)/12)*Q.bourgeois_power;
+            }
             if (Q.marx_relation < Q.z_relation) {
                 Q.marx_relation += 10/12;
             }
@@ -1942,6 +2002,13 @@ if (Q.month_actions >= 1) {
         }
         if (Q.black_thursday_seen && Q.nazi_urgency && !Q.return_to_normalcy && !Q.capital_nazi && Q.kpd_relation < 39) {
             Q.kpd_relation += Q.nazi_urgency/3;
+        }
+        if (Q.army_force <= 30) {
+            Q.reichswehr_militancy += 0.1/12;
+            Q.exception += 0.1/12;
+            if (!Q.exception) {
+                Q.exception = (0.1/12);
+            }
         }
     }
     if (Q.nazi_reform && Q.nazi_reform_timer > 0) {
@@ -2244,6 +2311,11 @@ if (Q.month_actions >= 1) {
     }
     if (Q.dvp_relation >= 50 && Q.capital_strike_progress > 0 && Q.in_grand_coalition) {
         Q.capital_strike_progress -= 3/12;
+    }
+    if (Q.capital_strike_seen && Q.economic_growth > 0) {
+        Q.capital_strike_progress -= (Q.economic_growth*Q.bourgeois_power)/12;
+        Q.capital_strike_progress += (Q.nationalization_progress)/12;
+        Q.capital_strike_progress -= (12-Q.capital_strike_timer)/12;
     }
     if (!Q.victory_republic && Q.nsdap_votes >= 30) {
         Q.sa_strength += Q.unemployed_nsdap_normalized;

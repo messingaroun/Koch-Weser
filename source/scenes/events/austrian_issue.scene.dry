@@ -143,6 +143,8 @@ if (Q.kpd_relation >= 60) {
 } else if (Q.kpd_relation >= 45) {
     Q.normalized_workers_total += Q.normalized_workers_kpd*0.5;
     Q.left_bl = Q.spd_bl+(Q.kpd_bl*0.5);
+} else {
+    Q.left_bl = Q.spd_bl;
 }
 Q.strike_power = (2 - Q.labor_dissent/100)*Q.normalized_workers_total*(2 - Q.unemployed/100)*(Q.left_bl/10);
 Q.total_power += Q.strike_power;

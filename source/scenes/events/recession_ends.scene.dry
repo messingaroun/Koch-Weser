@@ -1,0 +1,50 @@
+title: Recession Ends
+subtitle: The economy has recovered!
+view-if: in_recession and recession_severity < 1 and year >= 1937
+on-arrival: {! 
+
+Q.economic_growth += (Math.floor(Math.random() * 6) + 1)/10;
+Q.inflation += (Math.floor(Math.random() * 6) + 1)/10;
+Q.unemployed *= 0.95;
+
+Q.in_recession = 0;
+
+if (Q.spd_in_government) {
+    Q.workers_spd += 3;
+    Q.new_middle_spd += 3;
+    Q.old_middle_spd += 2;
+    Q.rural_spd += 3;
+    Q.unemployed_spd += 4;
+}
+if (Q.in_grand_coalition || Q.in_bourgeois_coalition || Q.in_right_coalition) {
+    Q.new_middle_dvp += 2;
+    Q.old_middle_dvp += 4;
+    Q.rural_dvp += 3;
+}
+if (Q.in_weimar_coalition || Q.in_bourgeois_coalition || Q.in_grand_coalition || Q.in_right_coalition) {
+    Q.new_middle_z += 1;
+    Q.old_middle_z += 1;
+    Q.rural_z += 1;
+    Q.new_middle_ddp += 2;
+    Q.rural_ddp += 1;
+    Q.old_middle_ddp += 1;
+    Q.workers_ddp += 1;
+}
+
+Q.unemployed_kpd -= 5;
+Q.unemployed_nsdap -= 5;
+
+!}
+tags: event
+new-page: true
+
+= Recession Ends
+
+The global economy, including the German one, has recovered from the recession.
+
+- @hurray: Hurray.
+
+@hurray
+on-arrival: socialism -= 5*bourgeois_power
+
+That's pretty good.

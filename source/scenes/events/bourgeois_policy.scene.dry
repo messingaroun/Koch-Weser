@@ -1,0 +1,564 @@
+title: The Governance of Germany
+subtitle: [+ chancellor +] is busy at work
+view-if: not spd_in_government and (spd_toleration or in_bourgeois_coalition or in_right_coalition) and ((year >= 1935 or (year >= 1934 and month >= 4)) or return_to_normalcy) and (time >= next_policy_time)
+tags: event
+new-page: true
+on-arrival: policy_seen += 1; {!
+
+Q.next_policy_time = (Q.time + (Math.floor(Math.random() * 2) + 1) + (Math.floor(Math.random() * 2) + 1) + (Math.floor(Math.random() * 1)));
+
+Q.tax_cuts_frequency = Math.max(1, Math.min(1000, 200 * (Q.upper_tax_rates + Q.budget + 4)));
+Q.tax_hikes_frequency = Math.max(1, Math.min(1000, 50 * Q.inflation));
+Q.regressive_tax_frequency = Math.max(1, Math.min(1000, 25 * (Q.upper_tax_rates + 5)));
+Q.welfare_cuts_frequency = Math.max(1, Math.min(1000, 25 * (Q.welfare + 5)));
+Q.welfare_hikes_frequency = Math.max(1, Math.min(1000, 50 * Q.budget));
+Q.tariff_cuts_frequency = Math.max(1, Math.min(1000, 25 * Q.budget));
+Q.tariff_hikes_frequency = Math.max(1, Math.min(1000, 5 * Q.rural_spd_normalized));
+Q.eu_talks_frequency = Math.max(1, Math.min(1000, 100 * (Q.eu_progress + 1)));
+Q.employers_frequency = Math.max(1, Math.min(1000, (50 / Q.bourgeois_power) + (25 * Q.capital_strike_progress)));
+Q.compromise_frequency = Math.max(1, Math.min(1000, Q.workers_spd_normalized + Q.workers_kpd_normalized + Q.workers_sapd_normalized));
+Q.rearmament_frequency = Math.max(1, Math.min(1000, 200 - (Q.reichswehr_militancy * (Q.west_relation + Q.east_relation))));
+Q.judicial_regression_frequency = Math.max(1, Math.min(1000, 50 * Q.judicial_reform));
+Q.interior_regression_frequency = Math.max(1, Math.min(1000, 100 * Q.interior_police_loyalty));
+Q.military_regression_frequency = Math.max(1, Math.min(1000, 100 * Q.reichswehr_loyalty));
+Q.disempower_councils_frequency = Math.max(1, Math.min(1000, 100 * Q.works_councils));
+Q.privatizations_frequency = Math.max(1, Math.min(1000, 300 * (Q.nationalization_progress + Q.capital_strike_progress)));
+Q.suppressing_reichsbanner_frequency = Math.max(1, Math.min(1000, Q.rb_force * 5));
+Q.suppressing_communists_frequency = Math.max(1, Math.min(1000, (Q.kpd_votes + Q.rfb_force) * (Q.socialism / 10)));
+Q.chud_agenda_frequency = Math.max(1, Math.min(1000, (Q.womens_rights + Q.homosexual_rights) * 50));
+Q.agricultural_subsidies_frequency = Math.max(1, Math.min(1000, Q.rural_spd_normalized * Q.budget * 5));
+Q.collapse_frequency = Math.max(1, Math.min(10 * (gov_tension * gov_tension * gov_tension)));
+
+!}
+max-choices: 1
+
+= The Governance of Germany
+
+Under the governance of [+ chancellor +], Germany's administration continues. But it's administration is not a passive one; it is natural that it makes decisions which shape the course of German society.
+
+- @tax_cuts: Tax cuts
+- @tax_hikes: Tax hikes
+- @regressive_tax: Regressive taxation
+- @welfare_cuts: Welfare cuts
+- @welfare_hikes: Welfare hikes
+- @tariff_cuts: Tariff cuts
+- @tariff_hikes: Tariff hikes
+- @diplomacy: Diplomacy
+- @diplomacy2: Diplomacy with the Soviet Union
+- @eu_talks: Negotiations for a European Union
+- @concordat: Negotiations for a Reichskonkordat
+- @employers: Supporting employers in labor disputes
+- @compromise: Striking compromises in labor disputes
+- @rearmament: Rearmament
+- @judicial_regression: Undoing judicial reforms
+- @interior_regression: Undoing police reform
+- @military_regression: Undoing military reform
+- @disempower_councils: Disempowering works councils
+- @privatizations: Privatizations
+- @lifting_price_controls: Lifting price controls
+- @privatizing_media: Returning media to private ownership
+- @unbanning_financing: Unbanning private party financing
+- @suppressing_reichsbanner: Suppressing the Reichsbanner
+- @suppressing_communists: Suppressing communists
+- @anti_state_buyer: Removing the state monopoly on grain
+- @chud_agenda: Rolling back womens & homosexual rights
+- @agricultural_subsidies: Agricultural subsidies
+- @collapse: The government collapses!
+
+@tax_cuts
+view-if: (budget > 2 or (budget >= 2 and upper_tax_rates >= 3)) and (inflation < 4 or unemployed >= 8)
+subtitle: The bourgeoisie cut taxes
+frequency: 200
+on-arrival: budget -= 2; workers_z += 2; workers_dvp += 2*(1-(socialism/100)); new_middle_dvp += 5; old_middle_dvp += 3; rural_dvp += 3; old_middle_dnvp += 3 if in_right_coalition; rural_dnvp += 3 if in_right_coalition; rural_dvp += 3 if not in_right_coalition; old_middle_dvp += 3 if not in_right_coalition; upper_tax_rates -= 1; lower_tax_rates -= 1; unemployed -= 1 if unemployed >= 5; capital_strike_progress -= 1 if upper_tax_rates < 0; inflation += 0.4; economic_growth += 0.4; socialism -= 1
+
+The government cuts tax rates, stimulating economic growth. The main beneficiaries are the middle classes and the wealthy, though nobody's going to complain about having more money in their pockets, at least until the consequences of such present themselves.
+
+@tax_hikes
+view-if: (budget <= 0 or (budget <= 1 and inflation >= 7)) and inflation >= 4
+subtitle: The bourgeoisie raise taxes
+frequency: 200
+on-arrival: budget += 3; new_middle_dvp -= 2; new_middle_ddp -= 2 if not in_right_coalition; old_middle_dvp -= 2; old_middle_dvp -= 2 if not in_right_coalition; old_middle_dnvp -= 2 if in_right_coalition; workers_dvp -= 3; workers_ddp -= 2 if not in_right_coalition; rural_dvp -= 2; rural_dvp -= 2 if not in_right_coalition; rural_dnvp -= 2 if in_right_coalition; unemployed += 2; lower_tax_rates += 1; upper_tax_rates += 1; capital_strike_progress += 1 if upper_tax_rates > 1; capital_strike_progress += 1 if upper_tax_rates > 2; workers_z -= 5 if lower_tax_rates > 1; inflation -= 1.1; economic_growth -= 0.6;
+
+The government raises tax rates, suppressing inflation at the cost of slackening economic growth and rising unemployment, while fitting out the government's previously tight coffers. 
+
+- @break_toleration
+- @tolerate
+
+@regressive_tax
+frequency: 200
+view-if: (upper_tax_rates >= 2 or ((upper_tax_rates > 0 and capital_strike_progress >= 5) or (upper_tax_rates >= (3-capital_strike_progress) and upper_tax_rates > -5))) or (upper_tax_rates >= -3 and bourgeois_power < 0.8)
+subtitle: The bourgeoisie make taxation more regressive
+on-arrival: workers_z -= 5; workers_dvp -= 5; workers_dnvp -= 5 if in_right_coalition; workers_dvp -= 5 if not in_right_coalition; bourgeois_power += 0.02; new_middle_dvp += 5*bourgeois_power; old_middle_dvp += 6*bourgeois_power; upper_tax_rates -= 1; lower_tax_rates += 1; workers_dvp -= 5 if lower_tax_rates >= 2; capital_strike_progress -= 1 if upper_tax_rates < 0; socialism += 2
+
+The government's regressive taxation policy benefits the rich while hurting the poor and working-class.
+
+- @break_toleration
+- @tolerate
+
+@welfare_cuts
+frequency: 200
+view-if: (welfare+2) >= budget
+subtitle: The bourgeoisie cut welfare spending
+on-arrival: budget += 1; workers_dvp -= 3; workers_z -= 3; workers_ddp -= 3 if not in_right_coalition; workers_dnvp -= 3 if in_right_coalition; unemployed_kpd += 5; workers_kpd += 2; workers_kpd += 1 if sapd_consolidated != 1; workers_sapd += 1 if sapd_consolidated == 1; welfare -= 1; pro_republic -= 3; inflation -= 0.3; unemployed += 0.4; economic_growth -= 0.2;
+
+The government has reduced levels of social welfare spending. This means more poverty and suffering for the working class. 
+
+- @break_toleration
+- @tolerate
+
+@welfare_hikes
+frequency: 100
+view-if: ((welfare+2) < budget) and (in_recession or unemployed >= 10) and inflation < 3.5 and budget > 0
+subtitle: The bourgeoisie increase welfare spending
+go-to: pre_depression if unemployed < 15; post_depression if unemployed >= 15
+
+@pre_depression
+on-arrival: budget -= 1; workers_dvp += 2*bourgeois_power; workers_z += 2*bourgeois_power; workers_ddp += 2*bourgeois_power if not in_right_coalition; workers_dnvp += 2*bourgeois_power if in_right_coalition; unemployed_z += 3*bourgeois_power; welfare += 1; inflation += 0.3; unemployed -= 0.4; economic_growth += 0.2;
+
+The government has increased welfare spending. Our proletarian base is pleased.
+
+@post_depression
+on-arrival: budget -= 1; workers_dvp += bourgeois_power; workers_z += bourgeois_power; workers_ddp += bourgeois_power if not in_right_coalition; workers_dnvp += bourgeois_power if in_right_coalition; unemployed_z += bourgeois_power; inflation += 0.3
+
+Increasing welfare spending is necessary in light of the rise in unemployment, so the government is essentially treading water.
+
+@tariff_cuts
+frequency: 100
+view-if: budget > 2 and tariffs > -5 and not in_right_coalition and (rural_spd_normalized < (rural_dvp_normalized+rural_other_normalized+rural_z_normalized+rural_ddp_normalized)) and (rural_dnvp_normalized > (rural_dvp_normalized+rural_z_normalized+rural_other_normalized+rural_ddp_normalized))
+on-arrival: tariffs -= 1; budget -= 2; inflation -= 0.5; workers_ddp += 2*bourgeois_power; workers_dvp += 2*bourgeois_power; rural_dvp -= 5; old_middle_dvp -= 3; west_relation += 1; east_relation += 1; eu_progress += 1 if eu_progress > 0; economic_growth += 0.4; socialism -= 2
+subtitle: The bourgeoisie cut tariffs 
+
+The government cuts tariffs, lowering prices for consumers by increasing supply. This benefits industry and the urban poor, but hurts small producers producing goods aimed at the domestic market.
+
+@tariff_hikes
+frequency: 50
+view-if: inflation < 3 and (budget < 2 or in_right_coalition or rural_spd_normalized >= (rural_dnvp_normalized+rural_dvp_normalized)) and not eu_progress and tariffs < 3
+on-arrival: gov_tension += 1 if budget >= 2; tariffs += 1; inflation += 1 if inflation > 0; inflation += 0.5 if inflation <= 0; unemployed += 1.5; budget += 2; workers_dvp -= 3; workers_ddp -= 2 if not in_right_coalition; workers_dnvp -= 2 if in_right_coalition; workers_z -= 2; unemployed_z -= 2; rural_dvp += 4*bourgeois_power; old_middle_dvp += 3*bourgeois_power; rural_ddp += 2*bourgeois_power if not in_right_coalition; rural_dnvp += 4*bourgeois_power if in_right_coalition; rural_spd -= 4*bourgeois_power if rural_spd_normalized >= 20; west_relation -= 1; east_relation -= 1; reparations_negotiation -= 2; eu_progress -= 1 if eu_progress > 0; economic_growth -= 0.4; socialism += 2
+subtitle: The bourgeoisie hike tariffs 
+
+The government increases tariff rates, increasing inflation and hurting consumption among the working class. Retaliatory tariffs reduce the competitiveness of German exports, raising unemployment among workers. They also lead to an atmosphere of international suspicion, reducing our ability to negotiate with other countries.
+
+On the other hand, agricultural producers and some small businesses benefit from higher tariffs, as farmers can now command higher prices for grain, and formerly uncompetitive businesses are now able to function.
+
+- @break_toleration
+- @tolerate
+
+@diplomacy
+frequency: 200
+view-if: not in_right_coalition and (west_relation < 5 or east_relation < 4)
+on-arrival: west_relation += 1; east_relation += 1
+subtitle: The bourgeoisie engage with their international counterparts
+
+The government has entered into negotiations with Germany's neighbors, seeking to improve relations for peace in Europe.
+
+@diplomacy2
+frequency: 200
+view-if: in_right_coalition
+on-arrival: soviet_relation += 1; reichswehr_militancy += 0.05; gov_tension += 1 if soviet_relation > west_relation
+subtitle: The bourgeoisie engage in dialogue with the Soviets
+
+The government has entered into negotiations with the Soviet Union, seeking to further the goal of rearmament and foster a broader anti-Versailles bloc despite ideological divergences.
+
+@eu_talks
+frequency: 200
+view-if: west_relation >= 5 and east_relation >= 4 and not in_right_coalition and not eu
+on-arrival: eu_progress += 1; west_relation += 1
+go-to: success if west_relation >= 5 and east_relation >= 4 and eu_progress >= 2
+subtitle: The bourgeoisie discuss a combined continental market
+
+The government is pursuing talks to explore the creation of a European Union. 
+
+@success
+
+Surprisingly, the talks are a success! A treaty has been signed to form a European Union with France, Great Britain and many other states of Western and Eastern Europe. The treaty is now to be ratified.
+
+- @vote_eu: We support the EU, of course.
+- @oppose_eu: We oppose the EU!
+- @ratified: The treaty is ratified.
+
+@vote_eu
+view-if: spd_toleration
+go-to: ratified
+
+@ratified
+view-if: not spd_toleration
+on-arrival: eu = 1; bourgeois_power += 0.05; unemployed -= 2 if unemployed >= 10; inflation += 2 if inflation <= -2; inflation -= 1 if inflation >= 4.5; workers_ddp += 5*bourgeois_power; new_middle_ddp += 5*bourgeois_power; old_middle_ddp += 3*bourgeois_power; old_middle_dvp += 3*bourgeois_power; rural_dvp += 4*bourgeois_power; catholics_z += 4*bourgeois_power; pro_republic += 5; nationalism -= 5; budget += 1; economic_growth += 1; economic_growth += 1 if economic_growth < 3
+achievement: eu
+
+The treaty has been ratified, and a major policy proposal of the government completed. A major component of the union is the free movement of people and goods across the countries of Europe, as well as the stabilization of currency exchange rates. This provides new markets for German products and new sources of investment.
+
+Fascist Italy remains a problem, and the Soviet Union also lies outside the system. But for now, there is new hope for peace and prosperity throughout the continent.
+
+@oppose_eu
+view-if: spd_toleration and left_strength >= 55
+on-arrival: workers_spd -= 3*bourgeois_power; new_middle_spd -= 5*bourgeois_power; old_middle_spd -= 5*bourgeois_power; rural_spd -= 4*bourgeois_power; eu_progress = 0; west_relation -= 1; east_relation -= 1; z_relation -= 8; ddp_relation -= 10; dvp_relation -= 10; kpd_relation += 7
+go-to: break_toleration
+
+By voting against, we have prevented the European Union from being formed, but opened ourselves up to a choral of slander from the bourgeois parties. The government has resigned.
+
+@concordat
+frequency: 100
+view-if: not in_right_coalition and chancellor_party == "Z" and gov_tension < 2 and not reichskonkordat
+on-arrival: reichskonkordat_progress += 2; gov_tension += 1;
+go-to: concordat_signed if reichskonkordat_progress >= 4 and gov_tension < 2
+subtitle: The Center seeks a Concordat
+
+The government is negotiating to sign a Concordat with the Vatican. The liberal and Protestant parties are reluctant to support this, straining the government.
+
+@concordat_signed
+
+The government has signed a Concordat with the Vatican! All that remains to see is its ratification.
+
+- @vote_concordat: We support the Reichskonkordat.
+- @oppose_concordat: We oppose the Reichskonkordat.
+- @ratified_concordat: The treaty is ratified.
+
+@vote_concordat
+view-if: spd_toleration
+go-to: ratified_concordat
+
+@ratified_concordat
+view-if: not spd_toleration
+on-arrival: reichskonkordat = 1; catholics_z += 10; catholics_spd -= 5 if catholics_spd_normalized >= 15; gov_tension += 1
+achievement: reichskonkordat
+
+The Concordat between Germany and the Roman Catholic Church has been ratified! This treaty defines a formal relationship between the Church and the German state, guaranteeing freedom of worship for Catholics, and the right of the church to appoint their own clergy. Catholics in Germany are pleased, as are their representatives in the Center Party.
+
+@oppose_concordat
+view-if: spd_toleration and ((z_relation+reformist_strength) < 100)
+on-arrival: catholics_spd = 0; reichskonkordat_progress -= 1; z_relation -= 20
+go-to: break_toleration
+
+By voting against, we have prevented the Reichskonkordat from being signed, but mobilized Catholics and their representatives against us. The Center Party has resigned from government, collapsing it.
+
+@employers
+frequency: 100
+view-if: bourgeois_power < 0.9 or capital_strike_progress >= 3
+subtitle: The bourgeoisie suppress labor in favor of capital
+on-arrival: gov_tension += 1 if z_party_leader == "Joos"; bourgeois_power += 0.02; workers_z -= 3; workers_ddp -= 3 if not in_right_coalition; workers_dnvp -= 3 if in_right_coalition; workers_dvp -= 3; workers_kpd += 2; workers_kpd += 1 if sapd_consolidated != 1; workers_sapd += 1 if sapd_consolidated == 1; capital_strike_progress -= 1 if capital_strike_progress > 1; capital_strike_progress -= 1 if capital_strike_progress > 8; socialism += 2
+
+The suppression of the strikes dampens the appeal of the bourgeoisie amongst the workers, but strengthens and serves their financial backers well. We will have to agitate against this.
+
+- @break_toleration
+- @tolerate
+- @support_strikes: Support the ADGB in striking against this government.
+- @rally_: Rally against the government!
+
+@support_strikes
+view-if: not unions_independent and not spd_toleration
+subtitle: -1 resource
+choose-if: resources >= 1
+unavailable-subtitle: -1 resource - We can't afford this.
+on-arrival: resources -= 1; workers_spd += 4*(1-dissent); labor_dissent -= 5; labor_strength += 5; unemployed_spd += 4*(1-dissent); workers_z -= 2; 
+
+We provide financial support to the ongoing strikes against the government, intensifying the class conflict that they have initiated and strengthening our relationship with the government.
+
+@rally_
+view-if: not spd_toleration
+go-to: rally.main_rally
+
+@compromise
+frequency: 100
+view-if: (((workers_spd_normalized+workers_kpd_normalized+workers_sapd_normalized) >= 85) or (workers_kpd_normalized+workers_sapd_normalized >= 50)) and bourgeois_power >= 0.9 and capital_strike_progress < 3
+subtitle: The bourgeoisie attempt to foster a class peace
+on-arrival: workers_spd -= workers_spd*(0.1-(0.1*(socialism/100)))*bourgeois_power; workers_ddp += 3*bourgeois_power if not in_right_coalition; workers_dnvp += 3*bourgeois_power if in_right_coalition; workers_z += 2*bourgeois_power; workers_dvp += 2*bourgeois_power; gov_tension += 1 if (bourgeois_power < 1 or capital_strike_progress > 0)
+
+The government has addressed the strikes by attempting to compromise between the classes, moderately estranging their industrialist supporters. However, while the compromises are quite insufficient in addressing the concerns of organized labor, they still represent clear overtures, bolstering their attempts to break the socialist hold on the working class moderately.
+
+@rearmament
+frequency: 100
+view-if: (in_right_coalition and budget > 1) or (budget > 2 and (reichswehr_strength*reichswehr_militancy < 500))
+subtitle: The bourgeoisie seek to rearm Germany
+on-arrival: budget -= 1; reichswehr_strength += 10 if reichswehr_strength <= 90; reichswehr_militancy += 1; economic_growth += 0.1; west_relation -= 1; east_relation -= 1; gov_tension += 1 if eu_progress; eu_progress -= 1
+
+The government has commenced a rearmament program, seeking to bolster the strength of the Reichswehr. What will come of this program is unclear, but our neighbors look on wearily.
+
+- @break_toleration
+- @tolerate
+
+@judicial_regression
+frequency: 100
+view-if: (in_right_coalition and judicial_reform > 0) or (judicial_reform > 3)
+on-arrival: gov_tension += 1 if judicial_reform < 3; judicial_reform -= 1; nationalism += 3 if judicial_reform < 2; pro_republic -= 3 if judicial_reform < 3
+subtitle: The bourgeoisie seek to undo our judicial reforms
+
+The government has begun a program of minor judicial reforms which overturn and reverse ours. They claim our attempts sought to politicize the judiciary, and that many of the judges we removed were more experienced than their young and brash republican replacements.
+
+- @break_toleration
+- @tolerate
+
+@interior_regression
+view-if: in_right_coalition and interior_police_loyalty > 0.4 or (z_relation < nationalism and interior_police_loyalty > 0.25)
+frequency: 100
+on-arrival: interior_police_loyalty -= 0.05; interior_police_loyalty -= (nationalism/1000); gov_tension += 1 if interior_police_loyalty < 0.55; gov_tension += 1 if interior_police_loyalty < 0.35
+subtitle: The reactionaries strike at the police force
+
+The government has begun a program of reversive interior reforms, with the DNVP attempting to derepublicanize the police forces and embed in them loyalty to German nationalism, against socialism. We will have to reverse these policies when we take power.
+
+@military_regression
+view-if: (in_right_coalition and reichswehr_loyalty > 0.25) or military_reforms
+frequency: 150
+on-arrival: military_reforms -= 1 if military_reforms; reichswehr_loyalty -= 0.05; coup_progress -= 1; reichswehr_militancy += 0.25 if military_reforms and reichswehr_militancy < 5; sh_militancy -= 0.025
+subtitle: The government undoes our military reforms
+
+The government has begun a program of [? if military_reforms : reinstating removed reactionary officers and ?] removing republican officers, on the basis of experience; claiming that the reactionaries of the old generation are simply better commanders more fitted to lead. 
+
+- @break_toleration
+- @tolerate
+
+@disempower_councils
+view-if: works_councils > 0 and (bourgeois_power < 0.9 or capital_strike_progress >= 3 or (works_councils >= 2 and ((workers_spd_normalized+workers_kpd_normalized+workers_sapd_normalized) < 85)))
+frequency: 250
+subtitle: The bourgeoisie attack economic democracy
+on-arrival: works_councils -= 1; capital_strike_progress -= 1; economic_democracy -= 1; workers_dvp -= 5; workers_ddp -= 3 if not in_right_coalition; workers_dnvp -= 3 if in_right_coalition; workers_z -= 2
+go-to: works_councils_0 if works_councils == 0; works_councils_1 if works_councils == 1; works_councils_2 if works_councils == 2
+
+@works_councils_0
+on-arrival: bourgeois_power += 0.01; socialism -= 1
+
+The works councils have been restored to a vestigial and powerless role, removed from management decisions by the governing coalition.
+
+- @break_toleration
+- @tolerate
+
+@works_councils_1
+on-arrival: bourgeois_power += 0.02; socialism -= 2; economic_growth -= 0.1 if economic_growth >= 3
+
+National and sectorial workers councils have been part of the Weimar Constitution, but they were disempowered in the past, acting as nothing more than advisory bodies. Now, they have been disempowered again.
+
+- @break_toleration
+- @tolerate
+
+@works_councils_2
+on-arrival: bourgeois_power += 0.03; socialism -= 3; unemployed += 2 if unemployed < 5; workers -= 2; economic_growth -= 0.1 if economic_growth >= 3
+
+Sectorial works councils can no longer negotiate wage and price policies for entire economic sectors, greatly disempowering the workers in favor of capital.
+
+- @break_toleration
+- @tolerate
+
+@privatizations
+view-if: nationalization_progress > 0 and ((not (president == "Braun" or president == "Schumacher" or president == "Juchacz" or president == "Thälmann" or president == "Münzenberg")) or (in_bourgeois_coalition or in_right_coalition))
+on-arrival: socialism -= 1; nationalization_progress -= 1; capital_strike_progress -= 2; bourgeois_power += 0.05; unemployed += 3.5 if unemployed < 6; unemployed += 1.2 if works_councils < 3; workers -= 2 if nationalization_progress >= 2; budget += 3; works_program -= 1; workers_spd += 2*(1-dissent); unemployed_spd += 3*(1-dissent); new_middle_spd -= 2; new_middle_spd += 1 if new_middle_conscious; old_middle_spd -= 3; inflation -= 2; economic_growth -= 1.7 if economic_growth >= 5
+frequency: 500
+subtitle: The bourgeoisie reassert their economic primacy
+
+The government has enacted a program of privatizations, reversing our own nationalization programs in the name of the free market. 
+
+- @break_toleration
+- @tolerate
+
+@lifting_price_controls
+view-if: price_controls and inflation < 5
+frequency: 10000
+on-arrival: price_controls = 0; black_market = 0; capital_strike_progress -= 3; inflation += 3; unemployed -= 1; old_middle_dvp += 4; new_middle_dvp += 3; rural_dvp += 5; workers_dvp += 2; rural_ddp += 2 if not in_right_coalition; rural_dnvp += 4 if in_right_coalition; unemployed_spd += 3; economic_growth += 0.4
+subtitle: The bourgeoisie lift price and wage controls
+
+The government has lifted the price and wage controls that we implemented, leading to a steep rise in inflation as the economy readjusts, although the decision is relatively popular for now, at least divorced from its potential consequences.
+
+- @break_toleration
+- @tolerate
+
+@privatizing_media
+view-if: socialized_media
+frequency: 1000000
+subtitle: The bourgeoisie restores its control over the narrative
+on-arrival: socialized_media = 0; economic_growth += 3*bourgeois_power; unemployed -= 2*bourgeois_power; inflation -= 1*bourgeois_power; bourgeois_power += 0.1; coup_progress -= 5; socialism -= 5; socialism -= 8 if state_media; workers_spd -= 6 if state_media; unemployed_spd -= 6 if state_media; new_middle_spd -= 6 if state_media; old_middle_spd -= 6 if state_media; rural_spd -= 5 if state_media; state_media = 0
+
+The government has restored private control over the media, championing the freedom of the press as it hands printing presses and newspapers back over to private control.
+
+- @break_toleration
+- @tolerate
+
+@unbanning_financing
+view-if: financing_banned
+frequency: 10000000
+subtitle: The bourgeoisie restores its influence on politics
+on-arrival: financing_banned = 0; economic_growth += 1*bourgeois_power; unemployed += 0.7*bourgeois_power; inflation += 0.5*bourgeois_power; bourgeois_power += 0.05; coup_progress -= 3; socialism -= 5
+
+The government has lifted the ban on private party financing, relegalizing it completely. This is paired with a general campaign by their parties to recoup support, and attack socialism.
+
+- @break_toleration
+- @tolerate
+
+@suppressing_reichsbanner
+view-if: (rb_exit and rb_force >= 20) or (in_right_coalition and rb_force >= 5)
+frequency: 100
+subtitle: The bourgeoisie suppress the Reichsbanner
+on-arrival: rb_militancy -= 0.05*(1-interior_police_loyalty); rb_militancy -= 0.05*(1-interior_police_loyalty) if in_right_coalition; gov_tension += 1 if not rb_exit; left_strength += 5; neorevisionist_strength -= 5
+
+The government has enacted wide-ranged suppressions of the Reichsbanner, confiscating guns and military equipment. The left proclaims vindication.
+
+- @break_toleration
+- @tolerate
+
+@suppressing_communists
+view-if: kpd_votes+rfb_force >= dnvp_votes
+on-arrival: kpd_relation += 3 if not spd_toleration; workers_kpd -= 4*(1-interior_police_loyalty); unemployed_kpd -= 4*(1-interior_police_loyalty); rfb_militancy -= 0.05*(1-interior_police_loyalty) if rfb_militancy >= 0.05; workers_sapd -= 3*(1-interior_police_loyalty) if in_right_coalition or sapd_votes >= 5; workers_spd -= 5*(1-interior_police_loyalty)*(left_strength/100) if in_right_coalition or left_strength >= 50; gov_tension += 1 if in_right_coalition and left_strength < 50 and sapd_votes < 5
+frequency: 200
+subtitle: The bourgeoisie suppresses the communists [? if in_right_coalition : and Marxists in a broader sense ?]
+
+The government has enacted wide-ranged suppressions of the communists and their affiliated organizations, with the effects of this suppression bleeding into broader Marxist associations as well.
+
+- @break_toleration
+- @tolerate
+
+@anti_state_buyer
+view-if: state_buyer
+frequency: 1000
+on-arrival: bourgeois_power += 0.05; budget += 2; state_buyer = 0; rural_spd -= 2*dissent; inflation += 0.5 if inflation < 3; rural_nsdap += 3*dissent; rural_dvp -= 3; rural_dnvp -= 6 if in_right_coalition; rural_dvp -= 6 if not in_right_coalition; capital_strike_progress -= 1; economic_growth -= 0.4; socialism += 2; old_middle_dvp += 5*bourgeois_power; new_middle_dvp += 5*bourgeois_power
+subtitle: The bourgeoisie remove the state monopoly on grain purchases
+
+The repeal of the state buyer program restores free market dominance in the distribution of food, increasing prices for consumers and threatening farmers with instability. Despite this, the capitalist presses frame this as a landmark repeal of a horrible policy, and the urban middle classes are motivated into feeling the same.
+
+- @break_toleration
+- @tolerate
+
+@chud_agenda
+view-if: progressive_coalition < 50 and (womens_rights or homosexual_rights)
+frequency: 100
+on-arrival: gov_tension += 1 if not in_right_coalition
+subtitle: Traditionalists pursue a return to "traditional" German values
+max-choices: 1
+
+The government has decided to pursue a return to traditional German values by repealing landmark progressive reforms we have enacted.
+
+- @repeal_175: Reinstate Paragraph 175.
+- @reform_183: Reinstate an unmodified Paragraph 183.
+- @change_sex: Remove legal processes for changing sex.
+- @labor: Repeal policies that help women in the workforce.
+- @family: Restore old marriage, divorce, and property laws.
+- @welfare: Cut welfare for single mothers and children.
+- @liberalize: Tighten abortion laws.
+
+@labor
+subtitle: Paid maternal leave policies, equal pay policies, and so on.
+view-if: womens_work
+on-arrival: womens_work -= 1; womens_rights -= 1; new_middle_ddp -= 4 if not in_right_coalition; economic_growth -= 0.1;
+
+The government has repealed the policies which help women in the workplace, under the antiquated idea that women should focus on the family.
+
+- @break_toleration
+- @tolerate
+
+@family
+subtitle: Change family and inheritance law to treat women more unfairly.
+view-if: family_law
+on-arrival: family_law -= 1; womens_rights -= 1; new_middle_ddp -= 2 if not in_right_coalition; workers_ddp -= 3 if not in_right_coalition; old_middle_dvp += 4; rural_dvp += 4; rural_dnvp += 4 if in_right_coalition; catholics_z += 6
+
+These policies aimed to ensure that women had equal rights within a marriage, including the right to divorce. The more conservative segments of society treat our reforms as deleterious to the social fabric, and, now in government, have undone them.
+
+- @break_toleration
+- @tolerate
+
+@welfare
+subtitle: +1 budget
+view-if: womens_welfare
+on-arrival: welfare -= 1; womens_welfare -= 1; workers_dvp -= 3; workers_ddp -= 3 if not in_right_coalition; unemployed_spd += 4*(1-dissent); budget += 1; womens_rights -= 1; unemployed += 0.4; inflation -= 0.2; economic_growth -= 0.3;
+
+The government has cut welfare spending for women. This hurts single families, especially of working women.
+
+- @break_toleration
+- @tolerate
+
+@liberalize
+view-if: abortion_rights
+frequency: 10000
+on-arrival: abortion_rights -= 1; womens_rights -= 1; catholics_z += 10; workers_z += 3; new_middle_z += 3; old_middle_z += 3; old_middle_dnvp += 3; rural_dnvp += 3; workers_nsdap -= 3; new_middle_nsdap -= 3; old_middle_nsdap -= 2; rural_nsdap -= 2; unemployed_nsdap -= 2; unemployed_z += 3
+
+Backed by the conservatives, the government has once again restricted abortion in Germany. This has disheartened our more progressive supporters. With the increasing political discourse around abortion, the religiously-oriented Center Party and DNVP have gained conservative votes at the expense of the NSDAP.
+
+- @break_toleration
+- @tolerate
+
+@repeal_175
+subtitle: Paragraph 175 once criminalized homosexual acts. Though we repealed it, the government will reinstate it.
+view-if: repealed_175
+on-arrival: repealed_175 = 0; homosexual_rights -= 1; catholics_z += 4; economic_growth -= 0.1;
+
+Together with the DNVP, the Center Party has passed a law to reinstate Paragraph 175. Persecution of homosexuals for their private acts will continue, despite our best attempts to stop it.
+
+- @break_toleration
+- @tolerate
+
+@reform_183
+subtitle: Paragraph 183 once criminalized public homosexual displays and cross-dressing. Though we reformed it, the government will reinstate it.
+view-if: reformed_183
+on-arrival: reformed_183 = 0; homosexual_rights -= 1; catholics_z += 4; economic_growth -= 0.1;
+
+Voting together with the conservatives in the DVP and DNVP, the Center Party has reformed Paragraph 183 so that it once more criminalizes public homosexuality and cross-dressing.
+
+- @break_toleration
+- @tolerate
+
+@change_sex
+subtitle: We created a legal process for individuals to change their sex, making their lives easier. The government will now remove it.
+view-if: trans_rights
+on-arrival: trans_rights = 0; homosexual_rights -= 1; catholics_z += 4; economic_growth -= 0.1;
+frequency: 1000
+
+We had passed a bill to allow legal recognition of transsexual and transvestite individuals as the sex in which they live, and allow them to change their name, dress as they wish without police persecution, and undergo medical treatment.
+
+Now, the government has repealed this bill, returning transsexual and transvestite individuals to persecution.
+
+- @break_toleration
+- @tolerate
+
+@agricultural_subsidies
+subtitle: The bourgeoisie gives hand outs to farmers
+frequency: 150
+view-if: budget > 2 and (rural_spd_normalized >= (rural_dvp_normalized+rural_other_normalized+rural_z_normalized+rural_ddp_normalized)) or (in_right_coalition and (rural_dnvp_normalized < (rural_spd_normalized+rural_other_normalized+rural_nsdap_normalized)))
+on-arrival: budget -= 1; agricultural_finance += 1; rural_spd -= 5*bourgeois_power; rural_nsdap -= 3*bourgeois_power; rural_dvp += 5*bourgeois_power; rural_dvp += 3*bourgeois_power if not in_right_coalition; rural_dnvp += 6*bourgeois_power if in_right_coalition; rural_sol += 4; economic_growth += 0.2;
+
+The government has increased financial support for small farmers, providing access to credit and insurance, saving them from privation.
+
+@break_toleration
+title: We will end our toleration agreement.
+subtitle: This will likely mean new elections.
+on-arrival: spd_toleration = 0; time_to_election = 3; z_relation -= 3; ddp_relation -= 2; dvp_relation -= 2; left_dissent -= 2
+call: set_next_election_time
+view-if: spd_toleration
+
+We have broken off our toleration agreement, forcing new elections set for [+ next_election_month : month +] [+ next_election_year +].
+
+@tolerate
+title: We have no choice but to tolerate these actions.
+subtitle: This will upset our base.
+on-arrival: left_dissent += 10; labor_dissent += 5; workers_spd -= 5; unemployed_spd -= 5; new_middle_spd -= 3; socialism -= 2
+view-if: spd_toleration
+
+Our toleration of the government is unpopular throughot the party, and dampens enthusiasm.
+
+@collapse
+view-if: gov_tension >= 3
+frequency: 150
+on-arrival: time_to_election = 4; ddp_relation += 5 if not in_right_coalition; z_relation += 5 if in_right_coalition
+call: set_next_election_time
+subtitle: The government has fallen to its internal disagreements
+
+The fall of the government has led to snap elections, set for [+ next_election_month : month +] [+ next_election_year +].
+
+
+
+## Tax cuts (requires enough budget to do)
+## Tax hikes (requires low budget and high inflation)
+## Welfare cuts (requires either high welfare or low budget)
+## Welfare hikes (requires low welfare and high budget and high unemployment)
+## Tariff hikes (requires either low budget or low bourgeois rural support, and low enough inflation)
+## Tariff cuts (requires high enough budget and high inflation or good relations with the west?)
+## Diplomacy (improves relations with either west or east, requires no DNVP in government)
+## EU negotiations (if relations are high enough, more likely to appear the more times it has appeared before until eventually the EU is formed by the bourgeois)
+## Concordat (requires no DNVP in government?)
+## Supporting employers in labor disputes (requires no Joos Z?)
+## Compromise in labor disputes (requires Joos Z?)
+## Rearmament (requires DNVP in government and budget)
+## Anti - judicial reform (requires high judicial reform and DNVP in government)
+## Anti - interior reform (requires high police loyalty and DNVP in government)
+## Disempowering works councils (requires empowered works councils and less powerful bourgeoisie)
+## Privatizations (requires nationalizations, wont remove the dedicated event tho this will just be another way for the same effect to fire)
+## Lifting price controls (requires price controls)
+## Privatizing media (requires socialized media)
+## Unbanning private party financing (requires private party financing)
+## Suppressing the Reichsbanner (should probably also make this a dedicated event like privatizations, requires militant reichsbanner with centrists & liberals left)
+## Suppressing communists (would also effect a leftist SPD, and SAPD, if DNVP is in government)
+## Maybe also one for the government collapsing of its own accord

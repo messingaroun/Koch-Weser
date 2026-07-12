@@ -1,0 +1,44 @@
+title: High Inflation
+subtitle: Workers are seeing their purchasing power decline.
+view-if: inflation >= 7 and high_inflation_timer = 0 and not spd_in_government
+new-page: true
+on-arrival: capital_strike_progress -= 1; hyperinflation += 0.2; old_middle_dvp -= 6; new_middle_dvp -= 6; rural_dvp -= 5; high_inflation_timer = 4 if inflation > 8; high_inflation_timer = 2 if inflation >= 10; pro_republic -= 5; old_middle_nsdap += 2; new_middle_nsdap += 2; rural_nsdap += 2; welfare -= 1; lower_tax_rates += 1; budget += 2; unemployed += 1; inflation -= 2; economic_growth -= 1
+tags: event
+
+= High Inflation
+
+Inflation has risen. People of all social classes are seeing their purchasing power fall. Memories of the hyperinflation period of 1923 echo through the public conscious, even though the present inflation is not nearly as severe.
+
+The people and the press are clamoring for action to reduce inflation. Since we are in opposition, we stand to benefit, especially as the government turns to austerity as solution.
+
+- @campaign: Campaign against the government!
+- @toleration: We are in toleration.
+- @do_nothing: We will wait it out.
+
+@campaign
+view-if: not spd_toleration
+choose-if: resources >= 1
+subtitle: -1 resource
+on-arrival: resources -= 1; workers_spd += 4; unemployed_spd += 4; new_middle_spd += 3; new_middle_spd += 3 if new_middle_conscious or peoples_party; old_middle_spd += 2; old_middle_spd += 2 if peoples_party; rural_spd += 2 if peoples_party; rural_spd += rural_policy
+
+We campaign against the government, expanding our support amongst the demographics most affected by the inflation and the measures employed to curtail it.
+
+@toleration
+view-if: spd_toleration
+on-arrival: workers_spd -= 4; unemployed_spd -= 4;
+
+An astute observation, sir. What should we do about it?
+
+- @break_toleration: End the toleration agreement!
+- @do_nothing: We will wait it out.
+
+@do_nothing
+on-arrival: new_middle_nsdap += inflation; old_middle_nsdap += inflation; rural_nsdap += (inflation-land_reform);
+
+We do nothing. Predictably, nothing happens.
+
+@break_toleration
+on-arrival: time_to_election = 3; workers_spd += 5; unemployed_spd += 5; new_middle_spd += 2
+call: set_next_election_time
+
+We bring down the government, forcing the dissolution of the Reichstag for new elections. 

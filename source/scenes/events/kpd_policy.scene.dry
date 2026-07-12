@@ -122,7 +122,7 @@ The KPD-controlled Interior Ministry has recently begun a purge of its security 
 - @interior_oppose: No, this seems to be a pretext for a KPD power grab.
 
 @interior_support
-on-arrival: interior_police_loyalty += 0.1; kpd_influence += 2; new_middle_kpd += 3; new_middle_nsdap -= 2; new_middle_dnvp -= 2; pro_republic += 3; reformist_dissent += 5; unemployed += 0.3; rfb_strength += 20; sa_strength -= 10; sh_strength -= 10
+on-arrival: interior_police_loyalty += 0.1; kpd_influence += 2; new_middle_kpd += 3; new_middle_nsdap -= 2; new_middle_dnvp -= 2; pro_republic += 3; reformist_dissent += 5; unemployed += 0.3; rfb_strength += 20; sa_strength -= 10; sh_strength -= 10; interior_kpd_seen += 1
 
 We allow the KPD to proceed with the purges, significantly weakening the sway of reactionaries over our police forces. At the same time, however, Communist forces are bolstered. The right of our party warns that the police is just being turned from one anti-democratic force into another.
 

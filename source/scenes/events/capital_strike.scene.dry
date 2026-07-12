@@ -1,9 +1,9 @@
 title: Capital Strike
 subtitle: Germany's industries are idling...
-view-if: (capital_strike_progress >= (10+(dvp_relation/100))) and spd_in_government
+view-if: (capital_strike_progress >= (10+(dvp_relation/100))) and spd_in_government and not in_capital_strike
 new-page: true
 max-visits: 1
-on-arrival: unemployed += 5*bourgeois_power; coalition_dissent += 1; coalition_dissent += 1 if in_grand_coalition; economic_growth -= 4*bourgeois_power; socialism -= 7*bourgeois_power; {! 
+on-arrival: in_capital_strike = 1; unemployed += 5*bourgeois_power; coalition_dissent += 1; coalition_dissent += 1 if in_grand_coalition; economic_growth -= 4*bourgeois_power; socialism -= 7*bourgeois_power; capital_strike_over = 0; {! 
 if (Q.weimar_plan_adopted) {
     Q.weimar_dissent += 2;
 } 

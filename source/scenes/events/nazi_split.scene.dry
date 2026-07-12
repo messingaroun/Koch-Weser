@@ -9,6 +9,7 @@ Q.new_middle_dne = Q.new_middle_nsdap*(Q.strasser_percent/2);
 Q.old_middle_dne = 0;
 Q.rural_dne = 0;
 Q.catholics_dne = 0;
+Q.bourgeoisie_dne = 0;
 Q.workers_nsdap -= Q.workers_dne;
 Q.unemployed_nsdap -= Q.unemployed_dne;
 Q.new_middle_nsdap -= Q.new_middle_dne;

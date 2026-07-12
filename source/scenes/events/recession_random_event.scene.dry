@@ -1,0 +1,58 @@
+title: Recession
+subtitle: The economy is slackening, oh dear.
+view-if: time >= recession_time and not capital_flight and year >= 1937
+on-arrival: {! 
+
+Q.recession_severity = (Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1);
+Q.recession_severity *= Q.bourgeois_power;
+
+Q.economic_growth -= (Math.floor(Math.random() * 6) + 1)*(Q.recession_severity/12);
+Q.inflation -= (Math.floor(Math.random() * 6) + 1)*(Q.recession_severity/12);
+Q.unemployed += Q.recession_severity;
+
+Q.recession_time = Q.time + (Math.floor(Math.random() * (96 - 60 + 1)) + 60);
+
+Q.in_recession = 1;
+
+if (Q.spd_in_government) {
+    Q.workers_spd -= 6;
+    Q.new_middle_spd -= 8;
+    Q.old_middle_spd -= 8;
+    Q.rural_spd -= 8;
+    Q.unemployed_spd -= 6;
+}
+if (Q.in_grand_coalition || Q.in_bourgeois_coalition || Q.in_right_coalition) {
+    Q.new_middle_dvp -= 6;
+    Q.old_middle_dvp -= 6;
+    Q.rural_dvp -= 6;
+}
+if (Q.in_weimar_coalition || Q.in_bourgeois_coalition || Q.in_grand_coalition || Q.in_right_coalition) {
+    Q.new_middle_z -= 4;
+    Q.old_middle_z -= 4;
+    Q.rural_z -= 4;
+    Q.workers_z -= 3;
+    Q.new_middle_ddp -= 6;
+    Q.rural_ddp -= 6;
+    Q.old_middle_ddp -= 6;
+    Q.workers_ddp -= 4;
+}
+
+Q.unemployed_kpd += 5;
+Q.unemployed_kpd += (Q.socialism/10);
+Q.unemployed_nsdap += 5;
+
+!}
+tags: event
+new-page: true
+
+= Recession
+
+The global economy, including the German one, has entered into a recession. Hard times are ahead of us.
+
+- @it_happens: It happens.
+
+@it_happens
+on-arrival: socialism += recession_severity*(1-(0.5*bourgeois_power))
+
+Sure does. Man, if there was only like, an economic system which would put an end to this.
+

@@ -17,6 +17,7 @@ As with the state police units and the Reichswehr, the internal police tends to 
 - @loyalty: Improve the loyalty of the Interior Ministry forces.
 - @investigate_corruption: Investigate corruption by big businesses.
 - @investigate_far_right: Investigate illegal activity among the far right.
+- @prosecute_far_right: Use our evidence to prosecure far right leaders.
 - @investigate_march: Investigate the March on Berlin.
 - @domestic_enemies: Investigate or ban our domestic enemies.
 - @deport_hitler
@@ -33,14 +34,16 @@ Current interior police loyalty: [+ interior_police_loyalty : loyalty +]
 
 
 @investigate_corruption
+choose-if: not capital_spd
+unavailable-subtitle: <span style="color:rgb(170,150,60);font-family:'Times New Roman',serif;font-weight:700;letter-spacing:0.5px;">Nothing to see here.</span>
 go-to: investigate_corruption_success if interior_police_loyalty >= 0.5; investigate_corruption_failure if interior_police_loyalty < 0.5
 
 @investigate_corruption_success
-on-arrival: investigate_corruption += 1; bourgeois_power -= 0.01; capital_strike_progress -= 1 if capital_strike_progress >= 8; workers_spd += 5*(1-dissent); inflation -= 0.1 if inflation > 3; inflation -= 0.2 if inflation >= 8
+on-arrival: investigate_corruption += 1; inaccuracy = 0; assessed_bourgeois = bourgeois_power; bourgeois_power -= 0.01; capital_strike_progress -= 1 if capital_strike_progress >= 5 and (left_dissent > (left_strength+kpd_relation)); workers_spd += 5*(1-dissent); inflation -= 0.1 if inflation > 3; inflation -= 0.2 if inflation >= 8
 
 Corruption in big business is rampant, of course. We have uncovered a number of scandals, and publicizing them brings new attention to the work of Interior Minister [+ interior_minister +], building up his popular appeal and that of the SPD.
 
-[? if capital_strike_progress >= 7 : We have uncovered plans by the business community to launch a coordinated withdrawal of investments in order to hurt the economy. ?]
+[? if capital_strike_progress >= 4 : We have uncovered plans by the business community to launch a coordinated withdrawal of investments in order to hurt the economy. ?]
 
 @investigate_corruption_failure
 
@@ -51,24 +54,96 @@ view-if: march_on_berlin_seen >= 1 and not victory_republic and not nazis_implic
 go-to: investigate_march_success if interior_police_loyalty >= 0.6; investigate_march_failure if interior_police_loyalty < 0.6
 
 @investigate_march_success
-on-arrival: nazis_implicated = 1; coup_progress += 3
+on-arrival: nazis_implicated = 1; coup_progress += 3; sa_banned = 1; sa_strength -= (sa_strength*0.2*interior_police_loyalty); investigate_far_right += 1 if investigate_far_right >= 3
 
-We have found that the Nazis were responsible for the recent March on Berlin, having organized it as a putsch and even made preparations for civil war. This is grounds to ban them, if we get the judiciary on our side.
+We have found that the Nazis were responsible for the recent March on Berlin, having organized it as a putsch and even made preparations for civil war. This is grounds to ban them, if we get the judiciary on our side. For now, we have cracked down on the SA, but gone no further.
 
 @investigate_march_failure
 
 Unfortunately, our investigation has failed to turn up anything. Rumors are that the targets of our investigation were tipped off by infiltrators within the police.
 
+@prosecute_far_right
+view-if: prosecution_unlocked and not nsdap_banned
+choose-if: investigate_far_right > 4
+unavailable-subtitle: We need to gather more evidence.
+on-arrival: investigate_far_right -= 1
+go-to: prosecute_far_right_success if judicial_reform >= (prosecutions+2); prosecute_far_right_failure if judicial_reform < (prosecutions+2)
+
+@prosecute_far_right_success
+subtitle: We could especially leverage the evidence of their participation in the March on Berlin.
+on-arrival: nazis_bannable = 1 if nazis_implicated; prosecutions += 1; interior_police_loyalty -= (0.05*(nationalism/100)*bourgeois_power); coup_progress += prosecutions; {! 
+
+Q.workers_nsdap -= 6*(Q.pro_republic/100);
+Q.workers_nsdap -= 2*((100-Q.nationalism)/100);
+Q.workers_nsdap -= 2*(Q.interior_police_loyalty);
+Q.workers_nsdap += 3*(Q.nationalism/100);
+
+Q.new_middle_nsdap -= 6*(Q.pro_republic/100);
+Q.new_middle_nsdap -= 2*((100-Q.nationalism)/100);
+Q.new_middle_nsdap -= 2*(Q.interior_police_loyalty);
+Q.new_middle_nsdap += 3*(Q.nationalism/100);
+Q.new_middle_nsdap += 2*((100-Q.pro_republic)/100);
+Q.new_middle_nsdap += 2*(Q.nationalism/100)*((100-Q.pro_republic)/100)*Q.bourgeois_power;
+
+Q.old_middle_nsdap -= 5*(Q.pro_republic/100);
+Q.old_middle_nsdap -= 2*((100-Q.nationalism)/100);
+Q.old_middle_nsdap -= 1*(Q.interior_police_loyalty);
+Q.old_middle_nsdap += 3*(Q.nationalism/100);
+Q.old_middle_nsdap += 3*((100-Q.pro_republic)/100);
+Q.old_middle_nsdap += 2*(Q.nationalism/100)*((100-Q.pro_republic)/100)*Q.bourgeois_power;
+
+Q.unemployed_nsdap -= 6*(Q.pro_republic/100);
+Q.unemployed_nsdap -= 2*((100-Q.nationalism)/100);
+Q.unemployed_nsdap -= 2*(Q.interior_police_loyalty);
+Q.unemployed_nsdap += 3*(Q.nationalism/100);
+Q.unemployed_nsdap += 2*((100-Q.pro_republic)/100);
+Q.unemployed_nsdap += 2*(Q.nationalism/100)*((100-Q.pro_republic)/100)*Q.bourgeois_power;
+
+Q.rural_nsdap -= 4*(Q.pro_republic/100);
+Q.rural_nsdap -= 1*((100-Q.nationalism)/100);
+Q.rural_nsdap -= 1*(Q.interior_police_loyalty);
+Q.rural_nsdap -= Q.land_reform;
+Q.rural_nsdap += 4*(Q.nationalism/100);
+Q.rural_nsdap += 3*((100-Q.pro_republic)/100);
+Q.rural_nsdap += 2*(Q.nationalism/100)*((100-Q.pro_republic)/100)*Q.bourgeois_power;
+
+!}
+
+We have successfully pressed charges against several key Nazi leaders using the evidence we have against them, removing them of many expert organizers by tying them up in legal proceedings and disrupting their party apparatus. They cry persecution by the Marxist state, but hopefully the legitimacy of the republic will counter these claims.
+
+[? if nazis_implicated : We have also conclusively charged them with being key organizers of the March on Berlin and proven an intent on their part to illegally overthrow the constitution and establish a dictatorship by force. This paves the way for outlawing their party. ?]
+
+- @suspend_nsdap: Temporarily suspend the NSDAP's rights as a party while we move towards a ban.
+- @dont: There is no need for that right now.
+
+@suspend_nsdap
+view-if: nazis_bannable and not nazis_suspended
+choose-if: president != "Hindenburg" and judicial_reform >= (nsdap_votes/5)
+unavailable-subtitle: [? if president == "Hindenburg" : Hindenburg would never allow this. ?][? if judicial_reform < (nsdap_votes/5) : The courts would never allow this. ?]
+on-arrival: nazis_suspended = 1; workers_nsdap *= 0.5*(1-(sa_force/100)); new_middle_nsdap *= 0.5*(1-(sa_force/100)); old_middle_nsdap *= 0.5*(1-(sa_force/100)); unemployed_nsdap *= 0.5*(1-(sa_force/100)); rural_nsdap *= 0.8*(1-(sa_force/100)); pro_republic -= 5; coup_progress += 5; reichswehr_loyalty -= 0.05; reichswehr_loyalty = 0 if reichswehr_loyalty < 0; coalition_dissent += 1 if kpd_relation > 30 or not rfb_banned; coalition_dissent += 1 if in_grand_coalition and dvp_relation < 50
+
+By suspending the Nazi party's rights for the time being, we are moving towards a full ban in the future pending judicial review while securing the republic immediately. This decision is quite unpopular amongst the right.
+
+@dont
+view-if: nazis_bannable and not nazis_suspended
+
+We will not move towards this just yet.
+
+@prosecute_far_right_failure
+on-arrival: interior_police_loyalty -= (0.08*(nationalism/100)*bourgeois_power); pro_republic -= 2; nationalism += 3; old_middle_nsdap += 3; rural_nsdap += 4; new_middle_nsdap += 3
+
+Unfortunately, despite the mounting evidence against the Nazis, we are unable to sway the still conservative courts against them. The Nazis instead use the trials to broadcast their beliefs, and our failures to defeat them in the courtroom delegitimize the republic.
+
 @investigate_far_right
 go-to: investigate_far_right_success if interior_police_loyalty >= 0.55; investigate_far_right_failure if interior_police_loyalty < 0.55
 
 @investigate_far_right_success
-on-arrival: investigate_far_right += 1; sa_strength -= 20; workers_nsdap -= 3; new_middle_nsdap -= 3; nazi_urgency += 1 if investigate_far_right == 2; nazi_urgency += 2 if investigate_far_right == 3; workers_nsdap -= 3 if investigate_far_right == 3; new_middle_nsdap -= 3 if investigate_far_right == 3; old_middle_nsdap -= 3 if investigate_far_right == 3; unemployed_spd -= 3 if investigate_far_right == 3; coup_progress -= 1 if coup_progress >= 7
+on-arrival: investigate_far_right += 1; prosecution_unlocked = 1 if investigate_far_right > 3; sa_strength -= 20; workers_nsdap -= 3; new_middle_nsdap -= 3; nazi_urgency += 1 if investigate_far_right == 2; nazi_urgency += 2 if investigate_far_right == 3; workers_nsdap -= 3 if investigate_far_right == 3; new_middle_nsdap -= 3 if investigate_far_right == 3; old_middle_nsdap -= 3 if investigate_far_right == 3; unemployed_spd -= 3 if investigate_far_right == 3; coup_progress -= 1 if coup_progress >= 7; investigate_far_right += 1 if investigate_far_right > 3 and interior_police_loyalty >= 0.6
 
 [? if investigate_far_right == 1 : We have discovered collusion between Hjalmar Schacht, president of the Reichsbank, and the Nazis. This is very useful information. ?]
 [? if investigate_far_right == 2 : We have discovered illegal arms smuggling by the SA, the Nazi paramilitary. ?]
 [? if investigate_far_right == 3 : We have discovered a secret cache of documents from the NSDAP detailing their plan to violently take over the country if they enter into power. This is an anti-constitutional plot, and will be publicized and persecuted. ?]
-[? if investigate_far_right > 3 : Of course the Nazis are doing crimes; everyone knows that. Now, we finally have proof. ?]
+[? if investigate_far_right > 3 : Of course the Nazis are doing crimes; everyone knows that. Now, we finally have proof, which we may use to prosecute the party if we so wish, as the case against the Nazis only grows stronger the more evidence we compile. ?]
 [? if coup_progress >= 6: There are reports of an imminent coup by the far-right. We have attempted to disrupt some of these plans, but the threat is still present. ?]
 
 @investigate_far_right_failure

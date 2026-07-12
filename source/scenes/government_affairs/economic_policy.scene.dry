@@ -25,6 +25,7 @@ We have already formulated an economic plan. Now we have to implement it.
 - @five_year_plan
 - @further_plan
 - @tighten_controls
+- @works_program
 - @reconcile_town_and_country1
 - @reconcile_town_and_country2
 - @reconcile_town_and_country3
@@ -114,8 +115,8 @@ We have entered the realm of deficit spending. Our coalition partners are disgus
 title: Implement the Left plan for the transformation of the economy.
 subtitle: -[+ nationalize_budget +] budget. [? if works_councils >= 3 : Our works councils have reduced the budget necessary for this program. ?] [? if socializations >= 2: Our existing socialization policies have reduced the budget necessary for this program. ?]
 view-if: nationalization_adopted == 1 and nationalization_progress == 0
-choose-if: economic_minister_party != "DVP"
-unavailable-subtitle: The DVP-controlled Economic Ministry could never allow such an action.
+choose-if: economic_minister_party != "DVP" and not capital_spd
+unavailable-subtitle: [? if not capital_spd : The DVP-controlled Economic Ministry could never allow such an action. ?][? if capital_spd : <span style="color:rgb(170,150,60);font-family:'Times New Roman',serif;font-weight:700;letter-spacing:0.5px;">What are you, a communist? That's my property, sicko.</span> ?]
 on-arrival: nationalize_vote = 1
 go-to: nationalize_done if not legislature_enabled; legislative_menu if legislature_enabled
 
@@ -298,6 +299,16 @@ subtitle: [? if budget <= 5 : -[+ budget +] budget. ?][? if budget > 5 : -5 budg
 on-arrival: invested = budget if budget <= 5; invested = 5 if budget > 5; budget = 0 if budget <= 5; budget -= 5 if budget > 5; economic_growth += 0.8*invested; unemployed -= 1.4*invested; inflation += 1*invested; inflation += 0.5*invested if inflation < 3; economic_growth += 0.4 if invested >= 3; economic_growth += 0.2 if invested == 5; unemployed -= 0.6 if invested >= 3; unemployed -= 1 if invested == 5; five_year_plan = 1
 
 We have begun, using our control over the economy, to implement a comprehensive economic plan, with which we hope to reduce unemployment to neglible margins and restore the economy. In a sense, this plan will be the trial of socialism; it is our task to demonstrate the superiority of this economic system. 
+
+@works_program
+view-if: year >= 1937 and in_recession
+title: Implement a works program, in view of the recession.
+subtitle: -2 budget.
+choose-if: budget >= 2 or wtb_adopted
+unavailable-subtitle: Not enough budget.
+on-arrival: budget -= 2; unemployed -= 1.5*(recession_severity/10); inflation += 0.4*(recession_severity/10); inflation += 0.3*(recession_severity/10) if inflation < 0; inflation += 0.5*(recession_severity/10) if budget < 0; unemployed -= (inflation/2)*(recession_severity/10) if inflation > 0; economic_growth += 0.7*(recession_severity/10); economic_growth += 0.5*(recession_severity/10) if inflation >= 0 and economic_growth < 0; economic_growth += (inflation/2)*(recession_severity/10) if inflation >= 0 and inflation < 3; coalition_dissent += 1 if budget < 0; coalition_dissent += 1 if in_grand_coalition; capital_strike_progress += 1; capital_strike_progress += 1 if budget < 0; capital_strike_progress -= 1 if economic_health >= old_economic_health; recession_severity -= 1
+
+We implement a public works program, to alleviate the recession's effects and try to get people back to work.
 
 @further_plan
 view-if: five_year_plan and capital_flight

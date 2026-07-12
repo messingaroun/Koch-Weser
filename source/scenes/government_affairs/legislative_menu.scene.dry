@@ -1568,6 +1568,10 @@ if (Q.other_vote) {
     var total_tariff = pro_tariff+anti_tariff;
     pro_tariff = (pro_tariff/total_tariff)*Q.other_r;
     anti_tariff = (anti_tariff/total_tariff)*Q.other_r;
+    if (total_tariff == 0) {
+        anti_tariff = 0;
+        pro_tariff = 0;
+    }
     if (Q.tariff_cut_vote) {
         Q.bill_support += anti_tariff;
     }

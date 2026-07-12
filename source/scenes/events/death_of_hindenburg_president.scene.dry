@@ -748,7 +748,7 @@ go-to: election_end
 
 
 @hitler_victory
-on-arrival: chancellor = "Hitler"; chancellor_party = "NSDAP"; hitler_seen = 0
+on-arrival: chancellor = "Hitler"; chancellor_party = "NSDAP"; hitler_seen = 0; resisted_hitler = 0
 
 With [+ nsdap_candidate +]'s victory, the Nazis waste no time in consolidating power. [? if president = "Göring": His first act is to depose the current chancellor and appoint Hitler as chancellor, first undoing his deportation. ?][? if president = "Hitler": His first act is to depose the current chancellor and appoint himself chancellor, using his stormtroopers to attack any opposition. ?]
 
