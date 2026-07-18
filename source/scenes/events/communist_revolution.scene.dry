@@ -1,6 +1,6 @@
 title: [+ month : month +] Revolution
 subtitle: The Communists are launching a revolution!
-view-if: ((kpd_votes+sapd_votes+rfb_force >= 40) or (kpd_votes+sapd_votes+spd_votes+rfb_force+rb_force >= 80 and kpd_relation >= 70 and left_strength >= 50 and not spd_in_government)) and (chancellor == "Schleicher" or chancellor == "Papen" or chancellor == "Groener" or chancellor_party == "NSDAP" or chancellor_party == "DNVP" or (in_emergency_government and kpd_relation < 30 and kpd_no_confidence)) and (not supreme_soviet or kpd_relation < 25 and kpd_influence < 2) and not in_left_front and not in_popular_front
+view-if: ((kpd_votes+sapd_votes+rfb_force >= 40) or (kpd_votes+sapd_votes+spd_votes+rfb_force+rb_force >= 80 and kpd_relation >= 70 and left_strength >= 50 and not spd_in_government)) and (chancellor == "Schleicher" or chancellor == "Papen" or chancellor == "Groener" or chancellor_party == "NSDAP" or chancellor_party == "DNVP" or (in_emergency_government and kpd_relation < 30 and kpd_no_confidence) or (kpd_votes+sapd_votes+rfb_force >= 50)) and (not supreme_soviet or kpd_relation < 25 and kpd_influence < 2) and not in_left_front and not in_popular_front
 new-page: true
 tags: event
 max-visits: 1

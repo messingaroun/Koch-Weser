@@ -2,7 +2,7 @@ title: Economic Expansion
 subtitle: The economy is growing steadily.
 new-page: true
 view-if: economic_expansion >= 85 and unemployed <= 6 and inflation <= 6 and spd_in_government
-on-arrival: economic_expansion = 0; expansion_seen += 1; capital_strike_progress -= 2 if capital_strike_progress >= 2 and not class_war; capital_strike_progress -= 1 if peoples_party and sapd_consolidated and not capital_rejected and (labor_strength < reformist_strength or capital_spd); budget += 1; workers_spd += 4*(1-dissent) if spd_in_government; new_middle_spd += 2*(1-dissent) if spd_in_government; old_middle_spd += 2*(1-dissent) if spd_in_government; rural_spd += 2*(1-dissent) if spd_in_government; new_middle_ddp += 5 if in_weimar_coalition or in_grand_coalition or in_popular_front; workers_kpd += 3 if in_popular_front or in_left_front; old_middle_dvp += 4 if in_grand_coalition; new_middle_dvp += 3 if in_grand_coalition; inflation += 0.4; socialism += class_war if class_war; socialism -= ((reformist_strength/10)*bourgeois_power) if not in_popular_front or in_left_front
+on-arrival: economic_expansion = 0; expansion_seen += 1; capital_strike_progress -= 2 if capital_strike_progress >= 2 and not class_war; capital_strike_progress -= 1 if peoples_party and sapd_consolidated and not capital_rejected and (labor_strength < reformist_strength or capital_spd) and not capital_flight; budget += 1; workers_spd += 4*(1-dissent) if spd_in_government; new_middle_spd += 2*(1-dissent) if spd_in_government; old_middle_spd += 2*(1-dissent) if spd_in_government; rural_spd += 2*(1-dissent) if spd_in_government; new_middle_ddp += 5 if in_weimar_coalition or in_grand_coalition or in_popular_front; workers_kpd += 3 if in_popular_front or in_left_front; old_middle_dvp += 4 if in_grand_coalition; new_middle_dvp += 3 if in_grand_coalition; inflation += 0.4; socialism += class_war if class_war; socialism -= ((reformist_strength/10)*bourgeois_power) if not in_popular_front or in_left_front
 tags: event
 
 = Economic Expansion
@@ -15,14 +15,14 @@ The German economy has been growing steadily for an extended period of time, and
 - @ew: It's nice that they don't want open conflict, but we still oppose their interests.
 
 @welcome_industry
-view-if: capital_strike_progress < 0 and expansion_seen >= 2 and not in_grand_coalition and peoples_party
+view-if: capital_strike_progress < 0 and expansion_seen >= 2 and not in_grand_coalition and peoples_party and not capital_flight
 subtitle: +3 resources
 on-arrival: resources += 3; bourgeois_power += 0.02; left_dissent += 10; center_dissent += 10; labor_dissent += 5; bourgeoisie_spd += (2*economic_growth)*(1-dissent); bourgeoisie_dvp -= economic_growth; socialism -= (spd_votes*bourgeois_power)/10; capital_spd += 2; old_middle_spd += 5*bourgeois_power; new_middle_spd += 5*bourgeois_power; rural_spd += (5-land_reform)*bourgeois_power; kpd_relation -= 20
 
 We are not a party to turn away supports just because of their economic class; we abandoned that practice when we become a people's party. Corporations are people, too. It's only a natural progression of our policy.
 
 @ew
-view-if: capital_strike_progress < 0 and expansion_seen >= 2 and not in_grand_coalition and peoples_party
+view-if: capital_strike_progress < 0 and expansion_seen >= 2 and not in_grand_coalition and peoples_party and not capital_flight
 unavailable-subtitle: <span style="color:rgb(170,150,60);font-family:'Times New Roman',serif;font-weight:700;letter-spacing:0.5px;">Who's we? I don't!</span>
 choose-if: not capital_spd
 on-arrival: capital_rejected = 1; capital_strike_progress = 2

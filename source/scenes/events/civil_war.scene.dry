@@ -327,9 +327,9 @@ President Hindenburg refuses to sign our Enabling Act, demanding it go to a refe
 
 @agenda_reb
 view-if: spd_rebel = 1
-on-arrival: judicial_reform += 4
+on-arrival: judicial_reform += 4; soviets_exist = 1; soviet_election_time = time+6
 
-The defeat of the reactionaries presents to us a unique opportunity. We have multiple issues to address.
+The defeat of the reactionaries presents to us a unique opportunity. We have multiple issues to address. Meanwhile, workers' councils which formed during the general strike have begun to form into workers' councils.
 
 - @presidency: The presidency.
 - @chancellorship: The cabinet.

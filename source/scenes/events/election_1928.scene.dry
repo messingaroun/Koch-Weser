@@ -1170,7 +1170,7 @@ on-arrival: spd_in_government = 0; spd_toleration = 0; chancellor = "Hugenberg";
 Despite intense opposition to the Republic from Hugenberg, and unwillingness to stand in coalition governments, the DNVP has nevertheless entered into a right-wing government following the capitulation of the bourgeois parties to Hugenberg's once absurd demands to be made chancellor.
 
 @no_right_coalition
-go-to: no_majority if president == "Hindenburg"; no_majority_marx if president == "Marx"; no_majority_adenauer if president == "Adenauer"; brauns_dilemma if president == "Braun" or president == "Schumacher" or president == "Juchacz"
+go-to: no_majority if president == "Hindenburg"; no_majority_marx if president == "Marx"; no_majority_adenauer if president == "Adenauer"; no_majority_eckener if president == "Eckener"; brauns_dilemma if president == "Braun" or president == "Schumacher" or president == "Juchacz"
 
 However, the DNVP and its leader Hugenberg is refusing to partake in a coalition with the "November criminals" in the Center Party. Thus, there is no clear path towards a Reichstag majority.
 

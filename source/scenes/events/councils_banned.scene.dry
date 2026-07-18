@@ -1,0 +1,36 @@
+title: Dual Power
+subtitle: The Reichstag convenes to debate the workers' councils
+view-if: soviets_exist and not supreme_soviet and reichstag_enemy
+#tags: event
+max-visits: 1
+new-page: true
+
+= Dual Power
+
+Seeing the formation of nationwide workers' councils which have now fallen under the control of revolutionary forces seeking the overthrow of the Reichstag, the Reichstag has reacted to try and preserve its power by convening to discuss a resolution condemning the councils and affirm the supremacy of the Reichstag over them and the complete absence of any administrative authority on their part, while reactionaries have filed suits with the judiciary seeking to have the councils banned as illegal parallel structures.
+
+- @vote_for: The SPD votes for the resolution to condemn the councils.
+- @vote_against: The SPD votes against the resolution to condemn the councils.
+
+@vote_for
+view-if: not united_soviets and left_strength < reformist_strength
+on-arrival: left_dissent += 20; kpd_relation -= 30; z_relation += 10; ddp_relation += 10; dvp_relation += 5; workers_spd -= (socialism/10)
+
+The resolution is passed, compelling the councils to disband, a compulsion which is backed up shortly thereafter by the courts, who conclude them to be illegal.
+
+- @councils_dissolve: The councils comply.
+- @councils_defy: The councils defy the order!
+
+@vote_against
+
+tbd
+
+@councils_dissolve
+
+tbd
+
+@councils_defy
+
+tbd
+
+WIP

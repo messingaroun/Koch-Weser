@@ -222,7 +222,7 @@ view-if: factory_takeovers >= 1 and class_war >= 5 and not supreme_soviet
 max-visits: 1
 choose-if: resources >= 2 or (resources >= 1 and works_councils >= 3)
 subtitle: [? if works_councils < 3 : -2 resources ?][? if works_councils >= 3 : -1 resource ?]
-on-arrival: capital_strike_timer += 3; soviets_exist = 1; resources -= 1; resources -= 1 if works_councils < 3; bourgeois_power -= (0.02*factory_takeovers); rb_militancy += (0.01*factory_takeovers); workers_spd += (factory_takeovers*2); unemployed_spd += factory_takeovers; socialism += factory_takeovers
+on-arrival: capital_strike_timer += 3; soviet_election_time = time+6; soviets_exist = 1; resources -= 1; resources -= 1 if works_councils < 3; bourgeois_power -= (0.02*factory_takeovers); rb_militancy += (0.01*factory_takeovers); workers_spd += (factory_takeovers*2); unemployed_spd += factory_takeovers; socialism += factory_takeovers
 
 We have established workers' councils in those factories which we occupy, helping to organize the occupied factories with each other and through existing works councils. These soviets also lay the groundwork for a parallel state apparatus.
 

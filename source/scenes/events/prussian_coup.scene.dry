@@ -29,7 +29,7 @@ The Reichswehr and Stahlhelm are already surrounding Berlin, and the SA is suppo
 
 @defend_2
 on-arrival: resist_coup = 1; defense_strength = rb_strength*rb_militancy*(1-dissent/2); defense_strength += prussian_police_strength*prussian_police_militancy*prussian_police_loyalty if spd_prussia; enemy_strength = sa_strength*sa_militancy + sh_strength*sh_militancy; enemy_strength += reichswehr_strength*reichswehr_militancy*(1-reichswehr_loyalty)/2; defense_strength += workers_spd_normalized*(2 - dissent)*(2 - unemployed/100);
-go-to: defend_2_civil_war if defense_strength < enemy_strength; defend_2_victory if defense_strength >= enemy_strength
+go-to: defend_2_civil_war if defense_strength < enemy_strength and (enemy_strength < (defense_strength*1.25)); defend_2_victory if defense_strength >= enemy_strength; defend_2_defeat if (defense_strength*1.25) < enemy_strength
 
 @defend_2_victory
 on-arrival: sa_strength *= 0.8; sh_strength *= 0.8; pro_republic += 10; workers_spd += 6; unemployed_spd += 6; workers_nsdap -= 6; unemployed_nsdap -= 6; coup_victory = 1
@@ -43,6 +43,13 @@ The show of force has reinvigorated support for the republic and for the SPD, an
 @defend_2_victory_2
 achievement: drei_pfeile
 
+@defend_2_defeat
+on-arrival: rb_militancy *= 0.25; rb_strength *= (0.9*(1-dissent)); pro_republic -= 10; workers_spd -= 5; unemployed_spd -= 5; workers_nsdap += 5; unemployed_nsdap += 5
+
+Our forces confront the government troops and their reactionary auxiliaries, and, somehow, retreat without a fight. They were overwhelmed by the fascist display of strength, and have chosen to slink away.
+
+- @defend: They retreated without a fight?! Send them back, dammit! What the hell! 
+- @surrender: Well, I guess we have no choice but to surrender in the end after all...
 
 @defend_2_civil_war
 on-arrival: spd_rebel = 1

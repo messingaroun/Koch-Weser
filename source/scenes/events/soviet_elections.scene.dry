@@ -1,0 +1,945 @@
+title: Council Elections
+new-page: true
+tags: event
+priority: -1
+view-if: time >= soviet_election_time and soviets_exist and not supreme_soviet
+on-arrival: soviet_election_rounds = 0; buttons_mashed = 0; sapd_endorsement = 0; kpd_endorsement = 0; unaffiliate_endorsement = 0; bourgeois_endorsement = 0; backs_sapd = 0; backs_kpd = 0; backs_unaffiliate = 0; backs_bourgeois = 0; sapd_included = 0; kpd_included = 0; unaffiliate_included = 0; bourgeois_included = 0; {! 
+Q.soviet_parties = ['faud', 'kapd', 'kpd', 'sapd', 'spd_left', 'spd_center', 'spd_labor', 'spd_reformist', 'spd_neorevisionist', 'bourgeois', 'unaffiliate', 'nsdap', 'z'];
+if (Q.ddp_socialist) {
+    Q.soviet_parties.push('ddp');
+}
+
+Q.spd_backs_kpd = 0;
+Q.spd_backs_sapd = 0;
+Q.spd_backs_unaffiliate = 0;
+Q.spd_backs_bourgeois = 0;
+
+Q.spd_included = 0;
+
+Q.comcon_seen = 0;
+Q.kpd_backs_sapd = 0;
+Q.sapd_backs_kpd = 0;
+Q.nsdap_backs_bourgeois = 0;
+Q.unaffiliate_backs_kpd = 0;
+Q.unaffiliate_backs_sapd = 0;
+Q.unaffiliate_backs_bourgeois = 0;
+
+
+Q.workers_kapd = (((Q.unemployed/10) * (Q.unemployed/10)) * (Q.workers_kpd_normalized/100)) + Math.floor(Math.random() * 6) + 1;
+Q.new_middle_kapd = 0;
+Q.old_middle_kapd = 0;
+Q.rural_kapd = 0;
+Q.unemployed_kapd = Math.floor(Math.random() * 6) + 1;
+Q.catholics_kapd = 0;
+Q.bourgeoisie_kapd = 0;
+
+Q.workers_faud = Math.floor(Math.random() * 6) + 1;
+Q.new_middle_faud = 0;
+Q.old_middle_faud = 0;
+Q.rural_faud = 0;
+Q.unemployed_faud = Math.floor(Math.random() * 6) + 1;
+Q.catholics_faud = 0;
+Q.bourgeoisie_faud = 0;
+
+Q.left_votes = 0;
+Q.center_votes = 0;
+Q.reformist_votes = 0;
+Q.labor_votes = 0;
+Q.neorevisionist_votes = 0;
+
+Q.left_workers = 1;
+Q.left_new_middle = 0.7;
+if (Q.new_middle_conscious) {
+    Q.left_new_middle += 0.3;
+}
+Q.left_old_middle = 0;
+Q.left_rural = 0.4;
+Q.left_unemployed = 1.25;
+Q.left_catholics = 0.75;
+Q.left_bourgeoisie = 0;
+
+Q.center_workers = 1;
+Q.center_new_middle = 1;
+if (Q.new_middle_conscious) {
+    Q.center_new_middle += 0.25;
+}
+Q.center_old_middle = 0.5;
+Q.center_rural = 0.5;
+Q.center_unemployed = 0.9;
+Q.center_catholics = 1;
+if (Q.center_strength >= Q.left_strength && Q.center_strength >= Q.reformist_strength) {
+    Q.center_workers += 0.25;
+    Q.center_new_middle += 0.25;
+    Q.center_old_middle += 0.1;
+    Q.center_rural += 0.1;
+    Q.center_unemployed += 0.2;
+    Q.center_catholics += 0.25;
+}
+Q.center_bourgeoisie = 0;
+
+Q.reformist_workers = 0.75;
+Q.reformist_new_middle = 1.5;
+if (Q.new_middle_conscious) {
+    Q.reformist_new_middle -= 0.25;
+}
+Q.reformist_old_middle = 3;
+Q.reformist_rural = 1.5;
+Q.reformist_unemployed = 0.25;
+Q.reformist_catholics = 1.25;
+Q.reformist_bourgeoisie = 2;
+
+Q.labor_workers = 1.5;
+Q.labor_new_middle = 1;
+if (Q.new_middle_conscious) {
+    Q.labor_new_middle -= 0.3;
+}
+Q.labor_old_middle = 0.1;
+Q.labor_rural = 0.7;
+Q.labor_unemployed = 0.2;
+if (Q.wtb_adopted) {
+    Q.labor_unemployed += 0.3;
+}
+Q.labor_catholics = 1;
+Q.labor_bourgeoisie = 0;
+
+Q.neorevisionist_workers = 0;
+Q.neorevisionist_new_middle = 0;
+Q.neorevisionist_old_middle = 0;
+Q.neorevisionist_rural = 0;
+Q.neorevisionist_unemployed = 0;
+Q.neorevisionist_catholics = 0;
+if (Q.neorevisionism) {
+    Q.neorevisionist_workers = 0.6;
+    Q.neorevisionist_new_middle = 1;
+    Q.neorevisionist_old_middle = 2;
+    Q.neorevisionist_rural = 2;
+    Q.neorevisionist_unemployed = Q.rb_militancy;
+    Q.neorevisionist_catholics = 0.75;
+    Q.neorevisionist_bourgeoisie = 0.5;
+}
+Q.neorevisionist_bourgeoisie = 0;
+
+var total_spd = 0;
+var total_factions = 0;
+
+// Calculate SPD performance
+var spd_performance = Q.spd_votes - Q.old_spd_performance;
+if (Q.old_spd_performance) {
+    Q.old_spd_performance = Q.spd_votes;
+} else {
+    Q.old_spd_performance = 26;
+}
+if (!spd_performance) {
+    spd_performance = Q.spd_votes - Q.old_spd_performance;
+}
+
+console.log("SPD performance delta:", spd_performance);
+
+// Sum SPD-normalized votes across all classes
+for (var c of Q.classes) {
+    total_spd += (Q[c + '_spd_normalized'] * (Q[c]*Q[c+'_ratio']));
+}
+console.log("Total SPD weighted class vote:", total_spd);
+
+// Loop through factions and classes
+for (var faction of Q.factions) {
+    Q[faction + '_votes'] = 0; // Ensure clean start
+
+    for (var c of Q.classes) {
+        var base_vote = ((Q[faction + '_strength'] / 100) * Q[faction + '_' + c]) * ((Q[c + '_spd_normalized'] * (Q[c]*Q[c+'_ratio'])) / total_spd);
+        var dissent = Q[faction + '_dissent'] || 0;
+        var dissent_modifier = 1 + (dissent / 60) * (-spd_performance / 10) * 5;
+
+        console.log(`[${faction}] + [${c}]`);
+        console.log("  Base vote:", base_vote.toFixed(4));
+        console.log("  Dissent:", dissent);
+        console.log("  Dissent modifier:", dissent_modifier.toFixed(4));
+
+        if (dissent_modifier < 0) {
+            dissent_modifier = 0;
+        }
+
+        Q[faction + '_votes'] += base_vote * dissent_modifier;
+    }
+
+    console.log(`[${faction}] total votes before normalization:`, Q[faction + '_votes'].toFixed(2));
+
+    total_factions += Q[faction + '_votes'];
+}
+
+// Normalize to percentage
+for (var faction of Q.factions) {
+    Q[faction + '_votes'] = Math.round((Q[faction + '_votes'] / total_factions) * 100);
+    console.log(`[${faction}] normalized vote %:`, Q[faction + '_votes']);
+}
+
+for (var faction of Q.factions) {
+    for (var c of Q.classes) {
+        Q[c+'_spd_'+faction] = (Q[c+'_spd'] * (Q[faction+'_votes']/100));
+    }
+}
+
+for (var c of Q.classes) {
+    Q[c+'_bourgeois'] = Q[c+'_dvp'] + Q[c+'_dnvp'] + (Q[c+'_other'] * (1-(Q.socialism/100)));
+    if (!Q.ddp_socialist) {
+        Q[c+'_bourgeois'] += Q[c+'_ddp'];
+    }
+    if (Q.zca_formed) {
+        Q[c+'_bourgeois'] += (Q[c+'_zca'] * (1-Q.bourgeois_power));
+    }
+}
+
+for (var c of Q.classes) {
+    Q[c+'_unaffiliate'] = (Q[c+'_other'] * (Q.socialism/100));
+}
+
+!}
+on-departure: month_actions += 1; in_election = 0; soviet_election_time = time+24
+set-jump: post_election_1928
+
+= Elections, [+ month : month +] [+ year +]
+
+Across Germany, workers' councils exist, operating as "soviets" and electing deputies to new bodies of national-level coordination between them. 
+
+- @election_algorithm: May we do our best...
+
+@post_election_1928
+on-arrival: {!
+
+for (var c of Q.classes) {
+    var class_votes = 0;
+    for (var party of Q.parties) {
+        if (Q[c+'_'+party] < 0) {
+            Q[c+'_'+party] = 0;
+        }
+        class_votes += Q[c+'_'+party];
+    }
+    for (var party of Q.soviet_parties) {
+        Q[c + '_' + party + '_normalized'] = 100*Q[c+'_'+party]/class_votes;
+        Q[c + '_' + party + '_display'] = Math.round(100*Q[c+'_'+party]/class_votes);
+    }
+}
+
+for (var party of Q.soviet_parties) {
+    Q['proletariat_' + party + '_normalized'] = Q.urban_proletariat*(Q['workers_' + party + '_normalized']/100);
+    Q['proletariat_' + party + '_normalized'] += Q.rural_proletariat*(Q['rural_' + party + '_normalized']/100);
+    Q['proletariat_' + party + '_normalized'] += Q.middle_proletariat*(Q['new_middle_' + party + '_normalized']/100);
+    Q['proletariat_' + party + '_normalized'] += Q.catholic_proletariat*(Q['catholics_' + party + '_normalized']/100);
+    Q['proletariat_' + party + '_normalized'] += Q.lumpenproletariat*(Q['unemployed_' + party + '_normalized']/100);
+    Q['proletariat_' + party + '_normalized'] = Math.round(Q['proletariat_' + party + '_normalized']);
+}
+
+// set old results
+// election threshold constitutional reform
+// banning parties
+var new_party_sum = 0;
+
+for (var party of Q.soviet_parties) {
+    Q['old_' + party + '_s'] = Q[party + '_s'];
+    if (Q.constitutional_reform > 0) {
+        if (Q['proletariat_' + party + '_normalized'] < Q.electoral_threshold || (Q.electoral_threshold > 1 && party == 'other') || (Q[party + '_banned'] == 1)) {
+            Q[party + '_s'] = 0;
+        } else {
+            Q[party + '_s'] = Q['proletariat_' + party + '_normalized'];
+        }
+        new_party_sum += Q[party + '_s'];
+    } else {
+        Q[party + '_s'] = Q['proletariat_' + party + '_normalized'];
+    }
+    Q['change_' + party + '_s'] = Q[party + '_s'] - Q['old_' + party + '_s'];
+    var sign = Q['change_' + party + '_s'] > 0 ? '+'  : '';
+    Q['str_change_' + party] = sign + Q['change_' + party + '_s'];//.toFixed(1);
+}
+// calculate new party sum if electoral reform
+if (Q.electoral_threshold && Q.electoral_threshold > 0 || Q.party_bans) {
+    for (var party of Q.soviet_parties) {
+        if (Q[party + '_s'] > 0) {
+            Q[party + '_s'] = Math.round(Q[party + '_s']*100/new_party_sum);
+        }
+        Q['change_' + party + '_s'] = Q[party + '_s'] - Q['old_' + party + '_s'];
+        var sign = Q['change_' + party + '_s'] > 0 ? '+'  : '';
+        Q['str_change_' + party] = sign + Q['change_' + party + '_s'];//.toFixed(1);
+    }
+}
+
+Q.spd_s = Q.spd_left_s + Q.spd_center_s + Q.spd_labor_s + Q.spd_reformist_s + Q.spd_neorevisionist_s;
+Q.effective_spd_s = Math.floor(Q.spd_s * 1-(Q.dissent));
+
+Q.revolutionary_s = Q.kpd_s + Q.faud_s + Q.kapd_s;
+Q.left_coalition_s = Q.kpd_s + Q.faud_s + Q.kapd_s + Q.sapd_s;
+Q.united_front_s = Q.kpd_s + Q.spd_s + Q.sapd_s;
+if (Q.spd_reformist_s || Q.spd_neorevisionist_s) {
+    Q.united_front_s -= Q.spd_reformist_s;
+    Q.united_front_s -= Q.spd_neorevisionist_s;
+}
+Q.dissolutionist_s = Q.bourgeois_s + Q.spd_reformist_s + Q.spd_neorevisionist_s;
+
+!}
+on-departure: nazi_urgency = 1 if (nazi_urgency == 0 and nsdap_s >= 15)
+on-display: {!
+const data = [];
+
+if (Q.faud_s) {
+    data.push({
+            "id": "faud",
+            "legend": "FAUD",
+            "name": "FAUD",
+            "seats": Math.round(Q.faud_s*(Q.socialism/10)), 
+            });
+}
+
+if (Q.kapd_s) {
+    data.push({
+            "id": "kapd",
+            "legend": "KAPD",
+            "name": "KAPD",
+            "seats": Math.round(Q.kapd_s*(Q.socialism/10)), 
+            });
+}
+
+if (Q.kpd_s) {
+    data.push({
+            "id": "kpd",
+            "legend": "KPD",
+            "name": "KPD",
+            "seats": Math.round(Q.kpd_s*(Q.socialism/10)),
+            });
+}
+
+if (Q.sapd_formed && Q.sapd_s) {
+    data.push({
+            "id": "sapd",
+            "legend": "SAPD",
+            "name": "SAPD",
+            "seats": Math.round(Q.sapd_s*(Q.socialism/10)),
+            });
+}
+
+if (Q.spd_left_s) {
+    data.push({
+            "id": "spd_left",
+            "legend": "SPD",
+            "name": "SPD",
+            "seats": Math.round(Q.spd_left_s*(Q.socialism/10)),
+            });
+}
+
+if (Q.spd_center_s) {
+    data.push({
+            "id": "spd_center",
+            "legend": "SPD",
+            "name": "SPD",
+            "seats": Math.round(Q.spd_center_s*(Q.socialism/10)),
+            });
+}
+
+if (Q.spd_labor_s) {
+    data.push({
+            "id": "spd_labor",
+            "legend": "SPD",
+            "name": "SPD",
+            "seats": Math.round(Q.spd_labor_s*(Q.socialism/10)),
+            });
+}
+
+if (Q.spd_reformist_s) {
+    data.push({
+            "id": "spd_reformist",
+            "legend": "SPD",
+            "name": "SPD",
+            "seats": Math.round(Q.spd_reformist_s*(Q.socialism/10)),
+            });
+}
+
+if (Q.spd_neorevisionist_s) {
+    data.push({
+            "id": "spd_neorevisionist",
+            "legend": "SPD",
+            "name": "SPD",
+            "seats": Math.round(Q.spd_neorevisionist_s*(Q.socialism/10)),
+            });
+}
+
+if (Q.unaffiliate_s) {
+    data.push({
+            "id": "other",
+            "legend": "Unaffiliated",
+            "name": "Unaffiliated",
+            "seats": Math.round(Q.unaffiliate_s*(Q.socialism/10)),
+            });
+}
+
+if (Q.ddp_s) {
+    data.push({
+            "id": "ddp",
+            "legend": Q.ddp_name,
+            "name": Q.ddp_name,
+            "seats": Math.round(Q.ddp_s*(Q.socialism/10)),
+            });
+}
+
+if (Q.z_s) {
+    data.push({
+            "id": "z",
+            "legend": "Z",
+            "name": "Z",
+            "seats": Math.round(Q.z_s*(Q.socialism/10)),
+            });
+}
+
+if (Q.bourgeois_s) {
+    data.push({
+            "id": "zca",
+            "legend": "Bourgeois",
+            "name": "Bourgeois",
+            "seats": Math.round(Q.bourgeois_s*(Q.socialism/10)),
+            });
+}
+
+if (Q.nsdap_s) {
+    data.push({
+            "id": "nsdap",
+            "legend": "NSDAP",
+            "name": "NSDAP",
+            "seats": Math.round(Q.nsdap_s*(Q.socialism/10)),
+            });
+}
+if (window && d3) {
+    var width = 500; 
+    var height = 500;
+    var screenWidth = document.getElementById('content').offsetWidth;
+    if (screenWidth < width - 50) {
+        width = screenWidth - 50; 
+        height = width;
+        document.getElementById("reichstag").style.height = screenWidth/2 + "px";
+    } 
+
+    var parliament = d3.parliament();
+    parliament.width(width).height(height).innerRadiusCoef(0.4);
+    parliament.enter.fromCenter(true).smallToBig(true);
+    parliament.exit.toCenter(false).bigToSmall(true);
+    d3.select("#reichstag").datum(data).call(parliament);
+}
+!}
+#go-to: coalition_menu
+
+**Election results:**
+
+{!<svg id="reichstag" style="width: 500px; height: 250px;"> </svg>!}
+
+{!<table>!} 
+{!<tr><td>Party</td><td>Vote share</td><td>% Change</td></tr>!}
+
+{!<tr><td><div class="box" style='background-color:#9c0000; outline: 2px; outline-style: solid;'> </div> !} **SPD (Left):** {!</td><td>!} **[+ spd_left_s +]%** {!</td><td>!} **[+ str_change_spd_left +]** {!</td></tr>!}
+
+{!<tr><td><div class="box" style='background-color:#e30000; outline: 2px; outline-style: solid;'> </div> !} **SPD (Center):** {!</td><td>!} **[+ spd_center_s +]%** {!</td><td>!} **[+ str_change_spd_center +]** {!</td></tr>!}
+
+{!<tr><td><div class="box" style='background-color:#ff681d; outline: 2px; outline-style: solid;'> </div> !} **SPD (Labor):** {!</td><td>!} **[+ spd_labor_s +]%** {!</td><td>!} **[+ str_change_spd_labor +]** {!</td></tr>!}
+
+{!<tr><td><div class="box" style='background-color:#ff6ba9; outline: 2px; outline-style: solid;'> </div> !} **SPD (Reform):** {!</td><td>!} **[+ spd_reformist_s +]%** {!</td><td>!} **[+ str_change_spd_reformist +]** {!</td></tr>!}
+
+[? if neorevisionism : {!<tr><td><div class="box" style='background-color:#ff14a5; outline: 2px; outline-style: solid;'> </div> !} **SPD (Neorevisionist):** {!</td><td>!} **[+ spd_neorevisionist_s +]%** {!</td><td>!} **[+ str_change_spd_neorevisionist +]** {!</td></tr>!} ?]
+
+[? if sapd_formed == 1 : {!<tr><td><div class="box" style='background-color:#C40000'> </div> !}SAPD: {!</td><td>!} [+ sapd_s +]% {!</td><td>!} [+ str_change_sapd +] {!</td></tr>!} ?]
+
+{!<tr><td><div class="box" style='background-color:#8B0000'> </div> !}KPD: {!</td><td>!} [+ kpd_s +]% {!</td><td>!} [+ str_change_kpd +] {!</td></tr>!}
+
+{!<tr><td><div class="box" style='background-color:#4e0000'> </div> !}KAPD: {!</td><td>!} [+ kapd_s +]% {!</td><td>!} [+ str_change_kapd +] {!</td></tr>!}
+
+{!<tr><td><div class="box" style='background-color:#612828'> </div> !}FAUD: {!</td><td>!} [+ faud_s +]% {!</td><td>!} [+ str_change_faud +] {!</td></tr>!}
+
+{!<tr><td><div class="box" style='background-color:#000'> </div> !} Z: {!</td><td>!} [+ z_s +]% {!</td><td>!} [+ str_change_z +] {!</td></tr>!}
+
+[? if ddp_socialist : {!<tr><td><div class="box" style='background-color:#DCCA4A'> </div> !} DDP: {!</td><td>!} [+ ddp_s +]% {!</td><td>!} [+ str_change_ddp +] {!</td></tr>!} ?]
+
+{!<tr><td><div class="box" style='background-color:#85754e'> </div> !}Bourgeois: {!</td><td>!} [+ bourgeois_s +]% {!</td><td>!} [+ str_change_bourgeois +] {!</td></tr>!}
+
+{!<tr><td><div class="box" style='background-color:#909090'> </div> !}Unaffiliated: {!</td><td>!} [+ unaffiliate_s +]% {!</td><td>!} [+ str_change_unaffiliate +] {!</td></tr>!}
+
+{!<tr><td><div class="box" style='background-color:#954B00'> </div> !} NSDAP: {!</td><td>!} [+ nsdap_s +]% {!</td><td>!} [+ str_change_nsdap +] {!</td></tr>!}
+{!</table>!}
+
+The council elections have been held, and deputies elected from all Germany's industries to determine the future course of the working clas and the pursuit of political power by this class. The first matter is the election of an executive.
+
+- @coalition_menu: Convene the Social Democratic delegation.
+
+@coalition_menu
+subtitle: SPD - [+ spd_s +]%
+
+Through the convocation of the SPD delegation, we have attempted to unify our factions ahead of the council discussions. In the end, our delegation numbers about [+ effective_spd_s +]% of the congress.
+
+- @spd_majority: We will elect a Social-Democratic chairman, then.
+- @minority: No majority.
+
+@minority
+view-if: effective_spd_s < 50
+go-to: competition
+on-arrival: spd_turn = 1; communist_candidate = kpd_s; unaffiliate_candidate = unaffiliate_s; bourgeois_candidate = bourgeois_s; unaffiliate_candidate += z_s if z_party_leader == "Joos"; spd_candidate += ddp_s if ddp_s; bourgeois_candidate += z_s if z_party_leader != "Joos"; nsdap_candidate = nsdap_s; spd_candidate = effective_spd_s; sapd_candidate = sapd_s if sapd_consolidated and sapd_s >= effective_spd_s; {! 
+
+Q.candidates = ['communist', 'unaffiliated', 'bourgeois', 'nsdap', 'spd', 'sapd'];
+
+!}
+
+With no majority for the SPD delegation, the election of a Social Democratic chairman becomes more complicated, requiring cooperation with other forces, other forces that also vie to take the councils for themselves.
+
+@competition
+on-arrival: soviet_election_rounds += 1; {! 
+
+Q.highest_candidate_support = 0;
+for (var c of Q.candidates) {
+    if (Q[c+'_candidate'] >= Q.highest_candidate_support) {
+        for (var can of Q.candidates) {
+            Q[can+'_plurality_soviets'] = 0;
+        }
+        Q[c+'_plurality_soviets'] = 1;
+        Q.highest_candidate_support = Q[c+'_candidate'];
+    } else {
+        Q[c+'_plurality_soviets'] = 0;
+    }
+}
+
+!}
+
+[? if communist_candidate : Support for a Communist: [+ communist_candidate +] ?]
+
+[? if sapd_candidate : Support for a Socialist Workers': [+ sapd_candidate +] ?]
+
+[? if spd_candidate : Support for a Social Democrat: [+ spd_candidate +] ?]
+
+[? if unaffiliate_candidate : Support for an Independent: [+ unaffiliate_candidate +] ?]
+
+[? if bourgeois_candidate : Support for a Bourgeois: [+ bourgeois_candidate +] ?]
+
+[? if nsdap_candidate : Support for a Nazi: [+ nsdap_candidate +] ?]
+
+[? if communist_plurality_soviets : Currently, the communists are in the lead. ?]
+
+[? if sapd_plurality_soviets : Currently, the SAPD is in the lead. ?]
+
+[? if spd_plurality_soviets : Currently, we are in the lead. ?]
+
+[? if unaffiliate_plurality_soviets : Currently, the independents are in the lead. ?]
+
+[? if bourgeois_plurality_soviets : Currently, the bourgeois are in the lead. ?]
+
+[? if nsdap_plurality_soviets : Currently, the Nazis are in the lead. ?]
+
+- @kpd_wins: The communists have been elected.
+- @sapd_wins: The SAPD has been elected.
+- @spd_wins: We have won!
+- @independent_wins: The independents have been elected.
+- @bourgeois_wins: The bourgeois have been elected.
+- @nsdap_wins: The Nazis have been elected.
+- @spd_campaign_hq: What can we do?
+- @other_forces: The other forces make their moves...
+- @round_ten: The congress deadlocks and elects a compromise candidate.
+
+@kpd_wins
+view-if: communist_candidate >= 50
+on-arrival: reichstag_enemy = 1; spd_included = 1 if spd_backs_kpd == 2; kpd_soviets = 1; communist_influence += 3 if communist_influence; rfb_militancy += 0.1; rfb_militancy += (socialism/10); rb_strength -= left_strength; rfb_strength += left_strength; workers_kpd += (socialism/10); executive_formed = 1
+
+The Communists have been elected to chair the councils. They do communist stuff, like having the government do stuff. Unfortunately, the government is the councils, and the real government, the Reichstag, doesn't like it when other governments do stuff, because that's communism, and they're doing a whole lotta stuff now.
+
+@sapd_wins
+view-if: sapd_candidate >= 50
+on-arrival: reichstag_enemy = 1; spd_included = 1 if spd_backs_sapd == 2; executive_formed = 1; sapd_soviets = 1; workers_sapd += (socialism/25)
+
+The Socialist Workers' Party has elected their candidate to chair the councils. This increases popular support for the SAPD, though causes the bourgeoisie to view the councils as even more of a direct threat.
+
+@spd_wins
+view-if: spd_candidate >= 50
+on-arrival: spd_soviets = 1; executive_formed = 1; kpd_included = 1 if kpd_endorsement; sapd_included = 1 if sapd_endorsement; unaffiliate_included = 1 if unaffiliate_endorsement; bourgeois_included = 1 if bourgeois_endorsement
+go-to: faction_choices
+
+We have managed to win the chairmanship, after all! This is good. We like this. This is a good thing. However, which faction precisely should our candidate be from?
+
+@independent_wins
+view-if: unaffiliate_candidate >= 50
+on-arrival: independent_soviets = 1; executive_formed = 1; spd_included = 1 if spd_backs_unaffiliate
+
+The independent candidate has won, representing sectorial and economic interests of workers rather than a political agenda. 
+
+@bourgeois_wins
+view-if: bourgeois_candidate >= 50
+on-arrival: bourgeois_soviets = 1; executive_formed = 1; spd_included = 1 if spd_backs_bourgeois == 2; socialism -= 3; pro_republic += 5
+
+The representative of the bourgeois interests amongst the workers has won, and now chairs the councils.
+
+@nsdap_wins
+view-if: nsdap_candidate >= 50
+on-arrival: workers_spd -= 10*bourgeois_power*(sa_force/50); workers_kpd -= 10*bourgeois_power*(sa_force/50); workers_nsdap += 10*bourgeois_power*(sa_force/50); socialism *= 0.75; soviets_exist = 0
+
+The Nazis have, somehow, won control over the councils. This is obviously very bad, and causes the councils to essentially dissolve as every non-Nazi force immediately boycotts them and they transform the rump remainder into a party organ to broadcast their beliefs amongst workers.
+
+@spd_campaign_hq
+view-if: spd_turn and spd_candidate and soviet_election_rounds < 10 and communist_candidate < 50 and spd_candidate < 50 and sapd_candidate < 50 and bourgeois_candidate < 50 and unaffiliate_candidate < 50 and nsdap_candidate < 50
+on-departure: spd_turn = 0
+
+[? if spd_turn : We are attempting to be elected to the office of chairmanship. To this end, we will have to forge alliances with other factions vying for the same. ?]
+
+- @court_kpd: Court the KPD.
+- @court_sapd: Court the SAPD.
+- @court_unaffiliated: Court the unaffiliated.
+- @court_bourgeois: Court the bourgeois.
+- @court_catholics: Court the Center Party.
+- @unify_spd: Whip the SPD into line.
+- @drop_out: We should drop out.
+
+@court_kpd
+view-if: communist_candidate and (kpd_relation >= 40 or kpd_party_leader == "Conciliators")
+choose-if: not communist_plurality_soviets
+unavailable-subtitle: They think we should be endorsing them.
+
+We could try to win the support of the communists for the chairmanship. How can we convince them?
+
+- @bribe_kpd: Use our resources.
+- @beg_kpd: Use our good relations.
+- @nvm: Let's try something else.
+
+@bribe_kpd
+subtitle: -1 resources
+choose-if: resources >= 1
+on-arrival: resources -= 1; kpd_endorsement = 1; communist_candidate = 0; spd_candidate += kpd_s
+go-to: competition
+
+We have won the support of the KPD!
+
+@beg_kpd
+choose-if: kpd_relation >= 60
+unavailable-subtitle: The KPD doesn't like us enough.
+on-arrival: kpd_endorsement = 1; communist_candidate = 0; spd_candidate += kpd_s
+go-to: competition
+
+We have won the support of the KPD!
+
+@court_sapd
+view-if: sapd_candidate and kpd_relation > 0
+choose-if: not sapd_plurality_soviets
+unavailable-subtitle: They think we should be endorsing them.
+on-arrival: sapd_endorsement = 1; sapd_candidate = 0; spd_candidate += sapd_s
+go-to: competition
+
+We have won the support of the SAPD!
+
+@court_unaffiliated
+view-if: unaffiliate_candidate
+choose-if: spd_plurality_soviets
+unavailable-subtitle: They don't support losers.
+on-arrival: unaffiliate_endorsement = 1; unaffiliate_candidate = 0; spd_candidate += unaffiliate_s
+go-to: competition
+
+We have won the support of the unaffiliated!
+
+@court_bourgeois
+view-if: bourgeois_candidate and dvp_relation > 40
+choose-if: spd_candidate > bourgeois_candidate
+unavailable-subtitle: They think we should be endorsing them.
+on-arrival: left_dissent += 10; kpd_relation -= 5; bourgeois_candidate = 0; bourgeois_endorsement = 1; spd_candidate += bourgeois_s
+go-to: competition
+
+We have won the support of the bourgeois!
+
+@court_catholics
+view-if: (z_party_leader == "Joos" and unaffiliate_endorsement) or (z_party_leader != "Joos" and bourgeois_endorsement) and z_s
+choose-if: z_relation >= 40
+unavailable-subtitle: They don't trust us.
+
+We could try to win the support of the Catholics. How do we convince them?
+
+- @bribe_z: Use our resources.
+- @beg_z: Use our relations.
+- @nvm: Let's try something else.
+
+@bribe_z
+subtitle: -1 resources
+choose-if: resources >= 1
+on-arrival: resources -= 1; spd_candidate += z_s
+go-to: competition
+
+We have won the support of the Catholics!
+
+@beg_z
+choose-if: z_relation >= 60
+unavailable-subtitle: The Center Party doesn't like us enough.
+on-arrival: spd_candidate += z_s
+go-to: competition
+
+We have won the support of the Catholics!
+
+@nvm
+go-to: spd_campaign_hq
+
+We will try something else.
+
+@unify_spd
+on-arrival: {! 
+
+var diff = (Q.spd_s - Q.effective_spd_s);
+Q.effective_spd_s += (diff/2);
+Q.spd_candidate += (diff/2)
+
+!}
+go-to: competition
+
+We attempt to further unify the SPD delegation in favor of our candidate.
+
+@drop_out
+subtitle: Tune in, turn on...
+
+If we can't win, there's no point splitting the vote further. But who should we back instead?
+
+- @back_kpd: Back the KPD.
+- @back_sapd: Back the SAPD.
+- @back_independent: Back the independents.
+- @back_bourgeois: Back the bourgeois.
+- @nvm: Let's try something else.
+
+@back_kpd
+view-if: communist_candidate and left_strength > reformist_strength
+subtitle: [? if kpd_relation < 35 : They likely won't be at all grateful for this endorsement. ?]
+on-arrival: {! 
+
+Q.center_labor_portion = Math.floor((Q.spd_center_s+Q.spd_labor_s)*(Q.effective_spd_s/Q.spd_s));
+Q.spd_candidate = 0;
+Q.communist_candidate += Q.spd_left_s+Q.center_labor_portion;
+Q.spd_backs_kpd = 1;
+if (Q.kpd_relation >= 35) {
+    Q.spd_backs_kpd = 2;
+}
+!}
+go-to: competition
+
+We have endorsed the communist candidate.
+
+@back_sapd
+view-if: sapd_candidate
+on-arrival: spd_candidate = 0; spd_backs_sapd = 2; sapd_candidate += effective_spd_s
+go-to: competition
+
+We have endorsed the SAPD candidate.
+
+@back_independent
+view-if: unaffiliate_candidate
+on-arrival: spd_candidate = 0; spd_backs_unaffiliate = 2; unaffiliate_candidate += effective_spd_s
+go-to: competition
+
+We have endorsed the independent candidate.
+
+@back_bourgeois
+view-if: bourgeois_candidate and reformist_strength >= left_strength
+subtitle: [? if dvp_relation < 35 : They likely won't be at all grateful for this endorsement. ?]
+on-arrival: {!
+
+Q.center_labor_portion = Math.floor((Q.spd_center_s+Q.spd_labor_s)*(Q.effective_spd_s/Q.spd_s));
+Q.spd_candidate = 0;
+Q.bourgeois_candidate += Q.spd_reformist_s+Q.spd_neorevisionist_s+Q.center_labor_portion;
+Q.spd_backs_bourgeois = 1;
+if (Q.dvp_relation >= 35) {
+    Q.spd_backs_bourgeois = 2;
+}
+!}
+go-to: competition
+
+We have endorsed the bourgeois candidate.
+
+@other_forces
+view-if: (not spd_turn or not spd_candidate) and soviet_election_rounds < 10 and communist_candidate < 50 and spd_candidate < 50 and sapd_candidate < 50 and bourgeois_candidate < 50 and unaffiliate_candidate < 50 and nsdap_candidate < 50
+max-choices: 1
+on-departure: spd_turn = 1 if spd_candidate
+
+We are not alone in this race. Each other contender acts in its own right.
+
+- @communist_consolidation: The Communists consolidate the far-left.
+- @kpd_backs_sapd: The KPD backs the SAPD candidate.
+- @sapd_backs_kpd: The SAPD backs the KPD candidate.
+- @nsdap_backs_bourgeois: The NSDAP backs the bourgeois candidate.
+- @unaffiliate_backs_kpd: The unaffiliated back the KPD.
+- @unaffiliate_backs_sapd: The unaffiliated back the SAPD.
+- @unaffiliate_backs_bourgeois: The unaffiliated back the bourgeois.
+- @nothing: They do nothing.
+
+@communist_consolidation
+view-if: not comcon_seen and communist_candidate
+on-arrival: comcon_seen = 1; communist_candidate += kapd_s; communist_candidate += faud_s
+go-to: competition
+
+The communists have consolidated the far-left behind themselves.
+
+@kpd_backs_sapd
+view-if: sapd_candidate and communist_candidate and not kpd_backs_sapd and sapd_candidate >= communist_candidate
+on-arrival: kpd_backs_sapd = 1; communist_candidate = 0; sapd_candidate += kpd_s
+go-to: competition
+
+The communists have chosen to back the SAPD candidate.
+
+@sapd_backs_kpd
+view-if: sapd_candidate and communist_candidate and not sapd_backs_kpd and communist_candidate >= sapd_candidate
+on-arrival: sapd_backs_kpd = 1; sapd_candidate = 0; communist_candidate += sapd_s
+go-to: competition
+
+The SAPD has chosen to back the communist candidate.
+
+@nsdap_backs_bourgeois
+view-if: nsdap_candidate and bourgeois_candidate and not nsdap_backs_bourgeois and bourgeois_candidate > nsdap_candidate and communist_plurality_soviets
+on-arrival: nsdap_backs_bourgeois = 1; nsdap_candidate = 0; bourgeois_candidate += nsdap_s
+go-to: competition
+
+To prevent the victory of a communist, the Nazis have rallied with the other bourgeois forces in the council.
+
+@unaffiliate_backs_kpd
+view-if: not unaffiliate_backs_kpd and unaffiliate_candidate and (communist_plurality_soviets or ((communist_candidate+unaffiliate_s) >= 50))
+on-arrival: unaffiliate_backs_kpd = 1; unaffiliate_candidate = 0; communist_candidate += unaffiliate_s
+go-to: competition
+
+The unaffiliated have backed the communists.
+
+@unaffiliate_backs_sapd
+view-if: not unaffiliate_backs_sapd and unaffiliate_candidate and (sapd_plurality_soviets or ((sapd_candidate+unaffiliate_s) >= 50))
+on-arrival: unaffiliate_backs_sapd = 1; unaffiliate_candidate = 0; sapd_candidate += unaffiliate_s
+go-to: competition
+
+The unaffiliated have backed the SAPD.
+
+@unaffiliate_backs_bourgeois
+view-if: not unaffiliate_backs_bourgeois and unaffiliate_candidate and (bourgeois_plurality_soviets or ((bourgeois_candidate+unaffiliate_s) >= 50))
+on-arrival: unaffiliate_backs_bourgeois = 1; unaffiliate_candidate = 0; bourgeois_candidate += unaffiliate_s
+go-to: competition
+
+The unaffiliated have backed the bourgeois.
+
+@nothing
+go-to: competition
+
+It seems there will be no further developments of this kind.
+
+@round_ten
+view-if: soviet_election_rounds >= 10
+on-arrival: socialism -= 3; pro_republic += 3
+
+The conference ends inconclusively, and the resultant chairman is a no-namer independent with little support. The Reichstag's legitimacy is bolstered by the poor legitimacy of the soviets.
+
+@spd_majority
+view-if: effective_spd_s >= 50
+on-arrival: spd_soviets = 1; executive_formed = 1
+go-to: faction_choices
+
+With a majority of the delegates, we have the capacity to elect a Social Democratic chairman. There still remains the matter of which faction the chairman should come from, however.
+
+@faction_choices
+
+- @left
+- @center
+- @reformist
+- @labor
+- @neorevisionist
+
+@left
+title: The Left.
+subtitle: [+ spd_left_s +]%
+view-if: (((left_strength+center_strength >= reformist_strength+neorevisionist_strength+labor_strength) and (left_strength >= center_strength) and (center_dissent < center_strength)) or ((left_strength+labor_strength >= reformist_strength+neorevisionist_strength+center_strength) and (left_strength >= labor_strength) and (labor_dissent < labor_strength))) and ((spd_s - spd_reformist_s - spd_neorevisionist_s) >= 50) and not bourgeois_included 
+on-arrival: left_soviets = 1; left_strength += 5; pro_republic -= 2; socialism += 2; z_relation -= 3; dvp_relation -= 5; ddp_relation -= 5; kpd_relation += 3
+go-to: optional_coalitions if effective_spd_s >= 50
+
+Toni Sender is elected to chair the councils, representing a firm though not too firm leftist line in the leadership of the new institution. 
+
+@center
+title: The Center
+subtitle: [+ spd_center_s +]%
+view-if: (not (((((reformist_strength+neorevisionist_strength+center_strength >= left_strength+labor_strength) and (reformist_strength >= center_strength) and (center_dissent < center_strength)) or ((reformist_strength+neorevisionist_strength+labor_strength >= left_strength+center_strength) and (reformist_strength >= labor_strength) and (labor_dissent < labor_strength))) and spd_neorevisionist_s < 50) and ((spd_s - spd_left_s) >= 50)) and not ((((left_strength+center_strength >= reformist_strength+neorevisionist_strength+labor_strength) and (left_strength >= center_strength) and (center_dissent < center_strength)) or ((left_strength+labor_strength >= reformist_strength+neorevisionist_strength+center_strength) and (left_strength >= labor_strength) and (labor_dissent < labor_strength))) and ((spd_s - spd_reformist_s - spd_neorevisionist_s) >= 50)) and not (spd_neorevisionist_s >= 50)) and spd_center_s >= spd_labor_s
+on-arrival: center_soviets = 1; center_strength += 5
+go-to: optional_coalitions if effective_spd_s >= 50
+
+Rudolf Breitscheid is elected to chair the councils, representing a middle road between the revolutionaries and the reformists.
+
+@reformist
+title: The Reformists
+subtitle: [+ spd_reformist_s +]%
+view-if: ((((reformist_strength+neorevisionist_strength+center_strength >= left_strength+labor_strength) and (reformist_strength >= center_strength) and (center_dissent < center_strength)) or ((reformist_strength+neorevisionist_strength+labor_strength >= left_strength+center_strength) and (reformist_strength >= labor_strength) and (labor_dissent < labor_strength))) and spd_neorevisionist_s < 50) and ((spd_s - spd_left_s) >= 50) and not kpd_included
+on-arrival: reformist_soviets = 1; reformist_strength += 5; socialism -= 2; pro_republic += 2; z_relation += 2; ddp_relation += 2; kpd_relation -= 4; left_dissent += 3
+go-to: optional_coalitions if effective_spd_s >= 50
+
+Marie Juchacz is elected to chair the councils, representing a strong reformist tendency that remains within the workers, and a seeming unreadiness by them to assume state power.
+
+@labor
+title: The Trade Unions
+subtitle: [+ spd_labor_s +]%
+view-if: (not (((((reformist_strength+neorevisionist_strength+center_strength >= left_strength+labor_strength) and (reformist_strength >= center_strength) and (center_dissent < center_strength)) or ((reformist_strength+neorevisionist_strength+labor_strength >= left_strength+center_strength) and (reformist_strength >= labor_strength) and (labor_dissent < labor_strength))) and spd_neorevisionist_s < 50) and ((spd_s - spd_left_s) >= 50)) and not ((((left_strength+center_strength >= reformist_strength+neorevisionist_strength+labor_strength) and (left_strength >= center_strength) and (center_dissent < center_strength)) or ((left_strength+labor_strength >= reformist_strength+neorevisionist_strength+center_strength) and (left_strength >= labor_strength) and (labor_dissent < labor_strength))) and ((spd_s - spd_reformist_s - spd_neorevisionist_s) >= 50)) and not (spd_neorevisionist_s >= 50)) and spd_labor_s >= spd_center_s
+on-arrival: labor_soviets = 1; labor_strength += 5
+go-to: optional_coalitions if effective_spd_s >= 50
+
+Rudolf Wissell is elected to chair the councils, representing the interests of the trade unions and organized labor in this emerging form of labor organization.
+
+@neorevisionist
+title: The Neorevisionists
+subtitle: [+ spd_neorevisionist_s +]%
+view-if: spd_neorevisionist_s >= 50 and not kpd_included
+on-arrival: neorevisionist_soviets = 1
+go-to: optional_coalitions if effective_spd_s >= 50
+
+Surprisingly, the Neorevisionists have taken a lead, electing Carlo Mierendorff to chair the councils. 
+
+@optional_coalitions
+go-to: oc_menu
+
+With an SPD chair elected, however, remains the issue of the wider council executive. With us possessing a majority, we could choose to distribute positions simply within the SPD; but this would risk giving the councils the appearance of a mere party organ and undermining their budding legitimacy, especially when they currently possess no inherent power beyond that granted by the voluntary participation of workers within them.
+
+@oc_menu
+
+- @spd_only: Distribute positions exclusively within the party.
+- @invite_sapd: Invite the SAPD.
+- @invite_kpd: Invite the KPD.
+- @invite_unaffiliate: Invite the unaffiliated.
+- @invite_bourgeois: Invite the bourgeois-aligned.
+- @done: We are done. 
+
+@spd_only
+view-if: not buttons_mashed
+on-arrival: socialism -= (10-(spd_s/10)); left_dissent -= 5; center_dissent -= 5; labor_dissent -= 5; reformist_dissent -= 5; neorevisionist_dissent -= 5
+subtitle: This may at least reduce dissent within the party.
+go-to: done
+
+The legitimacy and capacity of the councils is hurt by our unwillingness to distribute positions amongst other forces within the councils. In the end, the executive is made into an effective party organ, and those forces opposed to our party simply urge their councils to noncooperation with this executive.
+
+@invite_sapd
+view-if: not sapd_included and sapd_formed and sapd_s
+subtitle: Former Social Democrats, they are willing.
+choose-if: not bourgeois_included
+unavailable-subtitle: With the bourgeois? Yeah, right.
+on-arrival: buttons_mashed += 1; sapd_included = 1; socialism += 1; left_strength += 3; left_dissent -= 6; kpd_relation += 2; z_relation -= 2; ddp_relation -= 4; dvp_relation -= 5
+go-to: oc_menu
+
+We have invited the SAPD to our executive, and they have agreed. This has given the council a more left-wing orientation, as the SAPD stands firmly opposed to the disempowerment of the councils.
+
+@invite_kpd
+view-if: not kpd_included and not reformist_soviets and not neorevisionist_soviets
+subtitle: The Communists are willing.
+choose-if: (left_soviets or kpd_relation >= 50) and not bourgeois_included
+unavailable-subtitle: The Communists are unwilling to enter the executive as it stands, opposing our chairmanship wholly.
+on-arrival: buttons_mashed += 1; kpd_included = 1; reichstag_enemy = 1; socialism += 2; kpd_relation += 5; left_strength += 5; left_dissent -= 5; z_relation -= 5; ddp_relation -= 6; dvp_relation -= 8
+go-to: oc_menu
+
+We have invited the KPD to our executive, and they have agreed to join. This has given the council a vastly more left-wing orientation, opening itself up to a chorral of criticism from the bourgeois parties who have begun to view the councils with concern as parallel power structures genuinely invested in the overthrow of the existing ones.
+
+@invite_unaffiliate
+view-if: not unaffiliate_included and unaffiliate_s
+subtitle: Independent workers' representatives with largely economic and sectorial concerns.
+on-arrival: buttons_mashed += 1; unaffiliate_included = 1; workers_spd += 3*(1-dissent); workers_other -= 3*(1-dissent)
+go-to: oc_menu
+
+By including the unaffiliated representatives in the executive, we are politicizing them positively. 
+
+@invite_bourgeois
+view-if: not bourgeois_included and not left_soviets
+subtitle: The bourgeois-aligned representatives who demand the dissolution of the councils.
+choose-if: (reformist_soviets or neorevisionist_soviets or (reformist_strength > left_strength and dvp_relation >= 40)) and not kpd_included and not sapd_included
+unavailable-subtitle: The bourgeois representatives squarely refuse.
+on-arrival: buttons_mashed += 1; bourgeois_included = 1; socialism -= 3; left_dissent += 10; left_strength -= 5; socialism -= 4; pro_republic += 4; kpd_relation -= 7; capital_strike_progress -= 1 if capital_strike_progress >= 6
+go-to: oc_menu
+
+The bourgeois representatives are invited to the executive and promptly join. The KPD assaults and derides us as betraying the revolutionary opportunity once more, while the bourgeoisie take relief in the fact that the councils are being tamed.
+
+@done
+view-if: buttons_mashed
+
+With the executive assembled, the congress of councils is dismissed for the time being, to begin its affairs accordingly.
+

@@ -1,0 +1,20 @@
+title: Council Policy
+new-page: true
+is-card: true
+on-arrival: council_policy_timer += 3; month_actions += 1
+view-if: soviets_exist and executive_formed
+card-image: img/councils.jpg
+tags: govt_affairs
+#subtitle: The administration of Germany's workers' councils.
+#go-to: 
+
+= Council Policy
+
+Wow. How did you find me?
+
+- @nothing: There is nothing to do here, right now.
+- @easy_discard
+
+@nothing
+
+See you later, punk.

@@ -16,6 +16,7 @@ With the ZCA's formation and the banning of private party financing, the remnant
 - @ddp_bloc: Let's try to make the [+ ddp_name +] into a bloc party.
 - @z_bloc: Let's try to make the Z into a bloc party.
 - @reject: What a backhanded proposal.
+- @nothing: We will do nothing.
 - @easy_discard
 
 @ddp_bloc
@@ -35,16 +36,16 @@ on-arrival: resources -= 1; z_bloc += 1; z_bloc += 1 if interior_minister_party 
 We have attempted to work on turning the Z into a bloc party, our organizers reaching out to their remaining insolvent party branches and infiltrating them [? if interior_minister_party == "SPD" : with the help of the Interior Ministry?].
 
 @ddp_bloc2
-view-if: ddp_bloc >= 5
+view-if: ddp_bloc >= 5 and not ddp_socialist
 subtitle: Even the bourgeoisie can find their way to socialism.
-on-arrival: ddp_name = "RDP"; ddp_socialist = 1; ddp_relation += 100; socialism += ddp_votes; workers_ddp += 5*(socialism/100); new_middle_ddp += 8*(socialism/100); old_middle_ddp += 6*(socialism/100); rural_ddp += 5*(socialism/100)
+on-arrival: ddp_name = "RDP"; ddp_socialist = 1; ddp_relation = 100; socialism += ddp_votes; workers_ddp += 5*(socialism/100); new_middle_ddp += 8*(socialism/100); old_middle_ddp += 6*(socialism/100); rural_ddp += 5*(socialism/100)
 
 We have successfully transformed the Democrats, to the extent that, following an extraordinary party congress, they have rebranded their party out of their newly professed faith in socialism as the guiding principle of humanity and natural extension of liberal principles. 
 
 @z_bloc2
-view-if: z_bloc >= 5
+view-if: z_bloc >= 5 and not z_socialist
 subtitle: Even the bourgeoisie can find their way to socialism.
-on-arrival: z_socialist = 1; z_relation += 100; socialism += z_votes; workers_z += 5*(socialism/100); new_middle_z += 3*(socialism/100); old_middle_z += 3*(socialism/100); rural_z += 5*(socialism/100); catholics_z += 3*(socialism/100); catholics_z += 7*(socialism/100) if reichskonkordat
+on-arrival: z_socialist = 1; z_relation = 100; socialism += z_votes; workers_z += 5*(socialism/100); new_middle_z += 3*(socialism/100); old_middle_z += 3*(socialism/100); rural_z += 5*(socialism/100); catholics_z += 3*(socialism/100); catholics_z += 7*(socialism/100) if reichskonkordat
 
 We have successfully transformed the Centrists, who now proclaim their belief in Christian socialism, in the brotherhood of all men and the need to overcome their exploitation. [? if not reichskonkordat : The Pope is quick to condemn this. ?][? if reichskonkordat : Luckily for us, the Pope does not condemn this, so the gain amongst Catholics is quite strong. ?]
 
@@ -53,3 +54,7 @@ view-if: not ddp_bloc and not z_bloc
 on-arrival: blocparteis_rejected = 1
 
 This is far too backhanded. No, we will not do this.
+
+@nothing
+
+Okay.

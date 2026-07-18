@@ -537,6 +537,12 @@ table {
 }
 
 /* Styles for parties */
+.seat.kapd {
+    fill: #4e0000;
+}
+.seat.faud {
+    fill: #612828;
+}
 .seat.kpd {
     fill: #8B0000;
 }
@@ -598,6 +604,31 @@ table {
 }
 .seat.neorevisionist {
   fill: #ff14a5;
+}
+.seat.spd_left {
+  fill: #cc0000;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+.seat.spd_center {
+  fill: #f00000;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+.seat.spd_labor {
+  fill: #ff371d;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+.seat.spd_reformist {
+  fill: #ff5571;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+.seat.spd_neorevisionist {
+  fill: #ff004c;
+  stroke: #000;
+  stroke-width: 1.5px;
 }
 
 .tooltip-text {
